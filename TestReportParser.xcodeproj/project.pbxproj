@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E4357F726382B1B00A0539F /* TestParser in Frameworks */ = {isa = PBXBuildFile; productRef = 1E4357F626382B1B00A0539F /* TestParser */; };
 		A94F021F2632A65E00A75F30 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94F021E2632A65E00A75F30 /* main.swift */; };
 /* End PBXBuildFile section */
 
@@ -33,18 +34,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E4357F726382B1B00A0539F /* TestParser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1E4357F526382B1B00A0539F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		A94F02122632A65E00A75F30 = {
 			isa = PBXGroup;
 			children = (
 				1E4357F4263827F200A0539F /* TestParser */,
 				A94F021D2632A65E00A75F30 /* TestReportParser */,
 				A94F021C2632A65E00A75F30 /* Products */,
+				1E4357F526382B1B00A0539F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,6 +90,9 @@
 			dependencies = (
 			);
 			name = TestReportParser;
+			packageProductDependencies = (
+				1E4357F626382B1B00A0539F /* TestParser */,
+			);
 			productName = TestReportParser;
 			productReference = A94F021B2632A65E00A75F30 /* TestReportParser */;
 			productType = "com.apple.product-type.tool";
@@ -247,7 +260,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3P5JSTB48L;
+				DEVELOPMENT_TEAM = AVGCX5Z5VU;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -258,7 +271,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3P5JSTB48L;
+				DEVELOPMENT_TEAM = AVGCX5Z5VU;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -287,6 +300,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1E4357F626382B1B00A0539F /* TestParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TestParser;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A94F02132632A65E00A75F30 /* Project object */;
 }
