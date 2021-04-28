@@ -31,19 +31,23 @@ public class ReportParser {
         self.folder = folder
     }
     
-    public func parse() throws -> [String] {
+    public func parse() throws -> String {
         
 //        shell("ls")
 //
-//        let command = "xcrun xcresulttool get --path E2ETests.xcresult --format json"
+//        let command = "xcrun xcresulttool get --path E2ETests.xcresult --format json > report.json"
 //        shell(command)
         
-        let json = folder.appendingPathComponent("report.json")
+        let failedTests = try JSONFailParser(filePath: folder).failedNames()
         
-        let failedTests = try JSONFailParser(filePath: json).failedNames()
-        
-        return failedTests
+        return formattedReport(failedTests)
     }
+}
+
+func formattedReport(_ input: [String]) -> String {
+    input.map { testName in
+        "❌ \(testName)"
+    }.joined(separator: "\n")
 }
 
 

@@ -19,10 +19,19 @@ final class TestParserTests: XCTestCase {
         XCTAssertEqual(report.issues.testFailureSummaries._values[1].testCaseName._value,
                        "AuthorizationTests.test_guest_can_login_in_russia_with_estonia_phone()")
 
+        let names = ["AuthorizationTests.test_guest_can_login_in_russia_with_lithuania_phone()",
+                     "AuthorizationTests.test_guest_can_login_in_russia_with_estonia_phone()"]
         XCTAssertEqual(try parser.failedNames(),
-                       ["AuthorizationTests.test_guest_can_login_in_russia_with_lithuania_phone()",
-                        "AuthorizationTests.test_guest_can_login_in_russia_with_estonia_phone()"])
+                       names)
+        
+        XCTAssertEqual(formattedReport(names),
+                       """
+❌ AuthorizationTests.test_guest_can_login_in_russia_with_lithuania_phone()
+❌ AuthorizationTests.test_guest_can_login_in_russia_with_estonia_phone()
+""")
     }
+    
+    
 
     static var allTests = [
         ("testExample", testExample),
