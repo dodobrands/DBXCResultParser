@@ -45,9 +45,59 @@ public class ReportParser {
 }
 
 func formattedReport(_ input: [String]) -> String {
-    input.map { testName in
-        "❌ \(testName)"
-    }.joined(separator: "\n")
+    let pairs = input.map { fullName -> Test in
+        let parts = fullName.split(separator: ".")
+        return Test(suit: String(parts[0]),
+                    name: String(parts[1]))
+    }
+    
+    let suits = Dictionary(grouping: pairs) { pair in
+        pair.suit
+    }
+    .map({ (key: String, values: [Test]) in
+        Suit(name: key, tests: values.map({ test in test.name }))
+    })
+    
+    let groups2 = suits
+        .map  { suit in
+            SuitDescr(name: suit.name, tests: suitDescription(suit: suit))
+        }
+        .sorted { SuitDescr1, SuitDescr2 in
+            SuitDescr1.name < SuitDescr2.name
+        }
+            
+    
+    return groups2.map({ suitDescr in
+        suitDescr.tests
+    }).joined(separator: "\n\n")
+}
+
+func suitDescription(suit: Suit) -> String {
+    """
+\(suit.name):
+\(suitTests(suit.tests))
+"""
+}
+
+struct Test {
+    let suit: String
+    let name: String
+}
+
+struct Suit {
+    let name: String
+    let tests: [String]
+}
+
+struct SuitDescr {
+    let name: String
+    let tests: String
+}
+
+func suitTests(_ suit: [String]) -> String {
+    suit.map({ test in
+        "❌ \(test)"
+    }).joined(separator: "\n")
 }
 
 
