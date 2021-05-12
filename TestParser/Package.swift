@@ -24,6 +24,7 @@ let package = Package(
         .testTarget(
             name: "TestParserTests",
             dependencies: ["TestParser"],
-            resources: [.process("report.json")]),
+            resources: [.process("report.json"), .process("reportUnitsSuccess.json"), .process("reportUnitsFailure.json")]),
     ]
 )
+

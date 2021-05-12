@@ -17,9 +17,9 @@ class JSONFailParser {
     
     func failedNames() throws -> [String] {
         let report = try parse()
-        return report.issues.testFailureSummaries._values.map { value in
+        return report.issues.testFailureSummaries?._values.compactMap { value in
             return value.testCaseName._value
-        }
+        } ?? []
         
     }
 }
@@ -118,7 +118,7 @@ struct Report: Codable {
 }
 
 struct Issues: Codable {
-    let testFailureSummaries: TestFailureSummaries
+    let testFailureSummaries: TestFailureSummaries?
 }
 
 struct TestFailureSummaries: Codable {
