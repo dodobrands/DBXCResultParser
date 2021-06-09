@@ -1,17 +1,69 @@
 import Foundation
 
-class JSONFailParser {
+public class XCResultParser {
+    let filePath: URL
+    let shell: (_ command: String...) -> Int32
     
+    public init(filePath: URL,
+                shell: @escaping (_ command: String...) -> Int32) {
+        self.filePath = filePath
+        self.shell = shell
+    }
+    
+    public func parse() throws -> URL {
+//        guard filePath.startAccessingSecurityScopedResource() else {
+//            // Handle the failure here.
+//            throw Error.noAccess
+//        }
+//
+//        // Make sure you release the security-scoped resource when you are done.
+//        defer { filePath.stopAccessingSecurityScopedResource() }
+        
+        let reportFileName = "report.json"
+        let reportPath = filePath.deletingLastPathComponent().appendingPathComponent(reportFileName)
+        
+        let command = "xcrun xcresulttool get --path \(filePath.path) --format json"
+        _ = self.shell(command)
+        
+        return reportPath
+    }
+    
+    enum Error: Swift.Error {
+        case noAccess
+    }
+}
+
+public class ReportParser {
+    let filePath: URL
+    
+    public init(filePath: URL) {
+        self.filePath = filePath
+    }
+    
+    public func parse() throws -> String {
+        let failedTests = try JSONFailParser(filePath: filePath).failedNames()
+        
+        return formattedReport(failedTests)
+    }
+}
+
+class FileParser {
     let filePath: URL
     
     init(filePath: URL) {
         self.filePath = filePath
     }
     
+    func data() throws -> Data {
+        try Data(contentsOf: filePath)
+    }
+}
+
+class JSONFailParser: FileParser {
+    
+    
     func parse() throws -> Report {
-        let data = try Data(contentsOf: filePath)
-        let report: Report = try JSONDecoder().decode(Report.self, from: data)
-        
+        let report: Report = try JSONDecoder().decode(Report.self, from: data())
         return report
     }
     
@@ -21,26 +73,6 @@ class JSONFailParser {
             return value.testCaseName._value
         } ?? []
         
-    }
-}
-
-public class ReportParser {
-    let folder: URL
-    
-    public init(folder: URL) {
-        self.folder = folder
-    }
-    
-    public func parse() throws -> String {
-        
-//        shell("ls")
-//
-//        let command = "xcrun xcresulttool get --path E2ETests.xcresult --format json > report.json"
-//        shell(command)
-        
-        let failedTests = try JSONFailParser(filePath: folder).failedNames()
-        
-        return formattedReport(failedTests)
     }
 }
 
@@ -79,56 +111,3 @@ func suitDescription(suit: Suit) -> String {
 """
 }
 
-struct Test {
-    let suit: String
-    let name: String
-}
-
-struct Suit {
-    let name: String
-    let tests: [String]
-}
-
-struct SuitDescr {
-    let name: String
-    let tests: String
-}
-
-func suitTests(_ suit: [String]) -> String {
-    suit.map({ test in
-        "❌ \(test)"
-    }).joined(separator: "\n")
-}
-
-
-
-@discardableResult
-func shell(_ args: String...) -> Int32 {
-    let task = Process()
-    task.launchPath = "/usr/bin/env"
-    task.arguments = args
-    task.launch()
-    task.waitUntilExit()
-    return task.terminationStatus
-}
-
-
-struct Report: Codable {
-    let issues: Issues
-}
-
-struct Issues: Codable {
-    let testFailureSummaries: TestFailureSummaries?
-}
-
-struct TestFailureSummaries: Codable {
-    let _values: [FailureValue]
-}
-
-struct FailureValue: Codable {
-    let testCaseName: TestCaseName
-}
-
-struct TestCaseName: Codable {
-    let _value: String
-}
