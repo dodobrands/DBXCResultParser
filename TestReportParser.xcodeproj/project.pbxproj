@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E3DEF7F265B9F6300F237F9 /* SwiftShell in Frameworks */ = {isa = PBXBuildFile; productRef = 1E3DEF7E265B9F6300F237F9 /* SwiftShell */; };
 		1E4357F726382B1B00A0539F /* TestParser in Frameworks */ = {isa = PBXBuildFile; productRef = 1E4357F626382B1B00A0539F /* TestParser */; };
 		A94F021F2632A65E00A75F30 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94F021E2632A65E00A75F30 /* main.swift */; };
 /* End PBXBuildFile section */
@@ -35,6 +36,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E4357F726382B1B00A0539F /* TestParser in Frameworks */,
+				1E3DEF7F265B9F6300F237F9 /* SwiftShell in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,8 +53,8 @@
 		A94F02122632A65E00A75F30 = {
 			isa = PBXGroup;
 			children = (
-				1E4357F4263827F200A0539F /* TestParser */,
 				A94F021D2632A65E00A75F30 /* TestReportParser */,
+				1E4357F4263827F200A0539F /* TestParser */,
 				A94F021C2632A65E00A75F30 /* Products */,
 				1E4357F526382B1B00A0539F /* Frameworks */,
 			);
@@ -92,6 +94,7 @@
 			name = TestReportParser;
 			packageProductDependencies = (
 				1E4357F626382B1B00A0539F /* TestParser */,
+				1E3DEF7E265B9F6300F237F9 /* SwiftShell */,
 			);
 			productName = TestReportParser;
 			productReference = A94F021B2632A65E00A75F30 /* TestReportParser */;
@@ -120,6 +123,9 @@
 				Base,
 			);
 			mainGroup = A94F02122632A65E00A75F30;
+			packageReferences = (
+				1E3DEF7D265B9F6300F237F9 /* XCRemoteSwiftPackageReference "SwiftShell" */,
+			);
 			productRefGroup = A94F021C2632A65E00A75F30 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -178,6 +184,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -239,6 +246,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -301,7 +309,23 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		1E3DEF7D265B9F6300F237F9 /* XCRemoteSwiftPackageReference "SwiftShell" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:kareman/SwiftShell.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		1E3DEF7E265B9F6300F237F9 /* SwiftShell */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E3DEF7D265B9F6300F237F9 /* XCRemoteSwiftPackageReference "SwiftShell" */;
+			productName = SwiftShell;
+		};
 		1E4357F626382B1B00A0539F /* TestParser */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TestParser;

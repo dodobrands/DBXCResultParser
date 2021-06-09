@@ -52,7 +52,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "/Users/rubanov/Library/Developer/Xcode/DerivedData/TestReportParser-ewskpulxcqflnwaqxgbkuynialkq/Build/Products/Debug/"
+            argument = "/Users/rubanov/Desktop/E2ETests.xcresult"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

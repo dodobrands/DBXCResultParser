@@ -69,3 +69,20 @@ ContactsTabTests:
         ("testExample", testExample),
     ]
 }
+
+//class XCResultParserTests: XCTestCase {
+//    func testExample2() throws {
+//
+//        var shellOutput: String? = nil
+//        let sut = XCResultParser(filePath: URL(string: "output/E2E.xcresult")!) { command in
+//            shellOutput = command
+//        }
+//
+//        let reportPath = try sut.parse()
+//
+//        XCTAssertEqual(reportPath, URL(string: "output/report.json"))
+//        XCTAssertEqual(shellOutput, "xcrun xcresulttool get --path output/E2E.xcresult --format json > report.json")
+//    }
+//}
+
+
