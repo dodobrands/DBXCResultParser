@@ -52,7 +52,7 @@ public class ReportParser {
         return
 """
 \(failedTestsFormatted)
-
+Summary:
 \(summaryTests)
 """
     }
