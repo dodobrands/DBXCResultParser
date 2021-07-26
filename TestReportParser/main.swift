@@ -10,7 +10,7 @@ import Foundation
 
 let path = CommandLine.arguments[1]
 let url = URL(fileURLWithPath: path)
-let parser = ReportParser(folder: url)
+let parser = ReportParser(filePath: url)
 let result = try! parser.parse()
 print("\(result)")
 
