@@ -10,7 +10,7 @@ final class TestParserIntegratioinTests: XCTestCase {
                        """
 DownloadImageServiceSpec:
 ❌ DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()
-
+Summary:
 Total: 3600, Failed: 1
 """)
     }
@@ -19,8 +19,10 @@ Total: 3600, Failed: 1
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsWithoutErrors", withExtension: "json"))
         let report = try ReportParser(filePath: reportPath).parse()
         XCTAssertEqual("\(report)",
-                       """
-Total: 3350
+"""
+
+Summary:
+Total: 3350, Failed: 0
 """)
     }
 }
