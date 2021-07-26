@@ -41,9 +41,19 @@ public class ReportParser {
     }
     
     public func parse() throws -> String {
-        let failedTests = try JSONFailParser(filePath: filePath).failedNames()
+        let parser = JSONFailParser(filePath: filePath)
         
-        return formattedReport(failedTests)
+        let report = try parser.parse()
+        
+        let failedTests = try report.failedNames()
+        let failedTestsFormatted = formattedReport(failedTests)
+            
+        return
+"""
+\(failedTestsFormatted)
+
+\(report.summary())
+"""
     }
 }
 
@@ -61,18 +71,9 @@ class FileParser {
 
 class JSONFailParser: FileParser {
     
-    
     func parse() throws -> Report {
         let report: Report = try JSONDecoder().decode(Report.self, from: data())
         return report
-    }
-    
-    func failedNames() throws -> [String] {
-        let report = try parse()
-        return report.issues.testFailureSummaries?._values.compactMap { value in
-            return value.testCaseName._value
-        } ?? []
-        
     }
 }
 
