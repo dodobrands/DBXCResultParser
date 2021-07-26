@@ -31,6 +31,16 @@ func suitTests(_ suit: [String]) -> String {
 
 struct Report: Codable {
     let issues: Issues
+    
+    func failedNames() throws -> [String] {
+        return issues.testFailureSummaries?._values.compactMap { value in
+            return value.testCaseName._value
+        } ?? []
+    }
+    
+    func summary() -> String {
+        return "Total: 195, failed: 2"
+    }
 }
 
 struct Issues: Codable {

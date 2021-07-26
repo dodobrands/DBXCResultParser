@@ -16,7 +16,7 @@ final class TestParserTests: XCTestCase {
 
         let names = ["AuthorizationTests.test_guest_can_login_in_russia_with_lithuania_phone()",
                      "AuthorizationTests.test_guest_can_login_in_russia_with_estonia_phone()"]
-        XCTAssertEqual(try parser.failedNames(),
+        XCTAssertEqual(try parser.parse().failedNames(),
                        names)
     }
     
@@ -30,20 +30,12 @@ final class TestParserTests: XCTestCase {
                        "DownloadImageServiceSpec.DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()")
         
         let names = ["DownloadImageServiceSpec.DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()"]
-        XCTAssertEqual(try parser.failedNames(),
+        XCTAssertEqual(try parser.parse().failedNames(),
                        names)
     }
-    
-    func testExample3() throws {
-        let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsFailure", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parse()
-        XCTAssertEqual("\(report)",
-"""
-DownloadImageServiceSpec:
-❌ DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()
-""")
-    }
 }
+    
+
 
 
 //class XCResultParserTests: XCTestCase {
