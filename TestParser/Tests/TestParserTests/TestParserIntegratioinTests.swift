@@ -11,7 +11,7 @@ final class TestParserIntegratioinTests: XCTestCase {
 DownloadImageServiceSpec:
 ❌ DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()
 
-Total: 195, failed: 2
+Total: 3600, Failed: 1
 """)
     }
 }
