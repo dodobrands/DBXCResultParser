@@ -8,7 +8,7 @@
 import XMLCoder
 import Foundation
 
-
+/// Search for slowest tests
 class UnitTestParser: FileParser {
     func parse() -> TestSuites {
         try! XMLDecoder().decode(TestSuites.self,
