@@ -41,8 +41,8 @@ struct Report: Codable {
     
     func summary() -> String {
         let countOfTests = metrics.testsCount._value
-        let countOfFailureTests = metrics.testsFailedCount._value
-        let result = "Total: \(countOfTests), Failed: \(countOfFailureTests)"
+        let countOfFailureTests = metrics.testsFailedCount?._value
+        let result = "Total: \(countOfTests), Failed: \(countOfFailureTests!)"
         return result
     }
 }
@@ -66,7 +66,7 @@ struct TestCaseName: Codable {
 // metrics for func summary
 struct Metrics: Codable {
     let testsCount: TestsCount
-    let testsFailedCount: TestsFailedCount
+    let testsFailedCount: TestsFailedCount?
 }
 
 struct TestsCount: Codable {
