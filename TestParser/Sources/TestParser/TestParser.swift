@@ -46,13 +46,14 @@ public class ReportParser {
         let report = try parser.parse()
         
         let failedTests = try report.failedNames()
+        let summaryTests = report.summary()
         let failedTestsFormatted = formattedReport(failedTests)
             
         return
 """
 \(failedTestsFormatted)
 
-\(report.summary())
+\(summaryTests)
 """
     }
 }
