@@ -39,7 +39,7 @@ public class ReportParser {
     public init(filePath: URL) {
         self.filePath = filePath
     }
-    
+
     public func parseList() throws -> String {
         let parser = JSONFailParser(filePath: filePath)
         
@@ -128,4 +128,3 @@ func suitDescription(suit: Suit) -> String {
 \(suitTests(suit.tests))
 """
 }
-
