@@ -41,8 +41,8 @@ struct Report: Codable {
     
     func summary() -> String {
         let countOfTests = metrics.testsCount._value
-        let countOfFailureTests = metrics.testsFailedCount?._value
-        let result = "Total: \(countOfTests), Failed: \(countOfFailureTests!)"
+        let countOfFailureTests = metrics.testsFailedCount?._value ?? "0"
+        let result = "Total: \(countOfTests), Failed: \(countOfFailureTests)"
         return result
     }
 }

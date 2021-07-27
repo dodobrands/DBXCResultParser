@@ -26,7 +26,8 @@ let package = Package(
             resources: [.process("report.json"),
                         .process("reportUnitsSuccess.json"),
                         .process("reportUnitsFailure.json"),
-                        .process("report.junit")
+                        .process("report.junit"),
+                        .process("reportUnitsWithoutErrors.json")
             ]),
     ]
 )
