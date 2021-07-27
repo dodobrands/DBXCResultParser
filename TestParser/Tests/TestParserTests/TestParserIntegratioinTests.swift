@@ -5,7 +5,7 @@ final class TestParserIntegratioinTests: XCTestCase {
     
     func testParseList() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsFailure", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parseList()
+        let report = try ReportParser(filePath: reportPath).parse(mode: "list")
         XCTAssertEqual("\(report)",
                        """
 DownloadImageServiceSpec:
@@ -15,19 +15,19 @@ DownloadImageServiceSpec:
 
     func testParseTotal() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsWithoutErrors", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parseTotalTests()
+        let report = try ReportParser(filePath: reportPath).parse(mode: "total")
         XCTAssertEqual("\(report)","3350")
     }
 
     func testParseFailedTests() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsFailure", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parseFailedTests()
+        let report = try ReportParser(filePath: reportPath).parse(mode: "failed")
         XCTAssertEqual("\(report)","1")
     }
 
     func testParseSkippedTests() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsFailure", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parseSkippedTests()
+        let report = try ReportParser(filePath: reportPath).parse(mode: "skipped")
         XCTAssertEqual("\(report)","3")
     }
 }
