@@ -40,22 +40,38 @@ public class ReportParser {
         self.filePath = filePath
     }
     
-    public func parse() throws -> String {
+    public func parseList() throws -> String {
         let parser = JSONFailParser(filePath: filePath)
         
         let report = try parser.parse()
         
         let failedTests = try report.failedNames()
-        let summaryTests = report.summary()
         let failedTestsFormatted = formattedReport(failedTests)
-            
-        return
-"""
-\(failedTestsFormatted)
-Summary:
-\(summaryTests)
-"""
+
+        return failedTestsFormatted
     }
+
+    public func parseTotalTests() throws -> String {
+        let parser = JSONFailParser(filePath: filePath)
+        let report = try parser.parse()
+
+        return report.total()
+    }
+
+    public func parseFailedTests() throws -> String {
+        let parser = JSONFailParser(filePath: filePath)
+        let report = try parser.parse()
+
+        return report.failed()
+    }
+
+    public func parseSkippedTests() throws -> String {
+        let parser = JSONFailParser(filePath: filePath)
+        let report = try parser.parse()
+
+        return report.skipped()
+    }
+
 }
 
 class FileParser {

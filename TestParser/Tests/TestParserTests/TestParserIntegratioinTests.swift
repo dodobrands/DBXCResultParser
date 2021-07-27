@@ -5,7 +5,7 @@ final class TestParserIntegratioinTests: XCTestCase {
     
     func testReportWithErrors() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsFailure", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parse()
+        let report = try ReportParser(filePath: reportPath).parseList()
         XCTAssertEqual("\(report)",
                        """
 DownloadImageServiceSpec:
@@ -17,7 +17,7 @@ Total: 3600, Failed: 1
 
     func testReportWithoutErrors() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsWithoutErrors", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parse()
+        let report = try ReportParser(filePath: reportPath).parseList()
         XCTAssertEqual("\(report)",
 """
 
