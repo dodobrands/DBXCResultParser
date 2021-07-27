@@ -84,7 +84,7 @@ public class ReportParser {
         case "list":
             result = try! parseList()
         default:
-            result = "Unknow argument"
+            result = "\(mode) is unknow argument"
         }
         return result
     }
