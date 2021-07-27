@@ -35,7 +35,7 @@ public class XCResultParser {
 
 public class ReportParser {
     let filePath: URL
-    
+
     public init(filePath: URL) {
         self.filePath = filePath
     }
@@ -72,6 +72,22 @@ public class ReportParser {
         return report.skipped()
     }
 
+    public func parse(mode: String) throws -> String {
+        let result: String
+        switch mode {
+        case "total":
+            result = try! parseTotalTests()
+        case "skipped":
+            result = try! parseSkippedTests()
+        case "failed":
+            result = try! parseFailedTests()
+        case "list":
+            result = try! parseList()
+        default:
+            result = "Unknow argument"
+        }
+        return result
+    }
 }
 
 class FileParser {
