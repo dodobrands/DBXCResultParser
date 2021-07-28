@@ -74,14 +74,15 @@ public class ReportParser {
 
     public func parse(mode: String) throws -> String {
         let result: String
-        switch mode {
-        case "total":
+        let parserMode = ParserMode(rawValue: mode)
+        switch parserMode {
+        case .total:
             result = try! parseTotalTests()
-        case "skipped":
+        case .skipped:
             result = try! parseSkippedTests()
-        case "failed":
+        case .failed:
             result = try! parseFailedTests()
-        case "list":
+        case .list:
             result = try! parseList()
         default:
             result = "\(mode) is unknow argument"
@@ -143,4 +144,11 @@ func suitDescription(suit: Suit) -> String {
 \(suit.name):
 \(suitTests(suit.tests))
 """
+}
+
+enum ParserMode: String {
+    case total = "total"
+    case skipped = "skipped"
+    case failed = "failed"
+    case list = "list"
 }
