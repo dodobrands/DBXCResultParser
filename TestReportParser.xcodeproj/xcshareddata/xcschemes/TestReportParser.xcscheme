@@ -55,6 +55,10 @@
             argument = "/Users/rubanov/Desktop/E2ETests.xcresult"
             isEnabled = "YES">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "list"
+            isEnabled = "YES">
+         </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
    <ProfileAction

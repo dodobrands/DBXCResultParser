@@ -45,6 +45,18 @@ struct Report: Codable {
         let result = "Total: \(countOfTests), Failed: \(countOfFailureTests)"
         return result
     }
+
+    func total() -> String {
+         metrics.testsCount._value
+    }
+
+    func failed() -> String {
+        metrics.testsFailedCount?._value ?? "0"
+    }
+
+    func skipped() -> String {
+        metrics.testsSkippedCount?._value ?? "0"
+    }
 }
 
 struct Issues: Codable {
@@ -67,6 +79,7 @@ struct TestCaseName: Codable {
 struct Metrics: Codable {
     let testsCount: TestsCount
     let testsFailedCount: TestsFailedCount?
+    let testsSkippedCount: TestsSkippedCount?
 }
 
 struct TestsCount: Codable {
@@ -74,5 +87,9 @@ struct TestsCount: Codable {
 }
 
 struct TestsFailedCount: Codable {
+    let _value: String
+}
+
+struct TestsSkippedCount: Codable {
     let _value: String
 }

@@ -35,26 +35,54 @@ public class XCResultParser {
 
 public class ReportParser {
     let filePath: URL
-    
+
     public init(filePath: URL) {
         self.filePath = filePath
     }
-    
-    public func parse() throws -> String {
+
+    public func parseList() throws -> String {
         let parser = JSONFailParser(filePath: filePath)
         
         let report = try parser.parse()
         
         let failedTests = try report.failedNames()
-        let summaryTests = report.summary()
         let failedTestsFormatted = formattedReport(failedTests)
-            
-        return
-"""
-\(failedTestsFormatted)
-Summary:
-\(summaryTests)
-"""
+
+        return failedTestsFormatted
+    }
+
+    public func parseTotalTests() throws -> String {
+        let parser = JSONFailParser(filePath: filePath)
+        let report = try parser.parse()
+
+        return report.total()
+    }
+
+    public func parseFailedTests() throws -> String {
+        let parser = JSONFailParser(filePath: filePath)
+        let report = try parser.parse()
+
+        return report.failed()
+    }
+
+    public func parseSkippedTests() throws -> String {
+        let parser = JSONFailParser(filePath: filePath)
+        let report = try parser.parse()
+
+        return report.skipped()
+    }
+
+    public func parse(mode: ParserMode) throws -> String {
+        switch mode {
+        case .total:
+            return try parseTotalTests()
+        case .skipped:
+            return try parseSkippedTests()
+        case .failed:
+            return try parseFailedTests()
+        case .list:
+            return try parseList()
+        }
     }
 }
 
@@ -113,3 +141,9 @@ func suitDescription(suit: Suit) -> String {
 """
 }
 
+public enum ParserMode: String {
+    case total = "total"
+    case skipped = "skipped"
+    case failed = "failed"
+    case list = "list"
+}
