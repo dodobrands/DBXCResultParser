@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Mikhail Rubanov on 24.05.2021.
 //
@@ -28,37 +28,50 @@ func suitTests(_ suit: [String]) -> String {
     }).joined(separator: "\n")
 }
 
-
 struct Report: Codable {
-    let issues: Issues
-    let metrics: Metrics
-    
+    let actions: Actions
+
     func failedNames() throws -> [String] {
-        return issues.testFailureSummaries?._values.compactMap { value in
-            return value.testCaseName._value
+        return actions._values[0].actionResult.issues.testFailureSummaries?._values.compactMap { value in
+            value.testCaseName._value
         } ?? []
     }
-    
+
     func summary() -> String {
-        let countOfTests = metrics.testsCount._value
-        let countOfFailureTests = metrics.testsFailedCount?._value ?? "0"
+        let countOfTests = actions._values[0].actionResult.metrics.testsCount._value
+        let countOfFailureTests = actions._values[0].actionResult.metrics.testsFailedCount?._value ?? "0"
         let result = "Total: \(countOfTests), Failed: \(countOfFailureTests)"
         return result
     }
 
     func total() -> String {
-         metrics.testsCount._value
+        actions._values[0].actionResult.metrics.testsCount._value
     }
 
     func failed() -> String {
-        metrics.testsFailedCount?._value ?? "0"
+        actions._values[0].actionResult.metrics.testsFailedCount?._value ?? "0"
     }
 
     func skipped() -> String {
-        metrics.testsSkippedCount?._value ?? "0"
+        actions._values[0].actionResult.metrics.testsSkippedCount?._value ?? "0"
     }
 }
 
+// metrics for func summary
+struct Actions: Codable {
+    let _values: [ActionValue]
+}
+
+struct ActionValue: Codable {
+    let actionResult: ActionResult
+}
+
+struct ActionResult: Codable {
+    let metrics: Metrics
+    let issues: Issues
+}
+
+// issues for failed tests
 struct Issues: Codable {
     let testFailureSummaries: TestFailureSummaries?
 }
@@ -76,6 +89,7 @@ struct TestCaseName: Codable {
 }
 
 // metrics for func summary
+
 struct Metrics: Codable {
     let testsCount: TestsCount
     let testsFailedCount: TestsFailedCount?
