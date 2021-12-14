@@ -55,6 +55,10 @@ struct Report: Codable {
     func skipped() -> String {
         actions._values[0].actionResult.metrics.testsSkippedCount?._value ?? "0"
     }
+
+    func testsRefID() -> String {
+        actions._values[0].actionResult.testsRef.id._value
+    }
 }
 
 // metrics for func summary
@@ -67,8 +71,9 @@ struct ActionValue: Codable {
 }
 
 struct ActionResult: Codable {
-    let metrics: Metrics
     let issues: Issues
+    let metrics: Metrics
+    let testsRef: TestsRef
 }
 
 // issues for failed tests
@@ -105,5 +110,14 @@ struct TestsFailedCount: Codable {
 }
 
 struct TestsSkippedCount: Codable {
+    let _value: String
+}
+
+// testsRef id for detail analize
+struct TestsRef: Codable {
+    let id: TestsRefID
+}
+
+struct TestsRefID: Codable {
     let _value: String
 }
