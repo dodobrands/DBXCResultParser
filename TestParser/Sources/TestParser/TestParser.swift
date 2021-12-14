@@ -72,6 +72,13 @@ public class ReportParser {
         return report.skipped()
     }
 
+    public func parseTestsRefFromTests() throws -> String {
+        let parser = JSONFailParser(filePath: filePath)
+        let report = try parser.parse()
+
+        return report.testsRefID()
+    }
+
     public func parse(mode: ParserMode) throws -> String {
         switch mode {
         case .total:
@@ -82,6 +89,8 @@ public class ReportParser {
             return try parseFailedTests()
         case .list:
             return try parseList()
+        case .testsRef:
+            return try parseTestsRefFromTests()
         }
     }
 }
@@ -146,4 +155,5 @@ public enum ParserMode: String {
     case skipped = "skipped"
     case failed = "failed"
     case list = "list"
+    case testsRef = "testsRef"
 }
