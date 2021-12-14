@@ -79,6 +79,16 @@ public class ReportParser {
         return report.testsRefID()
     }
 
+    public func parseFlakyReport() throws -> String {
+        let parser = JSONFailParser(filePath: filePath)
+        let report = try parser.parseTestsRef()
+
+        let testNames = report.testsNames()
+        let flackyReportFormatted = formattedTestRefReport(testNames)
+
+        return flackyReportFormatted
+    }
+
     public func parse(mode: ParserMode) throws -> String {
         switch mode {
         case .total:
@@ -91,6 +101,8 @@ public class ReportParser {
             return try parseList()
         case .testsRef:
             return try parseTestsRefFromTests()
+        case .flakyReport:
+            return try parseFlakyReport()
         }
     }
 }
@@ -111,6 +123,11 @@ class JSONFailParser: FileParser {
     
     func parse() throws -> Report {
         let report: Report = try JSONDecoder().decode(Report.self, from: data())
+        return report
+    }
+
+    func parseTestsRef() throws -> TestsRefReport {
+        let report: TestsRefReport = try JSONDecoder().decode(TestsRefReport.self, from: data())
         return report
     }
 }
@@ -150,10 +167,16 @@ func suitDescription(suit: Suit) -> String {
 """
 }
 
+
+func formattedTestRefReport(_ input: [String]) -> String {
+    input.joined(separator:"\n")
+}
+
 public enum ParserMode: String {
     case total = "total"
     case skipped = "skipped"
     case failed = "failed"
     case list = "list"
     case testsRef = "testsRef"
+    case flakyReport = "flakyReport"
 }

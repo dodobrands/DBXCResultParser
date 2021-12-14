@@ -30,4 +30,11 @@ DownloadImageServiceSpec:
         let report = try ReportParser(filePath: reportPath).parse(mode: .skipped)
         XCTAssertEqual("\(report)","3")
     }
+
+    func testParseFlakyReport() throws {
+        let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "testsRefFileMixed", withExtension: "json"))
+        let report = try ReportParser(filePath: reportPath).parse(mode: .flakyReport)
+        XCTAssertEqual("\(report)","5")
+//        XCTAssertEqual("5","5")
+    }
 }
