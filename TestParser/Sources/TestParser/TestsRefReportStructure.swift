@@ -7,14 +7,22 @@
 
 import Foundation
 
-             // .summaries._values[].testableSummaries._values[].tests._values[].subtests._values[].subtests._values[].subtests._values[].name._value
+// .summaries._values[].testableSummaries._values[].tests._values[].subtests._values[].subtests._values[].subtests._values[].name._value
 struct TestsRefReport: Codable {
     let summaries: Summaries
 
-    func testsNames() -> [String] {
-        return summaries._values[0].testableSummaries._values[0].tests._values[0].subtests._values[0].subtests._values[0].subtests._values.compactMap { value in
-            value.name._value
+    func testResults() -> [String: [String]] {
+        var result = [String: [String]]()
+        summaries._values[0].testableSummaries._values[0].tests._values[0].subtests._values[0].subtests._values.forEach { thirdSubtestsValue in
+            thirdSubtestsValue.subtests._values.forEach { testsRefReportData in
+                if result[testsRefReportData.identifier._value] == nil {
+                    result[testsRefReportData.identifier._value] = [testsRefReportData.testStatus._value]
+                } else {
+                    result[testsRefReportData.identifier._value]?.append(testsRefReportData.testStatus._value)
+                }
+            }
         }
+        return result
     }
 }
 
@@ -60,7 +68,6 @@ struct SecondSubtestsValue: Codable {
     let _values: [ThirdSubtestsValue]
 }
 
-
 struct ThirdSubtestsValue: Codable {
     let subtests: FinalSubtests
 }
@@ -68,13 +75,32 @@ struct ThirdSubtestsValue: Codable {
 struct FinalSubtests: Codable {
     let _values: [TestsRefReportData]
 }
+
 // 3
 // subtests._values[].name._value
 struct TestsRefReportData: Codable {
+    let identifier: IdentifierTest
+    let summaryRef: SummaryRef
     let name: NameReportData
+    let testStatus: TestStatus
+}
+
+struct IdentifierTest: Codable {
+    let _value: String
+}
+
+struct SummaryRef: Codable {
+    let id: IdSummaryRef
+}
+
+struct IdSummaryRef: Codable {
+    let _value: String
 }
 
 struct NameReportData: Codable {
     let _value: String
 }
 
+struct TestStatus: Codable {
+    let _value: String
+}
