@@ -83,8 +83,9 @@ public class ReportParser {
         let parser = JSONFailParser(filePath: filePath)
         let report = try parser.parseTestsRef()
 
-        let testNames = report.testsNames()
-        let flackyReportFormatted = formattedTestRefReport(testNames)
+        let testResults = report.testResults()
+        let flackyResults = searchFlackyTests(testResults)
+        let flackyReportFormatted = formattedFlackyTests(flackyResults)
 
         return flackyReportFormatted
     }
@@ -138,23 +139,22 @@ func formattedReport(_ input: [String]) -> String {
         return Test(suit: String(parts[0]),
                     name: String(parts[1]))
     }
-    
+
     let suits = Dictionary(grouping: pairs) { pair in
         pair.suit
     }
     .map({ (key: String, values: [Test]) in
         Suit(name: key, tests: values.map({ test in test.name }))
     })
-    
+
     let groups2 = suits
-        .map  { suit in
+        .map { suit in
             SuitDescr(name: suit.name, tests: suitDescription(suit: suit))
         }
         .sorted { SuitDescr1, SuitDescr2 in
             SuitDescr1.name < SuitDescr2.name
         }
-            
-    
+
     return groups2.map({ suitDescr in
         suitDescr.tests
     }).joined(separator: "\n\n")
@@ -167,9 +167,34 @@ func suitDescription(suit: Suit) -> String {
 """
 }
 
+func formattedTestRefReport(_ input: [String: [String]]) -> String {
+    input
+        .map { $0 + ": " + $1.joined(separator: ", ") }
+        .joined(separator: "\n")
+}
 
-func formattedTestRefReport(_ input: [String]) -> String {
-    input.joined(separator:"\n")
+func searchFlackyTests(_ testResults: [String: [String]]) -> [String] {
+    var result = [String]()
+    for testName in testResults.keys {
+        if testResults[testName]?.contains(TestResult.failure.rawValue) == true {
+            if testResults[testName]?.contains(TestResult.success.rawValue) == true {
+                result.append(testName)
+            }
+        }
+    }
+    return result
+}
+
+func formattedFlackyTests(_ input: [String]) -> String {
+    input
+        .sorted{ $0 < $1 }
+        .joined(separator: "\n")
+}
+
+public enum TestResult: String {
+//    Failure, Success
+    case failure = "Failure"
+    case success = "Success"
 }
 
 public enum ParserMode: String {

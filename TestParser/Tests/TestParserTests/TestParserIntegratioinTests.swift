@@ -34,7 +34,13 @@ DownloadImageServiceSpec:
     func testParseFlakyReport() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "testsRefFileMixed", withExtension: "json"))
         let report = try ReportParser(filePath: reportPath).parse(mode: .flakyReport)
-        XCTAssertEqual("\(report)","5")
+        print(report)
+        XCTAssertEqual("\(report)",
+        """
+CountriesCreateOrderTests/test_belarus_create_order()
+DeepLinksTests/test_apply_promocode_deeplink()
+""")
+
 //        XCTAssertEqual("5","5")
     }
 }
