@@ -35,53 +35,42 @@ public class XCResultParser {
 
 public class ReportParser {
     let filePath: URL
-
+    let parser: JSONFailParser
+    
     public init(filePath: URL) {
         self.filePath = filePath
+        self.parser = JSONFailParser(filePath: filePath)
+    }
+    
+    private func report() throws -> Report {
+        try parser.parse()
     }
 
     public func parseList() throws -> String {
-        let parser = JSONFailParser(filePath: filePath)
-        
-        let report = try parser.parse()
-        
-        let failedTests = try report.failedNames()
-        let failedTestsFormatted = formattedReport(failedTests)
+        let failedTests = try report().failedNames()
+        let failedTestsFormatted = failureReport(failedTests)
 
         return failedTestsFormatted
     }
 
     public func parseTotalTests() throws -> String {
-        let parser = JSONFailParser(filePath: filePath)
-        let report = try parser.parse()
-
-        return report.total()
+        return try report().total()
     }
 
     public func parseFailedTests() throws -> String {
-        let parser = JSONFailParser(filePath: filePath)
-        let report = try parser.parse()
-
-        return report.failed()
+        return try report().failed()
     }
 
     public func parseSkippedTests() throws -> String {
-        let parser = JSONFailParser(filePath: filePath)
-        let report = try parser.parse()
-
-        return report.skipped()
+        return try report().skipped()
     }
 
     public func parseTestsRefFromTests() throws -> String {
-        let parser = JSONFailParser(filePath: filePath)
-        let report = try parser.parse()
-
-        return report.testsRefID()
+        return try report().testsRefID()
     }
 
     public func parseFlakyReport() throws -> String {
-        let parser = JSONFailParser(filePath: filePath)
-        let report = try parser.parseTestsRef()
+        let report: TestsRefReport = try parser.parse()
 
         let testResults = report.testResults()
         let flackyResults = searchFlackyTests(testResults)
@@ -122,34 +111,38 @@ class FileParser {
 
 class JSONFailParser: FileParser {
     
-    func parse() throws -> Report {
-        let report: Report = try JSONDecoder().decode(Report.self, from: data())
-        return report
-    }
-
-    func parseTestsRef() throws -> TestsRefReport {
-        let report: TestsRefReport = try JSONDecoder().decode(TestsRefReport.self, from: data())
+    func parse<ReportType: Decodable>() throws -> ReportType {
+        let report = try JSONDecoder()
+            .decode(ReportType.self, from: data())
         return report
     }
 }
 
-func formattedReport(_ input: [String]) -> String {
-    let pairs = input.map { fullName -> Test in
-        let parts = fullName.split(separator: ".")
+func failureReport(_ input: [String]) -> String {
+    return formattedReport(input, separator: ".", prefix: "❌")
+}
+
+func formattedReport(_ input: [String],
+                     separator: String.Element,
+                     prefix: String) -> String {
+    let tests = input.map { fullName -> Test in
+        let parts = fullName.split(separator: separator)
         return Test(suit: String(parts[0]),
                     name: String(parts[1]))
     }
-
-    let suits = Dictionary(grouping: pairs) { pair in
+    
+    let suitsDict = Dictionary(grouping: tests) { pair in
         pair.suit
     }
     .map({ (key: String, values: [Test]) in
         Suit(name: key, tests: values.map({ test in test.name }))
     })
 
-    let groups2 = suits
-        .map { suit in
-            SuitDescr(name: suit.name, tests: suitDescription(suit: suit))
+    let groups2 = suitsDict
+        .map { suitDict in
+            SuitDescr(name: suitDict.name,
+                      tests: suitDescription(suit: suitDict,
+                                             prefix: prefix))
         }
         .sorted { SuitDescr1, SuitDescr2 in
             SuitDescr1.name < SuitDescr2.name
@@ -160,10 +153,10 @@ func formattedReport(_ input: [String]) -> String {
     }).joined(separator: "\n\n")
 }
 
-func suitDescription(suit: Suit) -> String {
+func suitDescription(suit: Suit, prefix: String) -> String {
     """
 \(suit.name):
-\(suitTests(suit.tests))
+\(suitTests(suit.tests, prefix: prefix))
 """
 }
 
