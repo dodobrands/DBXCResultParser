@@ -22,9 +22,9 @@ struct SuitDescr {
     let tests: String
 }
 
-func suitTests(_ suit: [String]) -> String {
+func suitTests(_ suit: [String], prefix: String) -> String {
     suit.map({ test in
-        "❌ \(test)"
+        "\(prefix) \(test)"
     }).joined(separator: "\n")
 }
 

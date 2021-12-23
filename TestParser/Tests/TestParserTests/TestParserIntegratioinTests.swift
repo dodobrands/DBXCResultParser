@@ -30,4 +30,26 @@ DownloadImageServiceSpec:
         let report = try ReportParser(filePath: reportPath).parse(mode: .skipped)
         XCTAssertEqual("\(report)","3")
     }
+
+    func testParseE2EFlaky() throws {
+        let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "testsRefFileMixed", withExtension: "json"))
+        let report = try ReportParser(filePath: reportPath).parse(mode: .flakyE2E)
+        print(report)
+        XCTAssertEqual("\(report)",
+        """
+CountriesCreateOrderTests:
+🟡 test_belarus_create_order()
+""")
+    }
+
+    func testParseE2EFailed() throws {
+        let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "testsRefFileMixed", withExtension: "json"))
+        let report = try ReportParser(filePath: reportPath).parse(mode: .failedE2E)
+        print(report)
+        XCTAssertEqual("\(report)",
+        """
+DeepLinksTests:
+🔴 test_pizza_halves_deeplink_open_with_terminate()
+""")
+    }
 }
