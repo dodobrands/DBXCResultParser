@@ -33,7 +33,7 @@ DownloadImageServiceSpec:
 
     func testParseE2EFlaky() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "testsRefFileMixed", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parse(mode: .E2EFlaky)
+        let report = try ReportParser(filePath: reportPath).parse(mode: .flakyE2E)
         print(report)
         XCTAssertEqual("\(report)",
         """
@@ -44,7 +44,7 @@ CountriesCreateOrderTests:
 
     func testParseE2EFailed() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "testsRefFileMixed", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parse(mode: .E2EFailed)
+        let report = try ReportParser(filePath: reportPath).parse(mode: .failedE2E)
         print(report)
         XCTAssertEqual("\(report)",
         """
