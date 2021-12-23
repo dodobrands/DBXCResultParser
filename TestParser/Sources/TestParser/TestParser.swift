@@ -69,12 +69,22 @@ public class ReportParser {
         return try report().testsRefID()
     }
 
-    public func parseFlakyReport() throws -> String {
+    public func parseE2EFlaky() throws -> String {
         let report: TestsRefReport = try parser.parse()
 
         let testResults = report.testResults()
-        let flackyResults = searchFlackyTests(testResults)
+        let flackyResults = searchE2EFlacky(testResults)
         let formattedFlackyResult = formattedReport(flackyResults, separator: "/", prefix: "🟡")
+
+        return formattedFlackyResult
+    }
+
+    public func parseE2EFailed() throws -> String {
+        let report: TestsRefReport = try parser.parse()
+
+        let testResults = report.testResults()
+        let flackyResults = searchE2EFailed(testResults)
+        let formattedFlackyResult = formattedReport(flackyResults, separator: "/", prefix: "🔴")
 
         return formattedFlackyResult
     }
@@ -91,8 +101,10 @@ public class ReportParser {
             return try parseList()
         case .testsRef:
             return try parseTestsRefFromTests()
-        case .flakyReport:
-            return try parseFlakyReport()
+        case .E2EFlaky:
+            return try parseE2EFlaky()
+        case .E2EFailed:
+            return try parseE2EFailed()
         }
     }
 }
@@ -166,11 +178,23 @@ func formattedTestRefReport(_ input: [String: [String]]) -> String {
         .joined(separator: "\n")
 }
 
-func searchFlackyTests(_ testResults: [String: [String]]) -> [String] {
+func searchE2EFlacky(_ testResults: [String: [String]]) -> [String] {
     var result = [String]()
     for testName in testResults.keys {
         if testResults[testName]?.contains(TestResult.failure.rawValue) == true {
             if testResults[testName]?.contains(TestResult.success.rawValue) == true {
+                result.append(testName)
+            }
+        }
+    }
+    return result
+}
+
+func searchE2EFailed(_ testResults: [String: [String]]) -> [String] {
+    var result = [String]()
+    for testName in testResults.keys {
+        if testResults[testName]?.contains(TestResult.failure.rawValue) == true {
+            if testResults[testName]?.contains(TestResult.success.rawValue) == false {
                 result.append(testName)
             }
         }
@@ -190,5 +214,6 @@ public enum ParserMode: String {
     case failed = "failed"
     case list = "list"
     case testsRef = "testsRef"
-    case flakyReport = "flakyReport"
+    case E2EFlaky = "E2EFlaky"
+    case E2EFailed = "E2EFailed"
 }
