@@ -74,9 +74,9 @@ public class ReportParser {
 
         let testResults = report.testResults()
         let flackyResults = searchFlackyTests(testResults)
-        let flackyReportFormatted = formattedFlackyTests(flackyResults)
+        let formattedFlackyResult = formattedReport(flackyResults, separator: "/", prefix: "❔")
 
-        return flackyReportFormatted
+        return formattedFlackyResult
     }
 
     public func parse(mode: ParserMode) throws -> String {
@@ -176,12 +176,6 @@ func searchFlackyTests(_ testResults: [String: [String]]) -> [String] {
         }
     }
     return result
-}
-
-func formattedFlackyTests(_ input: [String]) -> String {
-    input
-        .sorted{ $0 < $1 }
-        .joined(separator: "\n")
 }
 
 public enum TestResult: String {

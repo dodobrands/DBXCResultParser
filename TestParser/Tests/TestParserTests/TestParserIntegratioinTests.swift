@@ -37,10 +37,11 @@ DownloadImageServiceSpec:
         print(report)
         XCTAssertEqual("\(report)",
         """
-CountriesCreateOrderTests/test_belarus_create_order()
-DeepLinksTests/test_apply_promocode_deeplink()
-""")
+CountriesCreateOrderTests:
+❔ test_belarus_create_order()
 
-//        XCTAssertEqual("5","5")
+DeepLinksTests:
+❔ test_apply_promocode_deeplink()
+""")
     }
 }
