@@ -74,7 +74,7 @@ public class ReportParser {
 
         let testResults = report.testResults()
         let flackyResults = searchFlackyTests(testResults)
-        let formattedFlackyResult = formattedReport(flackyResults, separator: "/", prefix: "❔")
+        let formattedFlackyResult = formattedReport(flackyResults, separator: "/", prefix: "🟡")
 
         return formattedFlackyResult
     }

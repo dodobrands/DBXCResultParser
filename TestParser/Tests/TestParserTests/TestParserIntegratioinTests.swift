@@ -38,10 +38,10 @@ DownloadImageServiceSpec:
         XCTAssertEqual("\(report)",
         """
 CountriesCreateOrderTests:
-❔ test_belarus_create_order()
+🟡 test_belarus_create_order()
 
 DeepLinksTests:
-❔ test_apply_promocode_deeplink()
+🟡 test_apply_promocode_deeplink()
 """)
     }
 }
