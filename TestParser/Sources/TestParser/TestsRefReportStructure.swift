@@ -13,9 +13,9 @@ struct TestsRefReport: Decodable {
 
     func testResults() -> [String: [String]] {
         var result = [String: [String]]()
-        let xx = summaries.testableSummaries[0].tests[0]._values[0].subtests._values[0].subtests._values
+        let testSuites = summaries.testableSummaries[0].tests[0].allTests[0].testScheme[0]._values
         
-        xx.forEach { thirdSubtestsValue in
+        testSuites.forEach { thirdSubtestsValue in
             thirdSubtestsValue.tests._values.forEach { testsRefReportData in
                 if result[testsRefReportData.identifier._value] == nil {
                     result[testsRefReportData.identifier._value] = [testsRefReportData.testStatus._value]
@@ -60,30 +60,42 @@ struct TestableSummariesValue: Decodable {
 // tests._values[].subtests._values[].subtests._values[].subtests._values[].name._value
 struct Tests: Decodable {
     let _values: [TestsValue]
+
+    var allTests: [AllTests] {
+        _values.map { value in
+            value.subtests
+        }
+    }
 }
 
 struct TestsValue: Decodable {
-    let subtests: FirstSubtests
+    let subtests: AllTests
 }
 
 // 1
 // subtests._values[].subtests._values[].subtests._values[].name._value
-struct FirstSubtests: Decodable {
-    let _values: [FirstSubtestsValue]
+struct AllTests: Decodable {
+    let _values: [AllTestsValue]
+
+    var testScheme: [TestSchemeValue] {
+        _values.map { value in
+            value.subtests
+        }
+    }
 }
 
-struct FirstSubtestsValue: Decodable {
-    let subtests: SecondSubtestsValue
+struct AllTestsValue: Decodable {
+    let subtests: TestSchemeValue
 }
 
 // 2
 // subtests._values[].subtests._values[].name._value
-struct SecondSubtestsValue: Decodable {
-    let _values: [ThirdSubtestsValue]
+struct TestSchemeValue: Decodable {
+    let _values: [TestSuiteValue]
 }
 
-struct ThirdSubtestsValue: Decodable {
-    let tests: FinalSubtests
+struct TestSuiteValue: Decodable {
+    let tests: TestResultData
     
     enum Keys: String, CodingKey {
         case tests = "subtests"
@@ -91,11 +103,11 @@ struct ThirdSubtestsValue: Decodable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: Keys.self)
-        self.tests = try container.decode(FinalSubtests.self, forKey: .tests)
+        self.tests = try container.decode(TestResultData.self, forKey: .tests)
     }
 }
 
-struct FinalSubtests: Decodable {
+struct TestResultData: Decodable {
     let _values: [TestsRefReportData]
 }
 
