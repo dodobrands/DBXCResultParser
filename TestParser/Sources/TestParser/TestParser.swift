@@ -101,9 +101,9 @@ public class ReportParser {
             return try parseList()
         case .testsRef:
             return try parseTestsRefFromTests()
-        case .E2EFlaky:
+        case .flakyE2E:
             return try parseE2EFlaky()
-        case .E2EFailed:
+        case .failedE2E:
             return try parseE2EFailed()
         }
     }
@@ -179,7 +179,7 @@ func formattedTestRefReport(_ input: [String: [String]]) -> String {
 }
 
 func searchE2EFlacky(_ testResults: [String: [String]]) -> [String] {
-    var result = [String]()
+    var result: [String] = []
     for testName in testResults.keys {
         if testResults[testName]?.contains(TestResult.failure.rawValue) == true {
             if testResults[testName]?.contains(TestResult.success.rawValue) == true {
@@ -191,7 +191,7 @@ func searchE2EFlacky(_ testResults: [String: [String]]) -> [String] {
 }
 
 func searchE2EFailed(_ testResults: [String: [String]]) -> [String] {
-    var result = [String]()
+    var result: [String] = []
     for testName in testResults.keys {
         if testResults[testName]?.contains(TestResult.failure.rawValue) == true {
             if testResults[testName]?.contains(TestResult.success.rawValue) == false {
@@ -214,6 +214,6 @@ public enum ParserMode: String {
     case failed = "failed"
     case list = "list"
     case testsRef = "testsRef"
-    case E2EFlaky = "E2EFlaky"
-    case E2EFailed = "E2EFailed"
+    case flakyE2E = "flakyE2E"
+    case failedE2E = "failedE2E"
 }
