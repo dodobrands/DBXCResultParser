@@ -27,7 +27,8 @@ let package = Package(
                         .process("reportUnitsSuccess.json"),
                         .process("reportUnitsFailure.json"),
                         .process("report.junit"),
-                        .process("reportUnitsWithoutErrors.json")
+                        .process("reportUnitsWithoutErrors.json"),
+                        .process("testsRefFileMixed.json")
             ]),
     ]
 )

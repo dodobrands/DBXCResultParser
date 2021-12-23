@@ -11,7 +11,7 @@ final class FormatteTests: XCTestCase {
             "AuthorizationTests.test_guest_can_login_in_russia_with_estonia_phone()",
         ]
         
-        XCTAssertEqual(formattedReport(names),
+        XCTAssertEqual(failureReport(names),
                        """
 AuthorizationTests:
 ❌ test_guest_can_login_in_russia_with_lithuania_phone()
