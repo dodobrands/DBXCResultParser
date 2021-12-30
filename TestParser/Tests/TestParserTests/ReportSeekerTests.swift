@@ -18,11 +18,9 @@ class ReportSeekerTests: XCTestCase {
         try super.tearDownWithError()
     }
     
-    func test() throws {
+    func test_xcresultIsFound() throws {
         let resourcesPath = try XCTUnwrap(TestsConstants.resourcesPath)
         let result = try XCTUnwrap(ReportSeeker.seek(in: resourcesPath).first)
-        
-        let expectedPathSuffix = "ios-testReportParser/TestParser/Sources/TestParser/Resources/AllTests.xcresult"
-        XCTAssertTrue(result.relativePath.hasSuffix(expectedPathSuffix))
+        XCTAssertEqual(result.pathExtension, "xcresult")
     }
 }
