@@ -26,12 +26,14 @@ let package = Package(
         .testTarget(
             name: "TestParserTests",
             dependencies: ["TestParser"],
-            resources: [.process("report.json"),
-                        .process("reportUnitsSuccess.json"),
-                        .process("reportUnitsFailure.json"),
-                        .process("report.junit"),
-                        .process("reportUnitsWithoutErrors.json"),
-                        .process("testsRefFileMixed.json")
+            resources: [
+                .process("Resources/report.json"),
+                .process("Resources/reportUnitsSuccess.json"),
+                .process("Resources/reportUnitsFailure.json"),
+                .process("Resources/report.junit"),
+                .process("Resources/reportUnitsWithoutErrors.json"),
+                .process("Resources/testsRefFileMixed.json"),
+                .process("Resources/AllTests.xcresult")
             ]),
     ]
 )

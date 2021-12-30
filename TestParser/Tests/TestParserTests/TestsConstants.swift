@@ -13,6 +13,6 @@ struct TestsConstants {
     }
     
     static var resourcesPath: URL? {
-        projectPath?.appendingPathComponent("TestParser/Sources/TestParser/Resources")
+        projectPath?.appendingPathComponent("TestParser/Tests/TestParserTests/Resources")
     }
 }

@@ -16,7 +16,7 @@ class ReportConverterTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
         resourcesPath = try XCTUnwrap(TestsConstants.resourcesPath)
-        resultPath = resourcesPath.appendingPathComponent("report.json")
+        resultPath = resourcesPath.appendingPathComponent("autoconvertreport.json")
     }
     
     override func tearDownWithError() throws {
