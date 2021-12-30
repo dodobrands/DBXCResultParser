@@ -1,38 +1,5 @@
 import Foundation
 
-public class XCResultParser {
-    let filePath: URL
-    let shell: (_ command: String...) -> Int32
-    
-    public init(filePath: URL,
-                shell: @escaping (_ command: String...) -> Int32) {
-        self.filePath = filePath
-        self.shell = shell
-    }
-    
-    public func parse() throws -> URL {
-//        guard filePath.startAccessingSecurityScopedResource() else {
-//            // Handle the failure here.
-//            throw Error.noAccess
-//        }
-//
-//        // Make sure you release the security-scoped resource when you are done.
-//        defer { filePath.stopAccessingSecurityScopedResource() }
-        
-        let reportFileName = "report.json"
-        let reportPath = filePath.deletingLastPathComponent().appendingPathComponent(reportFileName)
-        
-        let command = "xcrun xcresulttool get --path \(filePath.path) --format json"
-        _ = self.shell(command)
-        
-        return reportPath
-    }
-    
-    enum Error: Swift.Error {
-        case noAccess
-    }
-}
-
 public class ReportParser {
     let filePath: URL
     let parser: JSONFileParser
