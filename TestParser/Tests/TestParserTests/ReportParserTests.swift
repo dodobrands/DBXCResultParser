@@ -1,7 +1,7 @@
 import XCTest
 @testable import TestParser
 
-final class TestParserTests: XCTestCase {
+final class ReportParserTests: XCTestCase {
 
     func testExample() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "report", withExtension: "json"))
