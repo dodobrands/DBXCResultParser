@@ -2,42 +2,57 @@ import Foundation
 
 public class ReportParser {
     let filePath: URL
-    let parser: JSONFileParser
     
     public init(filePath: URL) {
         self.filePath = filePath
-        self.parser = JSONFileParser(filePath: filePath)
     }
     
-    private func report() throws -> UnitTestsReport {
-        try parser.parse()
+    var fileData: Data {
+        get throws {
+            try Data(contentsOf: filePath)
+        }
+    }
+    
+    var unitTestsReport: UnitTestsReport {
+        get throws {
+            let data = try fileData
+            return try JSONDecoder().decode(UnitTestsReport.self, from: data)
+        }
+    }
+    
+    var e2eTestsReport: E2ETestsReport {
+        get throws {
+            let data = try fileData
+            return try JSONDecoder().decode(E2ETestsReport.self, from: data)
+        }
+
     }
 
     public func parseList() throws -> String {
-        let failedTests = try report().failedNames()
+        let failedTests = try unitTestsReport.failedNames()
         let failedTestsFormatted = failureReport(failedTests)
 
         return failedTestsFormatted
     }
 
     public func parseTotalTests() throws -> String {
-        return try report().total()
+        return try unitTestsReport.total()
     }
 
     public func parseFailedTests() throws -> String {
-        return try report().failed()
+        return try unitTestsReport.failed()
     }
 
     public func parseSkippedTests() throws -> String {
-        return try report().skipped()
+        return try unitTestsReport.skipped()
     }
 
     public func parseTestsRefFromTests() throws -> String {
-        return try report().testsRefID()
+        return try unitTestsReport.testsRefID()
     }
 
     public func parseE2EFlaky() throws -> String {
-        let report: E2ETestsReport = try parser.parse()
+        let report = try e2eTestsReport
 
         let testResults = report.testResults()
         let flackyResults = searchE2EFlacky(testResults)
@@ -47,7 +62,7 @@ public class ReportParser {
     }
 
     public func parseE2EFailed() throws -> String {
-        let report: E2ETestsReport = try parser.parse()
+        let report = try e2eTestsReport
 
         let testResults = report.testResults()
         let flackyResults = searchE2EFailed(testResults)

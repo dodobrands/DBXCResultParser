@@ -5,9 +5,8 @@ final class TestParserTests: XCTestCase {
 
     func testExample() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "report", withExtension: "json"))
-        let parser = JSONFileParser(filePath: reportPath)
 
-        let report: UnitTestsReport = try parser.parse()
+        let report = try ReportParser(filePath: reportPath).unitTestsReport
 
         XCTAssertEqual(report.actions._values[0].actionResult.issues.testFailureSummaries?._values[0].testCaseName._value,
                        "AuthorizationTests.test_guest_can_login_in_russia_with_lithuania_phone()")
@@ -17,22 +16,20 @@ final class TestParserTests: XCTestCase {
         let names = ["AuthorizationTests.test_guest_can_login_in_russia_with_lithuania_phone()",
                      "AuthorizationTests.test_guest_can_login_in_russia_with_estonia_phone()"]
         
-        let newReport: UnitTestsReport = try parser.parse()
+        let newReport = try ReportParser(filePath: reportPath).unitTestsReport
         XCTAssertEqual(try newReport.failedNames(),
                        names)
     }
     
     func testExample2() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsFailure", withExtension: "json"))
-        let parser = JSONFileParser(filePath: reportPath)
-        
-        let report: UnitTestsReport = try parser.parse()
+        let report = try ReportParser(filePath: reportPath).unitTestsReport
         
         XCTAssertEqual(report.actions._values[0].actionResult.issues.testFailureSummaries?._values[0].testCaseName._value,
                        "DownloadImageServiceSpec.DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()")
         
         let names = ["DownloadImageServiceSpec.DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()"]
-        let newReport: UnitTestsReport = try parser.parse()
+        let newReport = try ReportParser(filePath: reportPath).unitTestsReport
         XCTAssertEqual(try newReport.failedNames(),
                        names)
     }

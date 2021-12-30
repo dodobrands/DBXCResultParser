@@ -1,5 +1,5 @@
 //
-//  UnitTestParser.swift
+//  SlowUnitTestParser.swift
 //  
 //
 //  Created by Алексей Берёзка on 30.12.2021.
@@ -9,7 +9,7 @@ import Foundation
 import XMLCoder
 
 /// Search for slowest tests
-class UnitTestParser: FileParser {
+class SlowUnitTestParser: FileParser {
     func parse() -> TestSuites {
         try! XMLDecoder().decode(TestSuites.self,
                                  from: data())
@@ -29,9 +29,7 @@ class UnitTestParser: FileParser {
                 (suite.name, suite.totalTime)
             }
         
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        numberFormatter.minimumFractionDigits = 3
+        let numberFormatter = NumberFormatter.slowTestsFormatter
         
         for time in times {
             let number = numberFormatter.string(from: NSNumber(value: time.1))!
@@ -48,5 +46,14 @@ class UnitTestParser: FileParser {
             result + suite.totalTime
         }
         print("\(times.count) spent \(longestTime), total: \(totalTime), \(longestTime/totalTime)")
+    }
+}
+
+fileprivate extension NumberFormatter {
+    static var slowTestsFormatter: NumberFormatter {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.minimumFractionDigits = 3
+        return numberFormatter
     }
 }
