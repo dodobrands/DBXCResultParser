@@ -7,7 +7,7 @@ final class TestParserTests: XCTestCase {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "report", withExtension: "json"))
         let parser = JSONFileParser(filePath: reportPath)
 
-        let report: Report = try parser.parse()
+        let report: UnitTestsReport = try parser.parse()
 
         XCTAssertEqual(report.actions._values[0].actionResult.issues.testFailureSummaries?._values[0].testCaseName._value,
                        "AuthorizationTests.test_guest_can_login_in_russia_with_lithuania_phone()")
@@ -17,7 +17,7 @@ final class TestParserTests: XCTestCase {
         let names = ["AuthorizationTests.test_guest_can_login_in_russia_with_lithuania_phone()",
                      "AuthorizationTests.test_guest_can_login_in_russia_with_estonia_phone()"]
         
-        let newReport: Report = try parser.parse()
+        let newReport: UnitTestsReport = try parser.parse()
         XCTAssertEqual(try newReport.failedNames(),
                        names)
     }
@@ -26,13 +26,13 @@ final class TestParserTests: XCTestCase {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsFailure", withExtension: "json"))
         let parser = JSONFileParser(filePath: reportPath)
         
-        let report: Report = try parser.parse()
+        let report: UnitTestsReport = try parser.parse()
         
         XCTAssertEqual(report.actions._values[0].actionResult.issues.testFailureSummaries?._values[0].testCaseName._value,
                        "DownloadImageServiceSpec.DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()")
         
         let names = ["DownloadImageServiceSpec.DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()"]
-        let newReport: Report = try parser.parse()
+        let newReport: UnitTestsReport = try parser.parse()
         XCTAssertEqual(try newReport.failedNames(),
                        names)
     }

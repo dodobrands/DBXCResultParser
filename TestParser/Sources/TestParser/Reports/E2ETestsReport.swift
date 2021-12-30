@@ -1,5 +1,5 @@
 //
-//  TestsRefReportStructure.swift
+//  E2ETestsReport.swift
 //
 //
 //  Created by Станислав Карпенко on 14.12.2021.
@@ -8,7 +8,7 @@
 import Foundation
 
 // .summaries._values[].testableSummaries._values[].tests._values[].subtests._values[].subtests._values[].subtests._values[].name._value
-struct TestsRefReport: Decodable {
+struct E2ETestsReport: Decodable {
     let summaries: Summaries
 
     func testResults() -> [String: [String]] {
