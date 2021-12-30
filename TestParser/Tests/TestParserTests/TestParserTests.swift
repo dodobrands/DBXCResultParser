@@ -7,31 +7,29 @@ final class TestParserTests: XCTestCase {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "report", withExtension: "json"))
 
         let report = try ReportParser(filePath: reportPath).unitTestsReport
+        
+        let failedName1 = "AuthorizationTests.test_guest_can_login_in_russia_with_lithuania_phone()"
+        let failedName2 = "AuthorizationTests.test_guest_can_login_in_russia_with_estonia_phone()"
 
         XCTAssertEqual(report.actions._values[0].actionResult.issues.testFailureSummaries?._values[0].testCaseName._value,
-                       "AuthorizationTests.test_guest_can_login_in_russia_with_lithuania_phone()")
+                       failedName1)
         XCTAssertEqual(report.actions._values[0].actionResult.issues.testFailureSummaries?._values[1].testCaseName._value,
-                       "AuthorizationTests.test_guest_can_login_in_russia_with_estonia_phone()")
+                       failedName2)
 
-        let names = ["AuthorizationTests.test_guest_can_login_in_russia_with_lithuania_phone()",
-                     "AuthorizationTests.test_guest_can_login_in_russia_with_estonia_phone()"]
-        
-        let newReport = try ReportParser(filePath: reportPath).unitTestsReport
-        XCTAssertEqual(try newReport.failedNames(),
-                       names)
+        XCTAssertEqual(try report.failedNames(),
+                       [failedName1, failedName2])
     }
     
     func testExample2() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsFailure", withExtension: "json"))
         let report = try ReportParser(filePath: reportPath).unitTestsReport
         
-        XCTAssertEqual(report.actions._values[0].actionResult.issues.testFailureSummaries?._values[0].testCaseName._value,
-                       "DownloadImageServiceSpec.DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()")
+        let failedName = "DownloadImageServiceSpec.DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()"
         
-        let names = ["DownloadImageServiceSpec.DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()"]
-        let newReport = try ReportParser(filePath: reportPath).unitTestsReport
-        XCTAssertEqual(try newReport.failedNames(),
-                       names)
+        XCTAssertEqual(report.actions._values[0].actionResult.issues.testFailureSummaries?._values[0].testCaseName._value,
+                       failedName)
+        XCTAssertEqual(try report.failedNames(),
+                       [failedName])
     }
 }
     
