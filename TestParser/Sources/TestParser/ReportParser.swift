@@ -1,31 +1,22 @@
 import Foundation
 
 public class ReportParser {
-    let filePath: URL
+    let fileData: Data
     
-    public init(filePath: URL) {
-        self.filePath = filePath
-    }
-    
-    var fileData: Data {
-        get throws {
-            try Data(contentsOf: filePath)
-        }
+    public init(filePath: URL) throws {
+        self.fileData = try Data(contentsOf: filePath)
     }
     
     var unitTestsReport: UnitTestsReport {
         get throws {
-            let data = try fileData
-            return try JSONDecoder().decode(UnitTestsReport.self, from: data)
+            return try JSONDecoder().decode(UnitTestsReport.self, from: fileData)
         }
     }
     
     var e2eTestsReport: E2ETestsReport {
         get throws {
-            let data = try fileData
-            return try JSONDecoder().decode(E2ETestsReport.self, from: data)
+            return try JSONDecoder().decode(E2ETestsReport.self, from: fileData)
         }
-
     }
 
     public func parseList() throws -> String {
