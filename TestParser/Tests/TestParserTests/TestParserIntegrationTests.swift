@@ -57,7 +57,7 @@ DeepLinksTests:
         let resourcesPath = try XCTUnwrap(TestsConstants.resourcesPath)
         let seekResult = try XCTUnwrap(ReportSeeker.seek(in: resourcesPath).first)
         let resultPath = resourcesPath.appendingPathComponent("repost.json")
-        let convertResult = try ReportConverter.convert(sourcePath: seekResult, resultPath: resultPath)
+        try ReportConverter.convert(sourcePath: seekResult, resultPath: resultPath)
         let report = try ReportParser(filePath: resultPath).parse(mode: .total)
         XCTAssertEqual(report, "3708")
         try FileManager.default.removeItem(atPath: resultPath.relativePath)
