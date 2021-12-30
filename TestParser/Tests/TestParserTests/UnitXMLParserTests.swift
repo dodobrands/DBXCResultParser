@@ -46,7 +46,7 @@ class UnitParserTests: XCTestCase {
     func testExample2() throws {
         let path = Bundle.module.url(forResource: "report",
                                      withExtension: "junit")!
-        let parser = UnitTestParser(filePath: path)
+        let parser = SlowUnitTestParser(filePath: path)
         
         let report = parser.parse()
         
