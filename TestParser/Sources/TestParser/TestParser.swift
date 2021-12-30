@@ -76,27 +76,6 @@ public class ReportParser {
     }
 }
 
-class FileParser {
-    let filePath: URL
-    
-    init(filePath: URL) {
-        self.filePath = filePath
-    }
-    
-    func data() throws -> Data {
-        try Data(contentsOf: filePath)
-    }
-}
-
-class JSONFileParser: FileParser {
-    
-    func parse<ReportType: Decodable>() throws -> ReportType {
-        let report = try JSONDecoder()
-            .decode(ReportType.self, from: data())
-        return report
-    }
-}
-
 func failureReport(_ input: [String]) -> String {
     return formattedReport(input, separator: ".", prefix: "❌")
 }
