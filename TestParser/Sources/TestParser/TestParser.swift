@@ -42,7 +42,7 @@ public class ReportParser {
         self.parser = JSONFileParser(filePath: filePath)
     }
     
-    private func report() throws -> Report {
+    private func report() throws -> UnitTestsReport {
         try parser.parse()
     }
 
@@ -70,7 +70,7 @@ public class ReportParser {
     }
 
     public func parseE2EFlaky() throws -> String {
-        let report: TestsRefReport = try parser.parse()
+        let report: E2ETestsReport = try parser.parse()
 
         let testResults = report.testResults()
         let flackyResults = searchE2EFlacky(testResults)
@@ -80,7 +80,7 @@ public class ReportParser {
     }
 
     public func parseE2EFailed() throws -> String {
-        let report: TestsRefReport = try parser.parse()
+        let report: E2ETestsReport = try parser.parse()
 
         let testResults = report.testResults()
         let flackyResults = searchE2EFailed(testResults)

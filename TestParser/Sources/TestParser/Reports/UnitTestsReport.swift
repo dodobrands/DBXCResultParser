@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UnitTestsReport.swift
 //
 //
 //  Created by Mikhail Rubanov on 24.05.2021.
@@ -28,7 +28,7 @@ func suitTests(_ suit: [String], prefix: String) -> String {
     }).joined(separator: "\n")
 }
 
-struct Report: Codable {
+struct UnitTestsReport: Codable {
     let actions: Actions
 
     func failedNames() throws -> [String] {
