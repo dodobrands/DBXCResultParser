@@ -5,7 +5,7 @@ final class TestParserTests: XCTestCase {
 
     func testExample() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "report", withExtension: "json"))
-        let parser = JSONFailParser(filePath: reportPath)
+        let parser = JSONFileParser(filePath: reportPath)
 
         let report: Report = try parser.parse()
 
@@ -24,7 +24,7 @@ final class TestParserTests: XCTestCase {
     
     func testExample2() throws {
         let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsFailure", withExtension: "json"))
-        let parser = JSONFailParser(filePath: reportPath)
+        let parser = JSONFileParser(filePath: reportPath)
         
         let report: Report = try parser.parse()
         

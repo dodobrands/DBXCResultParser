@@ -35,11 +35,11 @@ public class XCResultParser {
 
 public class ReportParser {
     let filePath: URL
-    let parser: JSONFailParser
+    let parser: JSONFileParser
     
     public init(filePath: URL) {
         self.filePath = filePath
-        self.parser = JSONFailParser(filePath: filePath)
+        self.parser = JSONFileParser(filePath: filePath)
     }
     
     private func report() throws -> Report {
@@ -121,7 +121,7 @@ class FileParser {
     }
 }
 
-class JSONFailParser: FileParser {
+class JSONFileParser: FileParser {
     
     func parse<ReportType: Decodable>() throws -> ReportType {
         let report = try JSONDecoder()
