@@ -9,7 +9,7 @@ import Foundation
 
 class ReportFormatter {
     static func format(_ report: ReportModel,
-                       filter: ReportParser.Filter,
+                       filters: [ReportParser.Filter] = [],
                        format: ReportParser.Format) -> String {
         let filesSorted = Array(report.files).sorted { $0.name < $1.name }
         var count = 0
@@ -17,7 +17,7 @@ class ReportFormatter {
         filesSorted.forEach { file in
             var fileRows = [String]()
             
-            let filteredRepeatableTests = file.repeatableTests.filtered(filter: filter)
+            let filteredRepeatableTests = file.repeatableTests.filtered(filters: filters)
             
             let sortedRepeatableTests = filteredRepeatableTests.sorted { $0.name < $1.name }
             var formattedRepeatableTestEntries = [String]()
@@ -66,18 +66,23 @@ fileprivate extension ReportModel.File.RepeatableTest.Test.Status {
 }
 
 extension Set where Element == ReportModel.File.RepeatableTest {
-    func filtered(filter: ReportParser.Filter) -> Self {
-        switch filter {
-        case .any:
-            return self
-        case .succeeded:
-            return self.succeeded
-        case .failed:
-            return self.failed
-        case .mixed:
-            return self.mixed
-        case .skipped:
-            return self.skipped
+    func filtered(filters: [ReportParser.Filter]) -> [Element] {
+        guard !filters.isEmpty else {
+            return Array(self)
+        }
+        
+        return filters
+            .flatMap { filter -> Set<Element> in
+            switch filter {
+            case .succeeded:
+                return self.succeeded
+            case .failed:
+                return self.failed
+            case .mixed:
+                return self.mixed
+            case .skipped:
+                return self.skipped
+            }
         }
     }
 }
