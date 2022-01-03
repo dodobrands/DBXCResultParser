@@ -67,9 +67,7 @@ extension ReportModel.File.RepeatableTest.Test {
 
 extension ReportModel {
     init(_ dto: DetailedReportDTO) throws {
-        var files = Set<File>()
-        // dto.summaries.testableSummaries[0].tests[0].subtests[0].subtests[0]._values[0]
-        
+        var files = Set<File>()      
         try dto.summaries._values.forEach { value1 in
             try value1.testableSummaries._values.forEach { value2 in
                 try value2.tests._values.forEach { value3 in

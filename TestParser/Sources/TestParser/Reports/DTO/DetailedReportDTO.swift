@@ -41,6 +41,12 @@ extension DetailedReportDTO.Summaries.Value.TestableSummaries.Value {
     }
 }
 
+extension DetailedReportDTO.Summaries.Value.TestableSummaries.Value {
+    struct Name: Decodable {
+        let _value: String
+    }
+}
+
 extension DetailedReportDTO.Summaries.Value.TestableSummaries.Value.Tests {
     struct Value: Decodable {
         let subtests: Subtests?
@@ -87,29 +93,15 @@ extension DetailedReportDTO.Summaries.Value.TestableSummaries.Value.Tests.Value.
 
 extension DetailedReportDTO.Summaries.Value.TestableSummaries.Value.Tests.Value.Subtests.Value.Subtests.Value.Subtests {
     struct Value: Decodable {
-        let duration: Duration
-        let identifier: Identifier
-        let name: Name
-        let testStatus: TestStatus
+        let duration: StringValueDTO
+        /// ActiveOrdersBadgeServiceSpec\/ActiveOrdersBadgeService__badge_count__delivery_orders__should_be_skipped()
+        let identifier: StringValueDTO
+        /// ActiveOrdersBadgeService__badge_count__delivery_orders__should_be_skipped()
+        let name: StringValueDTO
+        let testStatus: StringValueDTO
     }
 }
 
-extension DetailedReportDTO.Summaries.Value.TestableSummaries.Value.Tests.Value.Subtests.Value.Subtests.Value.Subtests.Value {
-    struct Duration: Decodable {
-        let _value: String
-    }
-    
-    struct Identifier: Decodable {
-        /// ActiveOrdersBadgeServiceSpec\/ActiveOrdersBadgeService__badge_count__delivery_orders__should_be_skipped()
-        let _value: String
-    }
-    
-    struct Name: Decodable {
-        /// ActiveOrdersBadgeService__badge_count__delivery_orders__should_be_skipped()
-        let _value: String
-    }
-    
-    struct TestStatus: Decodable {
-        let _value: String
-    }
+struct StringValueDTO: Decodable {
+    let _value: String
 }
