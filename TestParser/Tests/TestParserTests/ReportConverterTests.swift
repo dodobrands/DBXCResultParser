@@ -10,23 +10,18 @@ import XCTest
 @testable import TestParser
 
 class ReportConverterTests: XCTestCase {
-    var resourcesPath: URL!
-    var resultPath: URL!
-    
+
     override func setUpWithError() throws {
         try super.setUpWithError()
-        resourcesPath = try XCTUnwrap(TestsConstants.resourcesPath)
-        resultPath = resourcesPath.appendingPathComponent("autoconvertreport.json")
     }
     
     override func tearDownWithError() throws {
-        try FileManager.default.removeItem(atPath: resultPath.relativePath)
         try super.tearDownWithError()
     }
     
     func test() throws {
-        let sourcePath = try XCTUnwrap(ReportSeeker.seek(in: resourcesPath).first)
-        try ReportConverter.convert(sourcePath: sourcePath, resultPath: resultPath)
-        XCTAssertTrue(FileManager.default.fileExists(atPath: resultPath.relativePath))
+        let xcresultPath = try XCTUnwrap(ReportSeeker.seek(in: TestsConstants.resourcesPath).first)
+        let overview = try ReportConverter.convert(xcresultPath: xcresultPath)
+        _ = try ReportConverter.convertDetailed(xcresultPath: xcresultPath, refId: overview.testsRefID())
     }
 }
