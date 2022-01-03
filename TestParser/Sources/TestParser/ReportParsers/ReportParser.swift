@@ -9,8 +9,8 @@ public class ReportParser {
         report = try ReportModel(detailedReport)
     }
 
-    public func parse(filter: Filter, format: Format) throws -> String {
-        ReportFormatter.format(report, filter: filter, format: format)
+    public func parse(filters: [Filter] = [], format: Format) throws -> String {
+        ReportFormatter.format(report, filters: filters, format: format)
     }
 }
 
@@ -27,7 +27,6 @@ public enum TestResult: String {
 
 extension ReportParser {
     public enum Filter: String {
-        case any = "any"
         case skipped = "skipped"
         case failed = "failed"
         case mixed = "mixed"

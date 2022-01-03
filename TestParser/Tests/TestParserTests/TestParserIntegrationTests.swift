@@ -11,7 +11,7 @@ final class TestParserIntegratioinTests: XCTestCase {
     }
     
     func test_parse_failed_list () throws {
-        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filter: .failed, format: .list)
+        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.failed], format: .list)
         XCTAssertTrue(result.hasPrefix(
                        """
 CartHeaderCellSpec
@@ -24,25 +24,36 @@ CartHeaderCellSpec
     }
     
     func test_parse_failed_count() throws {
-        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filter: .failed, format: .count)
+        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.failed], format: .count)
         XCTAssertEqual(result, "77")
     }
 
     func test_parse_any_count() throws {
-        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filter: .any, format: .count)
+        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(format: .count)
         XCTAssertEqual(result, "3708")
     }
 
     func test_parse_skipped_count() throws {
-        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filter: .skipped, format: .count)
+        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.skipped], format: .count)
         XCTAssertEqual(result, "3")
     }
 
     func test_parse_mixed_list() throws {
-        let result = try ReportParser(xcresultPath: TestsConstants.e2eTestsReportPath).parse(filter: .mixed, format: .list)
+        let result = try ReportParser(xcresultPath: TestsConstants.e2eTestsReportPath).parse(filters: [.mixed], format: .list)
         XCTAssertEqual(result,
         """
 DeepLinksTests
+⚠️ test_promocode_is_invalid_deeplink()
+""")
+    }
+    
+    func test_parse_failedMixed_list() throws {
+        let result = try ReportParser(xcresultPath: TestsConstants.e2eTestsReportPath).parse(filters: [.failed, .mixed], format: .list)
+        XCTAssertEqual(result,
+        """
+DeepLinksTests
+❌ test_open_order_by_deeplink()
+❌ test_pizza_halves_screen_deeplink()
 ⚠️ test_promocode_is_invalid_deeplink()
 """)
     }

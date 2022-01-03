@@ -3,7 +3,7 @@ import XCTest
 
 final class ReportFormatterTests: XCTestCase {
     func test_filter_any_list() {
-        let result = ReportFormatter.format(report, filter: .any, format: .list)
+        let result = ReportFormatter.format(report, format: .list)
         
         XCTAssertEqual(result,
                        """
@@ -23,7 +23,7 @@ NetworkSpec
     }
     
     func test_filter_success_list() {
-        let result = ReportFormatter.format(report, filter: .succeeded, format: .list)
+        let result = ReportFormatter.format(report, filters: [.succeeded], format: .list)
         XCTAssertEqual(result,
                        """
 AuthSpec
@@ -35,12 +35,12 @@ NetworkSpec
     }
     
     func test_filter_any_count() {
-        let result = ReportFormatter.format(report, filter: .any, format: .count)
+        let result = ReportFormatter.format(report, format: .count)
         XCTAssertEqual(result, "7")
     }
     
     func test_filter_failure_count() {
-        let result = ReportFormatter.format(report, filter: .failed, format: .count)
+        let result = ReportFormatter.format(report, filters: [.failed], format: .count)
         XCTAssertEqual(result, "3")
     }
 }
