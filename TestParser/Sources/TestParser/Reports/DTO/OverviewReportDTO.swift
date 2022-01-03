@@ -1,5 +1,5 @@
 //
-//  UnitTestsReport.swift
+//  OverviewReportDTO.swift
 //
 //
 //  Created by Mikhail Rubanov on 24.05.2021.
@@ -28,7 +28,7 @@ func suitTests(_ suit: [String], prefix: String) -> String {
     }).joined(separator: "\n")
 }
 
-struct UnitTestsReport: Codable {
+struct OverviewReportDTO: Codable {
     let actions: Actions
 
     func failedNames() throws -> [String] {

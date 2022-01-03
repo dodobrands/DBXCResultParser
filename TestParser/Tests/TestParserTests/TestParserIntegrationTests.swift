@@ -2,64 +2,48 @@ import XCTest
 @testable import TestParser
 
 final class TestParserIntegratioinTests: XCTestCase {
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+    }
     
-    func testParseList() throws {
-        let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsFailure", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parse(mode: .list)
-        XCTAssertEqual("\(report)",
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
+    }
+    
+    func test_parse_failed_list () throws {
+        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filter: .failed, format: .list)
+        XCTAssertTrue(result.hasPrefix(
                        """
-DownloadImageServiceSpec:
-❌ DownloadImageService__prefetchFirstSmallImagesForAllCategories__when_not_2G__it_should_prefetch()
-""")
-    }
-
-    func testParseTotal() throws {
-        let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsWithoutErrors", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parse(mode: .total)
-        XCTAssertEqual("\(report)","3350")
-    }
-
-    func testParseFailedTests() throws {
-        let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsFailure", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parse(mode: .failed)
-        XCTAssertEqual("\(report)","1")
-    }
-
-    func testParseSkippedTests() throws {
-        let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "reportUnitsFailure", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parse(mode: .skipped)
-        XCTAssertEqual("\(report)","3")
-    }
-
-    func testParseE2EFlaky() throws {
-        let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "testsRefFileMixed", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parse(mode: .flakyE2E)
-        print(report)
-        XCTAssertEqual("\(report)",
-        """
-CountriesCreateOrderTests:
-🟡 test_belarus_create_order()
-""")
-    }
-
-    func testParseE2EFailed() throws {
-        let reportPath = try XCTUnwrap(Bundle.module.url(forResource: "testsRefFileMixed", withExtension: "json"))
-        let report = try ReportParser(filePath: reportPath).parse(mode: .failedE2E)
-        print(report)
-        XCTAssertEqual("\(report)",
-        """
-DeepLinksTests:
-🔴 test_pizza_halves_deeplink_open_with_terminate()
-""")
+CartHeaderCellSpec
+❌ CartHeaderCell__regular_state_with_delivery_amount__should_snapshot()
+❌ CartHeaderCell__regular_state_with_delivery_amount__when_translation_is_very_long__should_fit()
+❌ CartHeaderCell__simple_state__should_snapshot()
+"""
+                                      )
+        )
     }
     
-    func testSeekAndParse() throws {
-        let resourcesPath = try XCTUnwrap(TestsConstants.resourcesPath)
-        let seekResult = try XCTUnwrap(ReportSeeker.seek(in: resourcesPath).first)
-        let resultPath = resourcesPath.appendingPathComponent("repost.json")
-        try ReportConverter.convert(sourcePath: seekResult, resultPath: resultPath)
-        let report = try ReportParser(filePath: resultPath).parse(mode: .total)
-        XCTAssertEqual(report, "3708")
-        try FileManager.default.removeItem(atPath: resultPath.relativePath)
+    func test_parse_failed_count() throws {
+        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filter: .failed, format: .count)
+        XCTAssertEqual(result, "77")
+    }
+
+    func test_parse_any_count() throws {
+        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filter: .any, format: .count)
+        XCTAssertEqual(result, "3708")
+    }
+
+    func test_parse_skipped_count() throws {
+        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filter: .skipped, format: .count)
+        XCTAssertEqual(result, "3")
+    }
+
+    func test_parse_mixed_list() throws {
+        let result = try ReportParser(xcresultPath: TestsConstants.e2eTestsReportPath).parse(filter: .mixed, format: .list)
+        XCTAssertEqual(result,
+        """
+DeepLinksTests
+⚠️ test_promocode_is_invalid_deeplink()
+""")
     }
 }
