@@ -13,6 +13,6 @@ let filter = ReportParser.Filter(rawValue: CommandLine.arguments[2])!
 let format = ReportParser.Format(rawValue: CommandLine.arguments[3])!
 let url = URL(fileURLWithPath: path)
 let parser = try ReportParser(xcresultPath: url)
-let result = try parser.parse(filter: filter, format: format)
+let result = try parser.parse(filters: [filter], format: format)
 
 print("\(result)")
