@@ -37,6 +37,16 @@ CartHeaderCellSpec
         let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.skipped], format: .count)
         XCTAssertEqual(result, "3")
     }
+    
+    func test_parse_skipped_list() throws {
+        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.skipped], format: .list)
+        XCTAssertEqual(result, """
+StateSaveServiceTests
+⏭ test_whenAutoPromocodeIsAppliedForRestaurant_thenShouldShowNotification()
+⏭ test_when_actualize_realRestApp_isON_and_receivedOrderType_carryout_should_resetState()
+⏭ test_when_save_realRestApp_isON_and_receivedOrderType_carryout_should_resetState()
+""")
+    }
 
     func test_parse_mixed_list() throws {
         let result = try ReportParser(xcresultPath: TestsConstants.e2eTestsReportPath).parse(filters: [.mixed], format: .list)
