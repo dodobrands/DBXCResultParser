@@ -8,7 +8,6 @@ final class ReportFormatterTests: XCTestCase {
         XCTAssertEqual(result,
                        """
 AuthSpec
-⏭ enabledNotifications
 ✅ login
 ❌ logout
 ⚠️ openSettings
@@ -19,6 +18,9 @@ CaptchaSpec
 
 NetworkSpec
 ✅ MakeRequest
+
+NotificationsSetupServiceTests
+⏭ enabledNotifications
 """)
     }
     
@@ -47,99 +49,111 @@ NetworkSpec
 
 extension ReportFormatterTests {
     var report: ReportModel {
-        ReportModel(
+        let profileModule = ReportModel.Module.testMake(
+            name: "Profile",
             files: [
-                .init(
+                .testMake(
                     name: "AuthSpec",
                     repeatableTests: [
-                        .init(
-                            name: "logout",
-                            tests: [
-                                .init(
-                                    status: .failure,
-                                    duration: 0.1
-                                )
-                            ]
-                        ),
-                        .init(
-                            name: "login",
-                            tests: [
-                                .init(
-                                    status: .success,
-                                    duration: 0.1
-                                )
-                            ]
-                        ),
-                        .init(
-                            name: "openSettings",
-                            tests: [
-                                .init(
-                                    status: .failure,
-                                    duration: 0.1
-                                ),
-                                .init(
-                                    status: .success,
-                                    duration: 0.1
-                                )
-                            ]
-                        ),
-                        .init(
-                            name: "enabledNotifications",
-                            tests: [
-                                .init(
-                                    status: .skipped,
-                                    duration: 0.1
-                                )
-                            ]
-                        )
-                    ]
-                ),
-                .init(
-                    name: "NetworkSpec",
-                    repeatableTests: [
-                        .init(
-                            name: "MakeRequest",
-                            tests: [
-                                .init(
-                                    status: .success,
-                                    duration: 1
-                                )
-                            ]
-                        )
-                    ]
-                ),
-                .init(
-                    name: "CaptchaSpec",
-                    repeatableTests: [
-                        .init(
-                            name: "Handle Request",
-                            tests: [
-                                .init(
-                                    status: .failure,
-                                    duration: 1
-                                ),
-                                .init(
-                                    status: .failure,
-                                    duration: 1
-                                )
-                            ]
-                        ),
-                        .init(
-                            name: "Another Handle Request",
-                            tests: [
-                                .init(
-                                    status: .failure,
-                                    duration: 1
-                                ),
-                                .init(
-                                    status: .failure,
-                                    duration: 1
-                                )
-                            ]
-                        )
+                        .failed(named: "logout"),
+                        .succeeded(named: "login"),
+                        .mixedFailedSucceeded(named: "openSettings")
                     ]
                 )
             ]
         )
+        
+        let networkModule = ReportModel.Module.testMake(
+            name: "Network",
+            files: [
+                .testMake(
+                    name: "NetworkSpec",
+                    repeatableTests: [
+                        .succeeded(named: "MakeRequest")
+                    ]
+                ),
+                .testMake(
+                    name: "CaptchaSpec",
+                    repeatableTests: [
+                        .failed(named: "Handle Request", times: 2),
+                        .failed(named: "Another Handle Request", times: 2)
+                    ]
+                )
+            ]
+        )
+        let notificationsModule = ReportModel.Module.testMake(
+            name: "Notifications",
+            files: [
+                .testMake(
+                    name: "NotificationsSetupServiceTests",
+                    repeatableTests: [
+                        .skipped(named: "enabledNotifications")
+                    ]
+                )
+            ]
+        )
+        
+        return .testMake(
+            modules: [
+                profileModule,
+                networkModule,
+                notificationsModule
+            ]
+        )
+    }
+}
+
+extension ReportModel {
+    static func testMake(modules: Set<Module> = []) -> Self {
+        .init(modules: modules)
+    }
+}
+
+extension ReportModel.Module {
+    static func testMake(name: String = "", files: Set<File> = []) -> Self {
+        .init(name: name, files: files)
+    }
+}
+
+extension ReportModel.Module.File {
+    static func testMake(name: String = "", repeatableTests: Set<RepeatableTest> = []) -> Self {
+        .init(name: name, repeatableTests: repeatableTests)
+    }
+}
+
+extension ReportModel.Module.File.RepeatableTest {
+    static func testMake(name: String = "", tests: [Test] = []) -> Self {
+        .init(name: name, tests: tests)
+    }
+    
+    static func failed(named name: String, times: Int = 1) -> Self {
+        let tests = Array(
+            repeating: ReportModel.Module.File.RepeatableTest.Test.testMake(status: .failure),
+            count: times
+        )
+        return .testMake(name: name, tests: tests)
+    }
+    
+    static func succeeded(named name: String) -> Self {
+        .testMake(name: name, tests: [.testMake(status: .success)])
+    }
+    
+    static func skipped(named name: String) -> Self {
+        .testMake(name: name, tests: [.testMake(status: .skipped)])
+    }
+    
+    static func mixedFailedSucceeded(named name: String, failedTimes: Int = 1) -> Self {
+        let failedTests = Array(
+            repeating: ReportModel.Module.File.RepeatableTest.Test.testMake(status: .failure),
+            count: failedTimes
+        )
+        return .testMake(name: name, tests: failedTests + [.testMake(status: .success)])
+    }
+}
+
+extension ReportModel.Module.File.RepeatableTest.Test {
+    static func testMake(status: Status = .success,
+                         duration: Double = 0) -> Self {
+        .init(status: status, duration: duration)
     }
 }

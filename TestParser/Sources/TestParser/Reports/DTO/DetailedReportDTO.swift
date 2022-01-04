@@ -32,6 +32,7 @@ extension DetailedReportDTO.Summaries.Value {
 extension DetailedReportDTO.Summaries.Value.TestableSummaries {
     struct Value: Decodable {
         let tests: Tests
+        let name: StringValueDTO
     }
 }
 
