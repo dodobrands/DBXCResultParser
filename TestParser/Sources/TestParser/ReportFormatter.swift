@@ -11,7 +11,8 @@ class ReportFormatter {
     static func format(_ report: ReportModel,
                        filters: [ReportParser.Filter] = [],
                        format: ReportParser.Format) -> String {
-        let filesSorted = Array(report.files).sorted { $0.name < $1.name }
+        let files = report.modules.flatMap { $0.files }
+        let filesSorted = Array(files).sorted { $0.name < $1.name }
         var count = 0
         var filesFormatted = [String]()
         filesSorted.forEach { file in
@@ -50,7 +51,7 @@ class ReportFormatter {
     }
 }
 
-fileprivate extension ReportModel.File.RepeatableTest.Test.Status {
+fileprivate extension ReportModel.Module.File.RepeatableTest.Test.Status {
     var icon: String {
         switch self {
         case .success:
@@ -65,7 +66,7 @@ fileprivate extension ReportModel.File.RepeatableTest.Test.Status {
     }
 }
 
-extension Set where Element == ReportModel.File.RepeatableTest {
+extension Set where Element == ReportModel.Module.File.RepeatableTest {
     func filtered(filters: [ReportParser.Filter]) -> [Element] {
         guard !filters.isEmpty else {
             return Array(self)
