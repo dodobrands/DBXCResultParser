@@ -69,6 +69,19 @@ WriterSpec
 ⚠️🕢 [10 min] Write to file
 """)
     }
+    
+    func test_filter_failed_slow_list_minutes() {
+        let duration = Duration(value: 8, unit: .minutes)
+        let result = Formatter.format(slowReport(duration: duration),
+                                      filters: [.failed,.slow(duration: duration)], format: .list)
+        XCTAssertEqual(result, """
+WriterSpec
+✅🕢 [8 min] Check file exists
+❌ Check folder exists
+✅🕢 [16 min] Read from file
+⚠️🕢 [10 min] Write to file
+""")
+    }
 }
 
 extension FormatterTests {
@@ -142,7 +155,7 @@ extension FormatterTests {
                                 .testMake(
                                     name: "Check folder exists",
                                     tests: [
-                                        .testMake(status: .success, duration: duration / 2)
+                                        .testMake(status: .failure, duration: duration / 2)
                                     ]
                                 ),
                                 .testMake(
