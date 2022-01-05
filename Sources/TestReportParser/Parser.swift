@@ -4,8 +4,9 @@ public class Parser {
     let report: ReportModel
     
     public init(xcresultPath: URL) throws {
-        let overviewReport = try Converter.convert(xcresultPath: xcresultPath)
-        let detailedReport = try Converter.convertDetailed(xcresultPath: xcresultPath, refId: overviewReport.testsRefID())
+        let overviewReport = try OverviewReportDTO(from: xcresultPath)
+        let detailedReport = try DetailedReportDTO(from: xcresultPath,
+                                                   refId: overviewReport.testsRefID())
         report = try ReportModel(detailedReport)
     }
 
