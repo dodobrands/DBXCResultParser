@@ -3,7 +3,7 @@ import XCTest
 
 final class FormatterTests: XCTestCase {
     func test_filter_any_list() {
-        let result = Formatter.format(report, format: .list)
+        let result = Formatter.format(generalReport, format: .list)
         
         XCTAssertEqual(result,
                        """
@@ -25,7 +25,7 @@ NotificationsSetupServiceTests
     }
     
     func test_filter_success_list() {
-        let result = Formatter.format(report, filters: [.succeeded], format: .list)
+        let result = Formatter.format(generalReport, filters: [.succeeded], format: .list)
         XCTAssertEqual(result,
                        """
 AuthSpec
@@ -37,18 +37,67 @@ NetworkSpec
     }
     
     func test_filter_any_count() {
-        let result = Formatter.format(report, format: .count)
+        let result = Formatter.format(generalReport, format: .count)
         XCTAssertEqual(result, "7")
     }
     
     func test_filter_failure_count() {
-        let result = Formatter.format(report, filters: [.failed], format: .count)
+        let result = Formatter.format(generalReport, filters: [.failed], format: .count)
         XCTAssertEqual(result, "3")
+    }
+    
+    func test_filter_slow_list() {
+        // Module with slow tests
+        let slowThreshold: Double = 100
+        let fsModule = ReportModel.Module.testMake(
+            name: "FSModule",
+            files: [
+                .testMake(
+                    name: "WriterSpec",
+                    repeatableTests: [
+                        .testMake(
+                            name: "Check folder exists",
+                            tests: [
+                                .testMake(status: .success, duration: slowThreshold / 2)
+                            ]
+                        ),
+                        .testMake(
+                            name: "Check file exists",
+                            tests: [
+                                .testMake(status: .success, duration: slowThreshold)
+                            ]
+                        ),
+                        .testMake(
+                            name: "Read from file",
+                            tests: [
+                                .testMake(status: .success, duration: slowThreshold * 2)
+                            ]
+                        ),
+                        .testMake(
+                            name: "Write to file",
+                            tests: [
+                                .testMake(status: .failure, duration: slowThreshold / 2),
+                                .testMake(status: .success, duration: slowThreshold * 2),
+                            ]
+                        )
+                    ]
+                )
+            ]
+        )
+        let report = ReportModel.testMake(modules: [fsModule])
+        let result = Formatter.format(report, filters: [.slow(milliseconds: 100)], format: .list)
+        XCTAssertEqual(result, """
+WriterSpec
+✅🕢 [100 ms] Check file exists
+✅🕢 [200 ms] Read from file
+⚠️🕢 [125 ms] Write to file
+""")
     }
 }
 
 extension FormatterTests {
-    var report: ReportModel {
+    var generalReport: ReportModel {
+        // Module with all possible tests
         let profileModule = ReportModel.Module.testMake(
             name: "Profile",
             files: [
@@ -63,6 +112,7 @@ extension FormatterTests {
             ]
         )
         
+        // Module with repeated tests
         let networkModule = ReportModel.Module.testMake(
             name: "Network",
             files: [
@@ -81,6 +131,8 @@ extension FormatterTests {
                 )
             ]
         )
+        
+        // Module with skipped tests
         let notificationsModule = ReportModel.Module.testMake(
             name: "Notifications",
             files: [
