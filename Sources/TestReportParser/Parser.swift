@@ -16,22 +16,11 @@ public class Parser {
 }
 
 extension Parser {
-    enum Error: Swift.Error {
-        case missingDetailedReport
-    }
-}
-
-public enum TestResult: String {
-    case failure = "Failure"
-    case success = "Success"
-}
-
-extension Parser {
     public enum Filter: String {
-        case skipped = "skipped"
-        case failed = "failed"
-        case mixed = "mixed"
-        case succeeded = "succeeded"
+        case skipped
+        case failed
+        case mixed
+        case succeeded
     }
     
     public enum Format: String {
