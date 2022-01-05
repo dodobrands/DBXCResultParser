@@ -21,6 +21,6 @@ class DetailedReportDTOTests: XCTestCase {
     
     func test() throws {
         let overviewReport = try OverviewReportDTO(from: TestsConstants.unitTestsReportPath)
-        XCTAssertNoThrow(try DetailedReportDTO(from: TestsConstants.unitTestsReportPath, refId: overviewReport.testsRefID()))
+        XCTAssertNoThrow(try DetailedReportDTO(from: TestsConstants.unitTestsReportPath, refId: overviewReport.testsRefId))
     }
 }
