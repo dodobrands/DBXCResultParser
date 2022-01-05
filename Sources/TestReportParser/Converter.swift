@@ -1,5 +1,5 @@
 //
-//  ReportConverter.swift
+//  Converter.swift
 //  
 //
 //  Created by Алексей Берёзка on 30.12.2021.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ReportConverter {
+class Converter {
     static func convert(xcresultPath: URL) throws -> OverviewReportDTO {
         let tempFilePath = try tempFilePath
         try Shell.execute("xcrun xcresulttool get --path \(xcresultPath.relativePath) --format json > \(tempFilePath.relativePath)")
@@ -27,7 +27,7 @@ class ReportConverter {
     }
 }
 
-extension ReportConverter {
+extension Converter {
     static var cachesDirectory: URL {
         get throws {
             guard let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
@@ -59,7 +59,7 @@ extension ReportConverter {
     }
 }
 
-extension ReportConverter {
+extension Converter {
     enum Error: Swift.Error {
         case noCachesDirectory
     }

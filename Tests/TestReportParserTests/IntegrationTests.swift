@@ -1,7 +1,7 @@
 import XCTest
 @testable import TestReportParser
 
-final class TestReportParserIntegratioinTests: XCTestCase {
+final class IntegrationTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
     }
@@ -11,7 +11,7 @@ final class TestReportParserIntegratioinTests: XCTestCase {
     }
     
     func test_parse_failed_list () throws {
-        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.failed], format: .list)
+        let result = try Parser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.failed], format: .list)
         XCTAssertTrue(result.hasPrefix(
                        """
 CartHeaderCellSpec
@@ -24,22 +24,22 @@ CartHeaderCellSpec
     }
     
     func test_parse_failed_count() throws {
-        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.failed], format: .count)
+        let result = try Parser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.failed], format: .count)
         XCTAssertEqual(result, "77")
     }
 
     func test_parse_any_count() throws {
-        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(format: .count)
+        let result = try Parser(xcresultPath: TestsConstants.unitTestsReportPath).parse(format: .count)
         XCTAssertEqual(result, "3708")
     }
 
     func test_parse_skipped_count() throws {
-        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.skipped], format: .count)
+        let result = try Parser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.skipped], format: .count)
         XCTAssertEqual(result, "3")
     }
     
     func test_parse_skipped_list() throws {
-        let result = try ReportParser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.skipped], format: .list)
+        let result = try Parser(xcresultPath: TestsConstants.unitTestsReportPath).parse(filters: [.skipped], format: .list)
         XCTAssertEqual(result, """
 StateSaveServiceTests
 ⏭ test_whenAutoPromocodeIsAppliedForRestaurant_thenShouldShowNotification()
@@ -49,7 +49,7 @@ StateSaveServiceTests
     }
 
     func test_parse_mixed_list() throws {
-        let result = try ReportParser(xcresultPath: TestsConstants.e2eTestsReportPath).parse(filters: [.mixed], format: .list)
+        let result = try Parser(xcresultPath: TestsConstants.e2eTestsReportPath).parse(filters: [.mixed], format: .list)
         XCTAssertEqual(result,
         """
 DeepLinksTests
@@ -58,7 +58,7 @@ DeepLinksTests
     }
     
     func test_parse_failedMixed_list() throws {
-        let result = try ReportParser(xcresultPath: TestsConstants.e2eTestsReportPath).parse(filters: [.failed, .mixed], format: .list)
+        let result = try Parser(xcresultPath: TestsConstants.e2eTestsReportPath).parse(filters: [.failed, .mixed], format: .list)
         XCTAssertEqual(result,
         """
 DeepLinksTests

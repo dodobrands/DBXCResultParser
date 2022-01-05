@@ -1,5 +1,5 @@
 //
-//  ReportFormatter.swift
+//  Formatter.swift
 //  
 //
 //  Created by Алексей Берёзка on 31.12.2021.
@@ -7,10 +7,10 @@
 
 import Foundation
 
-class ReportFormatter {
+class Formatter {
     static func format(_ report: ReportModel,
-                       filters: [ReportParser.Filter] = [],
-                       format: ReportParser.Format) -> String {
+                       filters: [Parser.Filter] = [],
+                       format: Parser.Format) -> String {
         let files = report.modules.flatMap { $0.files }
         let filesSorted = Array(files).sorted { $0.name < $1.name }
         var count = 0
@@ -67,7 +67,7 @@ fileprivate extension ReportModel.Module.File.RepeatableTest.Test.Status {
 }
 
 extension Set where Element == ReportModel.Module.File.RepeatableTest {
-    func filtered(filters: [ReportParser.Filter]) -> [Element] {
+    func filtered(filters: [Parser.Filter]) -> [Element] {
         guard !filters.isEmpty else {
             return Array(self)
         }
