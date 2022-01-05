@@ -8,7 +8,7 @@
 //import XMLCoder
 //import Foundation
 //
-//@testable import TestParser
+//@testable import TestReportParser
 //
 //class UnitXMLParserTests: XCTestCase {
 //    func testExample2() throws {
@@ -46,7 +46,7 @@
 //    func testExample2() throws {
 //        let path = Bundle.module.url(forResource: "report",
 //                                     withExtension: "junit")!
-//        let parser = SlowUnitTestParser(filePath: path)
+//        let parser = SlowUnitTestReportParser(filePath: path)
 //
 //        let report = parser.parse()
 //

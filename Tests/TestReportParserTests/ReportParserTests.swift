@@ -1,5 +1,5 @@
 import XCTest
-@testable import TestParser
+@testable import TestReportParser
 
 final class ReportParserTests: XCTestCase {
 

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ShellTests.swift
 //  
 //
 //  Created by Алексей Берёзка on 28.12.2021.
@@ -7,7 +7,7 @@
 
 import Foundation
 import XCTest
-@testable import TestParser
+@testable import TestReportParser
 
 class ShellTests: XCTestCase {
     override func setUpWithError() throws {
