@@ -56,7 +56,8 @@ DeepLinksTests
     }
     
     func test_parse_slow_list() throws {
-        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(milliseconds: 100)], format: .list)
+        let slowThreshold = Measurement<UnitDuration>(value: 100, unit: .milliseconds)
+        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: slowThreshold)], format: .list)
         let expectedResult = """
 AlertViewSpec
 ✅🕢 [449 ms] EmailSubscriptionCell__snapshot()

@@ -58,8 +58,7 @@ extension ReportModel.Module.File {
 extension ReportModel.Module.File.RepeatableTest {
     struct Test {
         let status: Status
-        /// Milliseconds
-        let duration: Double
+        let duration: Measurement<UnitDuration>
     }
     
     var combinedStatus: Test.Status {
@@ -71,9 +70,19 @@ extension ReportModel.Module.File.RepeatableTest {
         }
     }
     
-    /// Milliseconds
-    var averageDuration: Double {
-        tests.map { $0.duration }.average()
+    var averageDuration: Measurement<UnitDuration> {
+        assert(tests.map { $0.duration.unit }.elementsAreEqual)
+        
+        return .init(
+            value: tests.map { $0.duration.value }.average(),
+            unit: Test.defaultDurationUnit
+        )
+    }
+    
+    func isSlow(_ duration: Measurement<UnitDuration>) -> Bool {
+        let averageDuration = averageDuration
+        let duration = duration.converted(to: averageDuration.unit)
+        return averageDuration >= duration
     }
 }
 
@@ -150,8 +159,8 @@ extension Set where Element == ReportModel.Module.File.RepeatableTest {
         filter { $0.combinedStatus == .mixed }
     }
     
-    func slow(_ milliseconds: Double) -> Self {
-        filter { $0.averageDuration >= milliseconds }
+    func slow(_ duration: Measurement<UnitDuration>) -> Self {
+        filter { $0.isSlow(duration) }
     }
 }
 
@@ -172,18 +181,20 @@ extension ReportModel.Module.File.RepeatableTest.Test {
             throw Error.invalidDuration(duration: test.duration._value)
         }
         
-        self.duration = duration * 1000
+        self.duration = .init(value: duration * 1000, unit: Self.defaultDurationUnit)
     }
     
     enum Error: Swift.Error {
         case unknownStatus(status: String)
         case invalidDuration(duration: String)
     }
+    
+    static let defaultDurationUnit = UnitDuration.milliseconds
 }
 
 extension Array where Element: Equatable {
     var elementsAreEqual: Bool {
-        dropFirst().allSatisfy({ $0 == first })
+        dropFirst().allSatisfy { $0 == first }
     }
 }
 
