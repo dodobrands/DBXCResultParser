@@ -64,9 +64,9 @@ fileprivate extension ReportModel.Module.File.RepeatableTest {
         isSlow(duration) ? "🕢" : nil
     }
     
-    private func reportDuration(with formatter: MeasurementFormatter) -> String {
+    private func reportDuration(with formatter: MeasurementFormatter, slowDuration: Duration) -> String {
         formatter.string(
-            from: averageDuration
+            from: averageDuration.converted(to: slowDuration.unit)
         ).wrappedInBrackets
     }
     
@@ -77,7 +77,7 @@ fileprivate extension ReportModel.Module.File.RepeatableTest {
         guard isSlow(duration) else {
             return nil
         }
-        return reportDuration(with: formatter)
+        return reportDuration(with: formatter, slowDuration: duration)
     }
     
     func reportRow(with formatter: MeasurementFormatter, duration: Duration?) -> String {
