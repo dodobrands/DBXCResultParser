@@ -29,12 +29,6 @@ let package = Package(
             name: "TestReportParserTests",
             dependencies: ["TestReportParser"],
             resources: [
-                .process("Resources/report.json"),
-                .process("Resources/reportUnitsSuccess.json"),
-                .process("Resources/reportUnitsFailure.json"),
-                .process("Resources/report.junit"),
-                .process("Resources/reportUnitsWithoutErrors.json"),
-                .process("Resources/testsRefFileMixed.json"),
                 .process("Resources/AllTests.xcresult"),
                 .process("Resources/E2ETests.xcresult")
             ]),
