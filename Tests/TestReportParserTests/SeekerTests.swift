@@ -9,7 +9,7 @@ import Foundation
 import XCTest
 @testable import TestReportParser
 
-class ReportSeekerTests: XCTestCase {
+class SeekerTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
     }
@@ -20,7 +20,7 @@ class ReportSeekerTests: XCTestCase {
     
     func test_xcresultIsFound() throws {
         let resourcesPath = try TestsConstants.resourcesPath
-        let result = try XCTUnwrap(ReportSeeker.seek(in: resourcesPath).first)
+        let result = try XCTUnwrap(XCResultSeeker.seek(in: resourcesPath).first)
         XCTAssertEqual(result.pathExtension, "xcresult")
     }
 }

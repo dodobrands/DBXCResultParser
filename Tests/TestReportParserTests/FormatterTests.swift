@@ -1,9 +1,9 @@
 import XCTest
 @testable import TestReportParser
 
-final class ReportFormatterTests: XCTestCase {
+final class FormatterTests: XCTestCase {
     func test_filter_any_list() {
-        let result = ReportFormatter.format(report, format: .list)
+        let result = Formatter.format(report, format: .list)
         
         XCTAssertEqual(result,
                        """
@@ -25,7 +25,7 @@ NotificationsSetupServiceTests
     }
     
     func test_filter_success_list() {
-        let result = ReportFormatter.format(report, filters: [.succeeded], format: .list)
+        let result = Formatter.format(report, filters: [.succeeded], format: .list)
         XCTAssertEqual(result,
                        """
 AuthSpec
@@ -37,17 +37,17 @@ NetworkSpec
     }
     
     func test_filter_any_count() {
-        let result = ReportFormatter.format(report, format: .count)
+        let result = Formatter.format(report, format: .count)
         XCTAssertEqual(result, "7")
     }
     
     func test_filter_failure_count() {
-        let result = ReportFormatter.format(report, filters: [.failed], format: .count)
+        let result = Formatter.format(report, filters: [.failed], format: .count)
         XCTAssertEqual(result, "3")
     }
 }
 
-extension ReportFormatterTests {
+extension FormatterTests {
     var report: ReportModel {
         let profileModule = ReportModel.Module.testMake(
             name: "Profile",
