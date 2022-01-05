@@ -20,7 +20,7 @@ struct Constants {
         }
     }
     
-    static var appCachesDirectory: URL {
+    private static var appCachesDirectory: URL {
         get throws {
             let appCachesDirectory = try cachesDirectory.appendingPathComponent(packageName, isDirectory: true)
             if !FileManager.default.fileExists(atPath: appCachesDirectory.path) {

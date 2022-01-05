@@ -1,5 +1,5 @@
 //
-//  TestsConstants.swift
+//  Constants.swift
 //  
 //
 //  Created by Алексей Берёзка on 30.12.2021.
@@ -9,10 +9,10 @@ import Foundation
 @testable import TestReportParser
 import XCTest
 
-struct TestsConstants {
+extension Constants {
     static var resourcesPath: URL {
         get throws {
-            try TestsConstants.unitTestsReportPath.deletingLastPathComponent()
+            try unitTestsReportPath.deletingLastPathComponent()
         }
     }
     

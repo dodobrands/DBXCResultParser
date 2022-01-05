@@ -19,7 +19,7 @@ class SeekerTests: XCTestCase {
     }
     
     func test_xcresultIsFound() throws {
-        let resourcesPath = try TestsConstants.resourcesPath
+        let resourcesPath = try Constants.resourcesPath
         let result = try XCTUnwrap(XCResultSeeker.seek(in: resourcesPath).first)
         XCTAssertEqual(result.pathExtension, "xcresult")
     }
