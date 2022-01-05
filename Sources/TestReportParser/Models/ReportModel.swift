@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias Duration = Measurement<UnitDuration>
+
 struct ReportModel {
     let modules: Set<Module>
 }
@@ -58,7 +60,7 @@ extension ReportModel.Module.File {
 extension ReportModel.Module.File.RepeatableTest {
     struct Test {
         let status: Status
-        let duration: Measurement<UnitDuration>
+        let duration: Duration
     }
     
     var combinedStatus: Test.Status {
@@ -70,16 +72,18 @@ extension ReportModel.Module.File.RepeatableTest {
         }
     }
     
-    var averageDuration: Measurement<UnitDuration> {
+    var averageDuration: Duration {
         assert(tests.map { $0.duration.unit }.elementsAreEqual)
+        
+        let unit = tests.first?.duration.unit ?? Test.defaultDurationUnit
         
         return .init(
             value: tests.map { $0.duration.value }.average(),
-            unit: Test.defaultDurationUnit
+            unit: unit
         )
     }
     
-    func isSlow(_ duration: Measurement<UnitDuration>) -> Bool {
+    func isSlow(_ duration: Duration) -> Bool {
         let averageDuration = averageDuration
         let duration = duration.converted(to: averageDuration.unit)
         return averageDuration >= duration
@@ -159,7 +163,7 @@ extension Set where Element == ReportModel.Module.File.RepeatableTest {
         filter { $0.combinedStatus == .mixed }
     }
     
-    func slow(_ duration: Measurement<UnitDuration>) -> Self {
+    func slow(_ duration: Duration) -> Self {
         filter { $0.isSlow(duration) }
     }
 }

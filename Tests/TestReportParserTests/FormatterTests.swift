@@ -46,51 +46,27 @@ NetworkSpec
         XCTAssertEqual(result, "3")
     }
     
-    func test_filter_slow_list() {
-        // Module with slow tests
-        let slowThreshold = Measurement<UnitDuration>(value: 100, unit: .milliseconds)
-        let fsModule = ReportModel.Module.testMake(
-            name: "FSModule",
-            files: [
-                .testMake(
-                    name: "WriterSpec",
-                    repeatableTests: [
-                        .testMake(
-                            name: "Check folder exists",
-                            tests: [
-                                .testMake(status: .success, duration: slowThreshold / 2)
-                            ]
-                        ),
-                        .testMake(
-                            name: "Check file exists",
-                            tests: [
-                                .testMake(status: .success, duration: slowThreshold)
-                            ]
-                        ),
-                        .testMake(
-                            name: "Read from file",
-                            tests: [
-                                .testMake(status: .success, duration: slowThreshold * 2)
-                            ]
-                        ),
-                        .testMake(
-                            name: "Write to file",
-                            tests: [
-                                .testMake(status: .failure, duration: slowThreshold / 2),
-                                .testMake(status: .success, duration: slowThreshold * 2),
-                            ]
-                        )
-                    ]
-                )
-            ]
-        )
-        let report = ReportModel.testMake(modules: [fsModule])
-        let result = Formatter.format(report, filters: [.slow(duration: slowThreshold)], format: .list)
+    func test_filter_slow_list_milliseconds() {
+        let duration = Duration(value: 100, unit: .milliseconds)
+        let result = Formatter.format(slowReport(duration: duration),
+                                      filters: [.slow(duration: duration)], format: .list)
         XCTAssertEqual(result, """
 WriterSpec
 ✅🕢 [100 ms] Check file exists
 ✅🕢 [200 ms] Read from file
 ⚠️🕢 [125 ms] Write to file
+""")
+    }
+    
+    func test_filter_slow_list_minutes() {
+        let duration = Duration(value: 8, unit: .minutes)
+        let result = Formatter.format(slowReport(duration: duration),
+                                      filters: [.slow(duration: duration)], format: .list)
+        XCTAssertEqual(result, """
+WriterSpec
+✅🕢 [8 min] Check file exists
+✅🕢 [16 min] Read from file
+⚠️🕢 [10 min] Write to file
 """)
     }
 }
@@ -153,6 +129,48 @@ extension FormatterTests {
             ]
         )
     }
+    
+    func slowReport(duration: Duration) -> ReportModel {
+        .testMake(
+            modules: [
+                .testMake(
+                    name: "FSModule",
+                    files: [
+                        .testMake(
+                            name: "WriterSpec",
+                            repeatableTests: [
+                                .testMake(
+                                    name: "Check folder exists",
+                                    tests: [
+                                        .testMake(status: .success, duration: duration / 2)
+                                    ]
+                                ),
+                                .testMake(
+                                    name: "Check file exists",
+                                    tests: [
+                                        .testMake(status: .success, duration: duration)
+                                    ]
+                                ),
+                                .testMake(
+                                    name: "Read from file",
+                                    tests: [
+                                        .testMake(status: .success, duration: duration * 2)
+                                    ]
+                                ),
+                                .testMake(
+                                    name: "Write to file",
+                                    tests: [
+                                        .testMake(status: .failure, duration: duration / 2),
+                                        .testMake(status: .success, duration: duration * 2),
+                                    ]
+                                )
+                            ]
+                        )
+                    ]
+                )
+        ]
+        )
+    }
 }
 
 extension ReportModel {
@@ -205,14 +223,14 @@ extension ReportModel.Module.File.RepeatableTest {
 
 extension ReportModel.Module.File.RepeatableTest.Test {
     static func testMake(status: Status = .success,
-                         duration: Measurement<UnitDuration> = .testMake()) -> Self {
+                         duration: Duration = .testMake()) -> Self {
         .init(status: status, duration: duration)
     }
 }
 
 extension Measurement where UnitType: UnitDuration {
     static func testMake(unit: UnitDuration = .milliseconds,
-                         value: Double = 0) -> Measurement<UnitDuration> {
+                         value: Double = 0) -> Duration {
         .init(value: value, unit: unit)
     }
     
