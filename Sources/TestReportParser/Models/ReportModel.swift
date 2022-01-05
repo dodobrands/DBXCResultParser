@@ -58,6 +58,7 @@ extension ReportModel.Module.File {
 extension ReportModel.Module.File.RepeatableTest {
     struct Test {
         let status: Status
+        /// Milliseconds
         let duration: Double
     }
     
@@ -68,6 +69,11 @@ extension ReportModel.Module.File.RepeatableTest {
         } else {
             return .mixed
         }
+    }
+    
+    /// Milliseconds
+    var averageDuration: Double {
+        tests.map { $0.duration }.average()
     }
 }
 
@@ -143,6 +149,10 @@ extension Set where Element == ReportModel.Module.File.RepeatableTest {
     var mixed: Self {
         filter { $0.combinedStatus == .mixed }
     }
+    
+    func slow(_ milliseconds: Double) -> Self {
+        filter { $0.averageDuration >= milliseconds }
+    }
 }
 
 extension ReportModel.Module.File.RepeatableTest.Test {
@@ -162,7 +172,7 @@ extension ReportModel.Module.File.RepeatableTest.Test {
             throw Error.invalidDuration(duration: test.duration._value)
         }
         
-        self.duration = duration
+        self.duration = duration * 1000
     }
     
     enum Error: Swift.Error {

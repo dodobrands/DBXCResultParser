@@ -16,14 +16,15 @@ public class Parser {
 }
 
 extension Parser {
-    public enum Filter: String {
+    public enum Filter {
         case skipped
         case failed
         case mixed
         case succeeded
+        case slow(milliseconds: Double)
     }
     
-    public enum Format: String {
+    public enum Format {
         case list
         case count
     }

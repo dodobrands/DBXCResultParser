@@ -12,15 +12,13 @@ final class IntegrationTests: XCTestCase {
     
     func test_parse_failed_list () throws {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed], format: .list)
-        XCTAssertTrue(result.hasPrefix(
-                       """
+        let expectedResult = """
 CartHeaderCellSpec
 ❌ CartHeaderCell__regular_state_with_delivery_amount__should_snapshot()
 ❌ CartHeaderCell__regular_state_with_delivery_amount__when_translation_is_very_long__should_fit()
 ❌ CartHeaderCell__simple_state__should_snapshot()
 """
-                                      )
-        )
+        XCTAssertEqual(String(result.prefix(expectedResult.count)), expectedResult)
     }
     
     func test_parse_failed_count() throws {
@@ -55,6 +53,22 @@ StateSaveServiceTests
 DeepLinksTests
 ⚠️ test_promocode_is_invalid_deeplink()
 """)
+    }
+    
+    func test_parse_slow_list() throws {
+        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(milliseconds: 100)], format: .list)
+        let expectedResult = """
+AlertViewSpec
+✅🕢 [449 ms] EmailSubscriptionCell__snapshot()
+
+AnalyticsAuthorizationServiceSpec
+✅🕢 [313 ms] AnalyticsAuthorizationServiceSpec__when_logged__should_send_event_to_mindbox()
+"""
+
+        XCTAssertEqual(
+            String(result.prefix(expectedResult.count)),
+            expectedResult
+        )
     }
     
     func test_parse_failedMixed_list() throws {
