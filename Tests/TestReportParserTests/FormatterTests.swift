@@ -48,7 +48,7 @@ NetworkSpec
     
     func test_filter_slow_list() {
         // Module with slow tests
-        let slowThreshold: Double = 100
+        let slowThreshold = Measurement<UnitDuration>(value: 100, unit: .milliseconds)
         let fsModule = ReportModel.Module.testMake(
             name: "FSModule",
             files: [
@@ -85,7 +85,7 @@ NetworkSpec
             ]
         )
         let report = ReportModel.testMake(modules: [fsModule])
-        let result = Formatter.format(report, filters: [.slow(milliseconds: 100)], format: .list)
+        let result = Formatter.format(report, filters: [.slow(duration: slowThreshold)], format: .list)
         XCTAssertEqual(result, """
 WriterSpec
 ✅🕢 [100 ms] Check file exists
@@ -205,7 +205,22 @@ extension ReportModel.Module.File.RepeatableTest {
 
 extension ReportModel.Module.File.RepeatableTest.Test {
     static func testMake(status: Status = .success,
-                         duration: Double = 0) -> Self {
+                         duration: Measurement<UnitDuration> = .testMake()) -> Self {
         .init(status: status, duration: duration)
+    }
+}
+
+extension Measurement where UnitType: UnitDuration {
+    static func testMake(unit: UnitDuration = .milliseconds,
+                         value: Double = 0) -> Measurement<UnitDuration> {
+        .init(value: value, unit: unit)
+    }
+    
+    static func * (left: Self, right: Int) -> Self {
+        .init(value: left.value * Double(right), unit: left.unit)
+    }
+    
+    static func / (left: Self, right: Int) -> Self {
+        .init(value: left.value / Double(right), unit: left.unit)
     }
 }
