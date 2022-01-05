@@ -7,117 +7,40 @@
 
 import Foundation
 
-struct Test {
-    let suit: String
-    let name: String
-}
-
-struct Suit {
-    let name: String
-    let tests: [String]
-}
-
-struct SuitDescr {
-    let name: String
-    let tests: String
-}
-
-func suitTests(_ suit: [String], prefix: String) -> String {
-    suit.map({ test in
-        "\(prefix) \(test)"
-    }).joined(separator: "\n")
-}
-
 struct OverviewReportDTO: Codable {
     let actions: Actions
+}
 
-    func failedNames() throws -> [String] {
-        return actions._values[0].actionResult.issues.testFailureSummaries?._values.compactMap { value in
-            value.testCaseName._value
-        } ?? []
-    }
-
-    func summary() -> String {
-        let countOfTests = actions._values[0].actionResult.metrics.testsCount._value
-        let countOfFailureTests = actions._values[0].actionResult.metrics.testsFailedCount?._value ?? "0"
-        let result = "Total: \(countOfTests), Failed: \(countOfFailureTests)"
-        return result
-    }
-
-    func total() -> String {
-        actions._values[0].actionResult.metrics.testsCount._value
-    }
-
-    func failed() -> String {
-        actions._values[0].actionResult.metrics.testsFailedCount?._value ?? "0"
-    }
-
-    func skipped() -> String {
-        actions._values[0].actionResult.metrics.testsSkippedCount?._value ?? "0"
-    }
-
-    func testsRefID() -> String {
-        actions._values[0].actionResult.testsRef.id._value
+extension OverviewReportDTO {
+    struct Actions: Codable {
+        let _values: [Value]
     }
 }
 
-// metrics for func summary
-struct Actions: Codable {
-    let _values: [ActionValue]
+extension OverviewReportDTO.Actions {
+    struct Value: Codable {
+        let actionResult: ActionResult
+    }
 }
 
-struct ActionValue: Codable {
-    let actionResult: ActionResult
+extension OverviewReportDTO.Actions.Value {
+    struct ActionResult: Codable {
+        let testsRef: StringReference
+    }
 }
 
-struct ActionResult: Codable {
-    let issues: Issues
-    let metrics: Metrics
-    let testsRef: TestsRef
-}
-
-// issues for failed tests
-struct Issues: Codable {
-    let testFailureSummaries: TestFailureSummaries?
-}
-
-struct TestFailureSummaries: Codable {
-    let _values: [FailureValue]
-}
-
-struct FailureValue: Codable {
-    let testCaseName: TestCaseName
-}
-
-struct TestCaseName: Codable {
-    let _value: String
-}
-
-// metrics for func summary
-
-struct Metrics: Codable {
-    let testsCount: TestsCount
-    let testsFailedCount: TestsFailedCount?
-    let testsSkippedCount: TestsSkippedCount?
-}
-
-struct TestsCount: Codable {
-    let _value: String
-}
-
-struct TestsFailedCount: Codable {
-    let _value: String
-}
-
-struct TestsSkippedCount: Codable {
-    let _value: String
-}
-
-// testsRef id for detail analize
-struct TestsRef: Codable {
-    let id: TestsRefID
-}
-
-struct TestsRefID: Codable {
-    let _value: String
+extension OverviewReportDTO {
+    var testsRefId: String {
+        get throws {
+            guard let testsRef = actions._values.first?.actionResult.testsRef.id._value else {
+                throw Error.noTestRef
+            }
+            
+            return testsRef
+        }
+    }
+    
+    enum Error: Swift.Error {
+        case noTestRef
+    }
 }

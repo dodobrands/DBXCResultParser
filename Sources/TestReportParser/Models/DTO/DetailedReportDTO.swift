@@ -102,7 +102,3 @@ extension DetailedReportDTO.Summaries.Value.TestableSummaries.Value.Tests.Value.
         let testStatus: StringValueDTO
     }
 }
-
-struct StringValueDTO: Decodable {
-    let _value: String
-}

@@ -6,7 +6,7 @@ public class Parser {
     public init(xcresultPath: URL) throws {
         let overviewReport = try OverviewReportDTO(from: xcresultPath)
         let detailedReport = try DetailedReportDTO(from: xcresultPath,
-                                                   refId: overviewReport.testsRefID())
+                                                   refId: overviewReport.testsRefId)
         report = try ReportModel(detailedReport)
     }
 
