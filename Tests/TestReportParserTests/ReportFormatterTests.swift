@@ -1,5 +1,5 @@
 import XCTest
-@testable import TestParser
+@testable import TestReportParser
 
 final class ReportFormatterTests: XCTestCase {
     func test_filter_any_list() {

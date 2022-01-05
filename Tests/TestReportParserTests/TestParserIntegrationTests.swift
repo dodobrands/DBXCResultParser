@@ -1,7 +1,7 @@
 import XCTest
-@testable import TestParser
+@testable import TestReportParser
 
-final class TestParserIntegratioinTests: XCTestCase {
+final class TestReportParserIntegratioinTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
     }

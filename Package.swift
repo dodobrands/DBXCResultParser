@@ -4,15 +4,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "TestParser",
+    name: "TestReportParser",
     platforms: [
         .macOS(.v10_13)
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "TestParser",
-            targets: ["TestParser"]),
+            name: "TestReportParser",
+            targets: ["TestReportParser"]),
     ],
     dependencies: [
 //        .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.12.0")
@@ -21,13 +21,13 @@ let package = Package(
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "TestParser",
+            name: "TestReportParser",
             dependencies: [
 //                "XMLCoder"
             ]),
         .testTarget(
-            name: "TestParserTests",
-            dependencies: ["TestParser"],
+            name: "TestReportParserTests",
+            dependencies: ["TestReportParser"],
             resources: [
                 .process("Resources/report.json"),
                 .process("Resources/reportUnitsSuccess.json"),

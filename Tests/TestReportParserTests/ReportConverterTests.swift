@@ -7,7 +7,7 @@
 
 import Foundation
 import XCTest
-@testable import TestParser
+@testable import TestReportParser
 
 class ReportConverterTests: XCTestCase {
 
@@ -20,7 +20,7 @@ class ReportConverterTests: XCTestCase {
     }
     
     func test() throws {
-        let xcresultPath = try XCTUnwrap(ReportSeeker.seek(in: TestsConstants.resourcesPath).first)
+        let xcresultPath = try TestsConstants.unitTestsReportPath
         let overview = try ReportConverter.convert(xcresultPath: xcresultPath)
         _ = try ReportConverter.convertDetailed(xcresultPath: xcresultPath, refId: overview.testsRefID())
     }

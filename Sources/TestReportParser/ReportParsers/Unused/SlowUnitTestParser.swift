@@ -1,5 +1,5 @@
 //
-//  SlowUnitTestParser.swift
+//  SlowUnitTestReportParser.swift
 //  
 //
 //  Created by Алексей Берёзка on 30.12.2021.
@@ -9,7 +9,7 @@
 //import XMLCoder
 //
 ///// Search for slowest tests
-//class SlowUnitTestParser: FileParser {
+//class SlowUnitTestReportParser: FileParser {
 //    func parse() -> TestSuites {
 //        try! XMLDecoder().decode(TestSuites.self,
 //                                 from: data())
