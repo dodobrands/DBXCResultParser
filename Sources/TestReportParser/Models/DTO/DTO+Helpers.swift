@@ -1,5 +1,5 @@
 //
-//  Converter.swift
+//  DTO+Helpers.swift
 //  
 //
 //  Created by Алексей Берёзка on 30.12.2021.
