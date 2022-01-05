@@ -21,7 +21,7 @@ extension Parser {
         case failed
         case mixed
         case succeeded
-        case slow(duration: Measurement<UnitDuration>)
+        case slow(duration: Duration)
     }
     
     public enum Format {
