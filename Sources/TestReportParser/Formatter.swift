@@ -51,7 +51,7 @@ class Formatter {
 }
 
 fileprivate extension ReportModel.Module.File.RepeatableTest {
-    private func reportIcons(duration: Measurement<UnitDuration>?) -> String {
+    private func reportIcons(duration: Duration?) -> String {
         [
             combinedStatus.icon,
             duration.flatMap { slowIcon($0) }
@@ -60,7 +60,7 @@ fileprivate extension ReportModel.Module.File.RepeatableTest {
             .joined(separator: "")
     }
     
-    private func slowIcon(_ duration: Measurement<UnitDuration>) -> String? {
+    private func slowIcon(_ duration: Duration) -> String? {
         isSlow(duration) ? "🕢" : nil
     }
     
@@ -72,7 +72,7 @@ fileprivate extension ReportModel.Module.File.RepeatableTest {
     
     private func slowReportDuration(
         with formatter: MeasurementFormatter,
-        duration: Measurement<UnitDuration>
+        duration: Duration
     ) -> String? {
         guard isSlow(duration) else {
             return nil
@@ -80,7 +80,7 @@ fileprivate extension ReportModel.Module.File.RepeatableTest {
         return reportDuration(with: formatter)
     }
     
-    func reportRow(with formatter: MeasurementFormatter, duration: Measurement<UnitDuration>?) -> String {
+    func reportRow(with formatter: MeasurementFormatter, duration: Duration?) -> String {
         [
             reportIcons(duration: duration),
             duration.flatMap { slowReportDuration(with:formatter, duration: $0) },
@@ -139,15 +139,15 @@ extension String {
 extension MeasurementFormatter {
     static var testsDurationFormatter: MeasurementFormatter {
         let formatter = MeasurementFormatter()
-        formatter.unitOptions = [.providedUnit, .naturalScale]
+        formatter.unitOptions = [.providedUnit]
         formatter.numberFormatter.maximumFractionDigits = 0
         return formatter
     }
 }
 
 extension Array where Element == Parser.Filter {
-    var slowTestsDuration: Measurement<UnitDuration>? {
-        var duration: Measurement<UnitDuration>?
+    var slowTestsDuration: Duration? {
+        var duration: Duration?
         
         forEach { filter in
             switch filter {
