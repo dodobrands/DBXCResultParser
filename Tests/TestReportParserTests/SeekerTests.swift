@@ -20,7 +20,7 @@ class SeekerTests: XCTestCase {
     
     func test_xcresultIsFound() throws {
         let resourcesPath = try Constants.resourcesPath
-        let result = try XCTUnwrap(XCResultSeeker.seek(in: resourcesPath).first)
+        let result = try XCTUnwrap(XCResultSeeker().seek(in: resourcesPath).first)
         XCTAssertEqual(result.pathExtension, "xcresult")
     }
 }
