@@ -8,6 +8,8 @@
 import Foundation
 
 public class XCResultSeeker {
+    public init() { }
+    
     public func seek(in path: URL) throws -> [URL] {
         try FileManager
             .default
