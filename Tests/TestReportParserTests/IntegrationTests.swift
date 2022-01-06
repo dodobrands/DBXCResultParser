@@ -33,22 +33,22 @@ ContactsViewControllerSpec
     
     func test_parse_slow_3s_count() throws {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: .init(value: 3, unit: .seconds))], format: .count)
-        XCTAssertEqual(result, "2")
+        XCTAssertEqual(result, "2 [7 secs]")
     }
     
     func test_parse_failed_count() throws {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed], format: .count)
-        XCTAssertEqual(result, "77")
+        XCTAssertEqual(result, "77 [9 secs]")
     }
     
     func test_parse_failed_slow_3s_count() throws {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed, .slow(duration: .init(value: 3, unit: .seconds))], format: .count)
-        XCTAssertEqual(result, "79")
+        XCTAssertEqual(result, "79 [16 secs]")
     }
 
     func test_parse_any_count() throws {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(format: .count)
-        XCTAssertEqual(result, "3708")
+        XCTAssertEqual(result, "3708 [2 min]")
     }
 
     func test_parse_skipped_count() throws {
