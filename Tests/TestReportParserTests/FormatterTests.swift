@@ -38,12 +38,12 @@ NetworkSpec
     
     func test_filter_any_count() {
         let result = Formatter.format(generalReport, format: .count)
-        XCTAssertEqual(result, "7")
+        XCTAssertEqual(result, "7 [0 secs]")
     }
     
     func test_filter_failure_count() {
         let result = Formatter.format(generalReport, filters: [.failed], format: .count)
-        XCTAssertEqual(result, "3")
+        XCTAssertEqual(result, "3 [0 secs]")
     }
     
     func test_filter_slow_list_milliseconds() {

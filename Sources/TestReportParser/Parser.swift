@@ -16,7 +16,7 @@ public class Parser {
 }
 
 extension Parser {
-    public enum Filter {
+    public enum Filter: Equatable {
         case skipped
         case failed
         case mixed

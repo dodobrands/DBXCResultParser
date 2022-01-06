@@ -83,6 +83,13 @@ extension ReportModel.Module.File.RepeatableTest {
         )
     }
     
+    var totalDuration: Duration {
+        assert(tests.map { $0.duration.unit }.elementsAreEqual)
+        let value = tests.map { $0.duration.value }.sum()
+        let unit = tests.first?.duration.unit ?? Test.defaultDurationUnit
+        return .init(value: value, unit: unit)
+    }
+    
     func isSlow(_ duration: Duration) -> Bool {
         let averageDuration = averageDuration
         let duration = duration.converted(to: averageDuration.unit)
