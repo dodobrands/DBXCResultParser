@@ -31,7 +31,7 @@ class Formatter {
             let tests = files.flatMap { $0.repeatableTests.filtered(filters: filters) }
             let count = tests.count
             let duration = tests.totalDuration
-            let addDuration = filters != [.skipped]
+            let addDuration = filters != [.skipped] // don't add 0ms duration if requested only skipped tests
             return [
                 numberFormatter.string(from: NSNumber(value: count)) ?? String(count),
                 addDuration ? totalTestsMeasurementFormatter.string(from: duration).wrappedInBrackets : nil
@@ -61,8 +61,10 @@ extension ReportModel.Module.File {
             return nil
         }
         
-        var rows = tests.map { tests in
-            tests.report(
+        var rows = tests
+            .sorted { $0.name < $1.name }
+            .map { test in
+            test.report(
                 formatter: formatter,
                 slowThresholdDuration: slowTestsDuration
             )
