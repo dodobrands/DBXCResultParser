@@ -7,8 +7,8 @@
 
 import Foundation
 
-class XCResultSeeker {
-    static func seek(in path: URL) throws -> [URL] {
+public class XCResultSeeker {
+    public func seek(in path: URL) throws -> [URL] {
         try FileManager
             .default
             .contentsOfDirectory(at: path, includingPropertiesForKeys: nil)
