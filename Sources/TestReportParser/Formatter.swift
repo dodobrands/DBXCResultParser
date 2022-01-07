@@ -158,7 +158,7 @@ extension Set where Element == ReportModel.Module.File.RepeatableTest {
 
 extension String {
     var wrappedInBrackets: Self {
-        "[" + self + "]"
+        "(" + self + ")"
     }
 }
 
