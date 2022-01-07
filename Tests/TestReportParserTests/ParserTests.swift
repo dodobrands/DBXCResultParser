@@ -4,7 +4,7 @@ import XCTest
 final class ParserTests: XCTestCase {
 
     func test() throws {
-        _ = try Parser(xcresultPath: Constants.unitTestsReportPath)
+        XCTAssertNoThrow(try Parser(xcresultPath: Constants.unitTestsReportPath))
     }
 }
 
