@@ -25,14 +25,16 @@ extension OverviewReportDTO.Actions {
 
 extension OverviewReportDTO.Actions.Value {
     struct ActionResult: Codable {
-        let testsRef: StringReference
+        let testsRef: StringReference?
     }
 }
 
 extension OverviewReportDTO {
     var testsRefId: String {
         get throws {
-            guard let testsRef = actions._values.first?.actionResult.testsRef.id._value else {
+            let testRefs = actions._values.compactMap { $0.actionResult.testsRef }
+            
+            guard let testsRef = testRefs.first?.id._value else {
                 throw Error.noTestRef
             }
             
