@@ -25,30 +25,30 @@ CartHeaderCellSpec
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: .init(value: 3, unit: .seconds))], format: .list)
         let expectedResult = """
 ContactsViewControllerSpec
-✅🕢 [3 secs] ContactsViewController__load_view__when_feedback_block_are_visible__when_chat_enabled__should_snapshot()
-✅🕢 [3 secs] ContactsViewController__load_view__when_location_button_is_visible__should_snapshot()
+✅🕢 (3 secs) ContactsViewController__load_view__when_feedback_block_are_visible__when_chat_enabled__should_snapshot()
+✅🕢 (3 secs) ContactsViewController__load_view__when_location_button_is_visible__should_snapshot()
 """
         XCTAssertEqual(String(result.prefix(expectedResult.count)), expectedResult)
     }
     
     func test_parse_slow_3s_count() throws {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: .init(value: 3, unit: .seconds))], format: .count)
-        XCTAssertEqual(result, "2 [7 secs]")
+        XCTAssertEqual(result, "2 (7 secs)")
     }
     
     func test_parse_failed_count() throws {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed], format: .count)
-        XCTAssertEqual(result, "77 [9 secs]")
+        XCTAssertEqual(result, "77 (9 secs)")
     }
     
     func test_parse_failed_slow_3s_count() throws {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed, .slow(duration: .init(value: 3, unit: .seconds))], format: .count)
-        XCTAssertEqual(result, "79 [16 secs]")
+        XCTAssertEqual(result, "79 (16 secs)")
     }
 
     func test_parse_any_count() throws {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(format: .count)
-        XCTAssertEqual(result, "3708 [2 min]")
+        XCTAssertEqual(result, "3708 (2 min)")
     }
 
     func test_parse_skipped_count() throws {
@@ -80,10 +80,10 @@ DeepLinksTests
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: slowThreshold)], format: .list)
         let expectedResult = """
 AlertViewSpec
-✅🕢 [449 ms] EmailSubscriptionCell__snapshot()
+✅🕢 (449 ms) EmailSubscriptionCell__snapshot()
 
 AnalyticsAuthorizationServiceSpec
-✅🕢 [313 ms] AnalyticsAuthorizationServiceSpec__when_logged__should_send_event_to_mindbox()
+✅🕢 (313 ms) AnalyticsAuthorizationServiceSpec__when_logged__should_send_event_to_mindbox()
 """
 
         XCTAssertEqual(

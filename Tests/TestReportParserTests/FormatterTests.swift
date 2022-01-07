@@ -38,12 +38,12 @@ NetworkSpec
     
     func test_filter_any_count() {
         let result = Formatter.format(generalReport, format: .count)
-        XCTAssertEqual(result, "7 [0 secs]")
+        XCTAssertEqual(result, "7 (0 secs)")
     }
     
     func test_filter_failure_count() {
         let result = Formatter.format(generalReport, filters: [.failed], format: .count)
-        XCTAssertEqual(result, "3 [0 secs]")
+        XCTAssertEqual(result, "3 (0 secs)")
     }
     
     func test_filter_slow_list_milliseconds() {
@@ -52,9 +52,9 @@ NetworkSpec
                                       filters: [.slow(duration: duration)], format: .list)
         XCTAssertEqual(result, """
 WriterSpec
-✅🕢 [100 ms] Check file exists
-✅🕢 [200 ms] Read from file
-⚠️🕢 [125 ms] Write to file
+✅🕢 (100 ms) Check file exists
+✅🕢 (200 ms) Read from file
+⚠️🕢 (125 ms) Write to file
 """)
     }
     
@@ -64,9 +64,9 @@ WriterSpec
                                       filters: [.slow(duration: duration)], format: .list)
         XCTAssertEqual(result, """
 WriterSpec
-✅🕢 [8 min] Check file exists
-✅🕢 [16 min] Read from file
-⚠️🕢 [10 min] Write to file
+✅🕢 (8 min) Check file exists
+✅🕢 (16 min) Read from file
+⚠️🕢 (10 min) Write to file
 """)
     }
     
@@ -76,10 +76,10 @@ WriterSpec
                                       filters: [.failed,.slow(duration: duration)], format: .list)
         XCTAssertEqual(result, """
 WriterSpec
-✅🕢 [8 min] Check file exists
+✅🕢 (8 min) Check file exists
 ❌ Check folder exists
-✅🕢 [16 min] Read from file
-⚠️🕢 [10 min] Write to file
+✅🕢 (16 min) Read from file
+⚠️🕢 (10 min) Write to file
 """)
     }
 }
