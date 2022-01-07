@@ -11,7 +11,11 @@ public class XCResultSeeker {
     public init() { }
     
     public func seek(in path: URL) throws -> [URL] {
-        try FileManager
+        guard FileManager.default.fileExists(atPath: path.path) else {
+            return []
+        }
+        
+        return try FileManager
             .default
             .contentsOfDirectory(at: path, includingPropertiesForKeys: nil)
             .filter{ $0.pathExtension == "xcresult" }
