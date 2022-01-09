@@ -133,12 +133,12 @@ fileprivate extension ReportModel.Module.File.RepeatableTest.Test.Status {
 }
 
 extension Set where Element == ReportModel.Module.File.RepeatableTest {
-    func filtered(filters: [Parser.Filter]) -> [Element] {
+    func filtered(filters: [Parser.Filter]) -> Set<Element> {
         guard !filters.isEmpty else {
-            return Array(self)
+            return self
         }
         
-        return filters
+        let results = filters
             .flatMap { filter -> Set<Element> in
             switch filter {
             case .succeeded:
@@ -153,6 +153,8 @@ extension Set where Element == ReportModel.Module.File.RepeatableTest {
                 return self.slow(duration)
             }
         }
+        
+        return Set(results)
     }
 }
 
