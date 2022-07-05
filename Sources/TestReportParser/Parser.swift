@@ -1,7 +1,7 @@
 import Foundation
 
 public class Parser {
-    let report: ReportModel
+    public let report: ReportModel
     
     public init(xcresultPath: URL) throws {
         let overviewReport = try OverviewReportDTO(from: xcresultPath)
