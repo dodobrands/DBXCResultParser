@@ -9,58 +9,58 @@ import Foundation
 
 public typealias Duration = Measurement<UnitDuration>
 
-struct ReportModel {
-    let modules: Set<Module>
+public struct ReportModel {
+    public let modules: Set<Module>
 }
 
 extension ReportModel {
-    struct Module: Hashable {
-        let name: String
-        var files: Set<File>
+    public struct Module: Hashable {
+        public let name: String
+        public internal(set) var files: Set<File>
         
         public func hash(into hasher: inout Hasher) {
             hasher.combine(name)
         }
         
-        static func == (lhs: Self, rhs: Self) -> Bool {
+        public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.name == rhs.name
         }
     }
 }
 
 extension ReportModel.Module {
-    struct File: Hashable {
-        let name: String
-        var repeatableTests: Set<RepeatableTest>
+    public struct File: Hashable {
+        public let name: String
+        public internal(set) var repeatableTests: Set<RepeatableTest>
         
         public func hash(into hasher: inout Hasher) {
             hasher.combine(name)
         }
         
-        static func == (lhs: Self, rhs: Self) -> Bool {
+        public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.name == rhs.name
         }
     }
 }
 extension ReportModel.Module.File {
-    struct RepeatableTest: Hashable {
-        let name: String
-        var tests: [Test]
+    public struct RepeatableTest: Hashable {
+        public let name: String
+        public internal(set) var tests: [Test]
         
         public func hash(into hasher: inout Hasher) {
             hasher.combine(name)
         }
         
-        static func == (lhs: Self, rhs: Self) -> Bool {
+        public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.name == rhs.name
         }
     }
 }
 
 extension ReportModel.Module.File.RepeatableTest {
-    struct Test {
-        let status: Status
-        let duration: Duration
+    public struct Test {
+        public let status: Status
+        public let duration: Duration
     }
     
     var combinedStatus: Test.Status {
@@ -98,7 +98,7 @@ extension ReportModel.Module.File.RepeatableTest {
 }
 
 extension ReportModel.Module.File.RepeatableTest.Test {
-    enum Status {
+    public enum Status {
         case success
         case failure
         case skipped
