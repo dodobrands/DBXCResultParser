@@ -22,6 +22,12 @@ extension Constants {
         }
     }
     
+    static var unitTestsWithCoverageReportPath: URL {
+        get throws {
+            try path(filename: "AllTests_coverage", type: "xcresult")
+        }
+    }
+    
     static var e2eTestsReportPath: URL {
         get throws {
             try path(filename: "E2ETests", type: "xcresult")
