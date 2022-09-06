@@ -26,3 +26,13 @@ extension DetailedReportDTO {
         self = try JSONDecoder().decode(DetailedReportDTO.self, from: data)
     }
 }
+
+extension Array where Element == CoverageDTO {
+    init(from xcresultPath: URL) throws {
+        let tempFilePath = try Constants.tempFilePath
+        try Shell.execute("xcrun xccov view --report --only-targets --json \(xcresultPath.relativePath) > \(tempFilePath.relativePath)")
+        let data = try Data(contentsOf: tempFilePath)
+        try FileManager.default.removeItem(atPath: tempFilePath.relativePath)
+        self = try JSONDecoder().decode(Array<CoverageDTO>.self, from: data)
+    }
+}
