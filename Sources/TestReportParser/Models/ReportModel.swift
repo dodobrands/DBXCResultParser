@@ -186,6 +186,7 @@ extension ReportModel {
     }
     
     public var totalCoverage: Double {
+        guard modules.count > 0 else { return 0 }
         let coverageValues = modules.map { $0.coverage?.coverage }.compactMap { $0 }
         let coverageSumm = coverageValues.reduce(into: 0) { $0 += $1 }
         return coverageSumm / Double(coverageValues.count)
