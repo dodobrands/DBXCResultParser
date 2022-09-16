@@ -11,12 +11,14 @@ public typealias Duration = Measurement<UnitDuration>
 
 public struct ReportModel {
     public let modules: Set<Module>
+    public private(set) var warningCount: Int?
 }
 
 extension ReportModel {
     public struct Module: Hashable {
         public let name: String
         public internal(set) var files: Set<File>
+        public let coverage: Coverage?
         
         public func hash(into hasher: inout Hasher) {
             hasher.combine(name)
@@ -24,6 +26,32 @@ extension ReportModel {
         
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.name == rhs.name
+        }
+    }
+}
+
+extension ReportModel.Module {
+    public struct Coverage: Equatable {
+        public let name: String
+        public let coveredLines: Int
+        public let totalLines: Int
+        public let coverage: Double
+        
+        init(name: String,
+             coveredLines: Int,
+             totalLines: Int,
+             coverage: Double) {
+            self.name = name
+            self.coveredLines = coveredLines
+            self.totalLines = totalLines
+            self.coverage = coverage
+        }
+        
+        init(from dto: CoverageDTO) {
+            self.name = dto.name
+            self.coveredLines = dto.coveredLines
+            self.totalLines = dto.executableLines
+            self.coverage = dto.lineCoverage
         }
     }
 }
@@ -107,13 +135,30 @@ extension ReportModel.Module.File.RepeatableTest.Test {
 }
 
 extension ReportModel {
-    init(_ dto: DetailedReportDTO) throws {
+    init(overviewReportDTO: OverviewReportDTO,
+         detailedReportDTO: DetailedReportDTO,
+         coverageDTOs: [CoverageDTO]) throws {
+        
+        if let warningCount = overviewReportDTO.metrics.warningCount?._value {
+            self.warningCount = Int(warningCount)
+        }
+        
+        let filteredCoverages = coverageDTOs
+            .map { Module.Coverage(from: $0)}
+            .filter { !$0.name.contains("TestHelpers") && !$0.name.contains("Tests") }
         var modules = Set<Module>()
-        try dto.summaries._values.forEach { value1 in
+        
+        func findCoverage(for moduleName: String, coverageModels: [Module.Coverage]) -> Module.Coverage? {
+            coverageModels.first { $0.name.split(separator: ".")[0] + "Tests" == moduleName }
+        }
+        
+        try detailedReportDTO.summaries._values.forEach { value1 in
             try value1.testableSummaries._values.forEach { value2 in
                 let modulename = value2.name._value
                 var module = modules[modulename] ?? .init(name: modulename,
-                                                          files: [])
+                                                          files: [],
+                                                          coverage: findCoverage(for: modulename,
+                                                                                 coverageModels: filteredCoverages))
                 try value2.tests._values.forEach { value3 in
                     try value3.subtests?._values.forEach { value4 in
                         try value4.subtests?._values.forEach { value5 in
@@ -138,6 +183,12 @@ extension ReportModel {
         }
         
         self.modules = modules
+    }
+    
+    public var totalCoverage: Double {
+        let coverageValues = modules.map { $0.coverage?.coverage }.compactMap { $0 }
+        let coverageSumm = coverageValues.reduce(into: 0) { $0 += $1 }
+        return coverageSumm / Double(coverageValues.count)
     }
 }
 
