@@ -193,8 +193,20 @@ extension ReportModel {
 }
 
 extension ReportModel.Module {
-    static func testMake(name: String = "", files: Set<File> = []) -> Self {
-        .init(name: name, files: files)
+    static func testMake(name: String = "", files: Set<File> = [], coverage: Coverage = .testMake()) -> Self {
+        .init(name: name, files: files, coverage: coverage)
+    }
+}
+
+extension ReportModel.Module.Coverage {
+    static func testMake(name: String = "",
+                         coveredLines: Int = 0,
+                         totalLines: Int = 0,
+                         coverage: Double = 0.0) -> Self {
+        Self(name: name,
+             coveredLines: coveredLines,
+             totalLines: totalLines,
+             coverage: coverage)
     }
 }
 
