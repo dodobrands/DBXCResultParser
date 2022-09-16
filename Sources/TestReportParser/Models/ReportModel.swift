@@ -185,9 +185,9 @@ extension ReportModel {
         self.modules = modules
     }
     
-    public var totalCoverage: Double {
-        guard modules.count > 0 else { return 0.0 }
+    public var totalCoverage: Double? {
         let coverages = modules.map { $0.coverage }.compactMap { $0 }
+        guard coverages.count > 0 else { return nil }
         
         let totalLines = coverages.reduce(into: 0) { $0 += $1.totalLines }
         let totalCoveredLines = coverages.reduce(into: 0) { $0 += $1.coveredLines }
