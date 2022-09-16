@@ -125,7 +125,31 @@ final class IntegrationTests: XCTestCase {
     
     func test_total_coverage() throws {
         let parser = try Parser(xcresultPath: Constants.unitTestsWithCoverageReportPath)
-        XCTAssertEqual(parser.report.totalCoverage, 0.4369, accuracy: 0.0001)
+        XCTAssertEqual(parser.report.totalCoverage, 0.4164, accuracy: 0.0001)
+    }
+    
+    func test_totalCoverage_whenZeroModules_shouldReturnZero() {
+        let report = ReportModel(modules: [])
+        XCTAssertEqual(report.totalCoverage, 0.0)
+    }
+    
+    func test_totalCoverage_whenOneModule_shouldReturnTheModulesCoverage() {
+        let moduleWithCoverage: ReportModel.Module = .testMake(coverage: .testMake(coveredLines: 456,
+                                                                                   totalLines: 789,
+                                                                                   coverage: 0.234))
+        let report = ReportModel(modules: [moduleWithCoverage])
+        XCTAssertEqual(report.totalCoverage, 0.5779, accuracy: 0.0001)
+    }
+    
+    func test_totalCoverage_shouldReturnModulesAvgCoverage() {
+        let moduleWithCoverage1: ReportModel.Module = .testMake(name: "1",
+                                                                coverage: .testMake(coveredLines: 1,
+                                                                                    totalLines: 2))
+        let moduleWithCoverage2: ReportModel.Module = .testMake(name: "2",
+                                                                coverage: .testMake(coveredLines: 19,
+                                                                                    totalLines: 20))
+        let report = ReportModel(modules: [moduleWithCoverage1, moduleWithCoverage2])
+        XCTAssertEqual(report.totalCoverage, 0.9, accuracy: 0.01)
     }
 }
 
