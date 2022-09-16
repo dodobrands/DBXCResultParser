@@ -100,5 +100,32 @@ final class IntegrationTests: XCTestCase {
         ⚠️ test_promocode_is_invalid_deeplink()
         """)
     }
+    
+    func test_parse_warning_count() throws {
+        let parser = try Parser(xcresultPath: Constants.unitTestsWithCoverageReportPath)
+        XCTAssertEqual(parser.report.warningCount, 325)
+    }
+    
+    func test_parse_coverage() throws {
+        let parser = try Parser(xcresultPath: Constants.unitTestsWithCoverageReportPath)
+        for module in parser.report.modules {
+            XCTAssertNotNil(module.coverage)
+        }
+    }
+    
+    func test_parse_coverage_model() throws {
+        let parser = try Parser(xcresultPath: Constants.unitTestsWithCoverageReportPath)
+        let missionsModuleCoverage = parser.report.modules.first { $0.name == "MissionsTests" }?.coverage
+        XCTAssertNotNil(missionsModuleCoverage)
+        XCTAssertEqual(missionsModuleCoverage, .testMake(name: "Missions.framework",
+                                                         coveredLines: 843,
+                                                         totalLines: 1964,
+                                                         coverage: 0.42922606924643586))
+    }
+    
+    func test_total_coverage() throws {
+        let parser = try Parser(xcresultPath: Constants.unitTestsWithCoverageReportPath)
+        XCTAssertEqual(parser.report.totalCoverage, 0.4369070650990267)
     }
 }
+
