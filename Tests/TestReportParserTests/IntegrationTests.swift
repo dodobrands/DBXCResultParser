@@ -125,7 +125,7 @@ final class IntegrationTests: XCTestCase {
     
     func test_total_coverage() throws {
         let parser = try Parser(xcresultPath: Constants.unitTestsWithCoverageReportPath)
-        XCTAssertEqual(parser.report.totalCoverage, 0.4369070650990267)
+        XCTAssertEqual(parser.report.totalCoverage, 0.4369, accuracy: 0.0001)
     }
 }
 
