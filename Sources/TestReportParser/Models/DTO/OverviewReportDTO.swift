@@ -9,6 +9,7 @@ import Foundation
 
 struct OverviewReportDTO: Codable {
     let actions: Actions
+    let metrics: Metrics
 }
 
 extension OverviewReportDTO {
@@ -44,5 +45,17 @@ extension OverviewReportDTO {
     
     enum Error: Swift.Error {
         case noTestRef
+    }
+}
+
+extension OverviewReportDTO {
+    struct Metrics: Codable {
+        let warningCount: WarningCount?
+    }
+}
+
+extension OverviewReportDTO.Metrics {
+    struct WarningCount: Codable {
+        let _value: String
     }
 }

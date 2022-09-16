@@ -1,13 +1,18 @@
 import Foundation
 
 public class Parser {
-    public let report: ReportModel
+    private(set) var report: ReportModel
     
     public init(xcresultPath: URL) throws {
         let overviewReport = try OverviewReportDTO(from: xcresultPath)
         let detailedReport = try DetailedReportDTO(from: xcresultPath,
                                                    refId: overviewReport.testsRefId)
-        report = try ReportModel(detailedReport)
+        let coverageDTOs = try? Array<CoverageDTO>(from: xcresultPath)
+            .filter { !$0.name.contains("TestHelpers") && !$0.name.contains("Tests") }
+        
+        report = try ReportModel(overviewReportDTO: overviewReport,
+                                 detailedReportDTO: detailedReport,
+                                 coverageDTOs: coverageDTOs ?? [])
     }
 
     public func parse(filters: [Filter] = [], format: Format) throws -> String {
