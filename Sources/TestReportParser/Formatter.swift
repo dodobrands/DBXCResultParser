@@ -128,6 +128,8 @@ fileprivate extension ReportModel.Module.File.RepeatableTest.Test.Status {
             return "⏭"
         case .mixed:
             return "⚠️"
+        case .expectedFailure:
+            return "🤡"
         }
     }
 }

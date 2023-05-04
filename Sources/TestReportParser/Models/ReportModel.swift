@@ -129,6 +129,7 @@ extension ReportModel.Module.File.RepeatableTest.Test {
     public enum Status {
         case success
         case failure
+        case expectedFailure
         case skipped
         case mixed
     }
@@ -240,6 +241,8 @@ extension ReportModel.Module.File.RepeatableTest.Test {
             status = .failure
         case "Skipped":
             status = .skipped
+        case "Expected Failure":
+            status = .expectedFailure
         default:
             throw Error.unknownStatus(status: test.testStatus._value)
         }
