@@ -92,9 +92,9 @@ extension ReportModel.Module.File.RepeatableTest {
     }
     
     var combinedStatus: Test.Status {
-        let satuses = tests.map { $0.status }
-        if satuses.elementsAreEqual {
-            return satuses.first ?? .success
+        let statuses = tests.map { $0.status }
+        if statuses.elementsAreEqual {
+            return statuses.first ?? .success
         } else {
             return .mixed
         }
@@ -126,12 +126,13 @@ extension ReportModel.Module.File.RepeatableTest {
 }
 
 extension ReportModel.Module.File.RepeatableTest.Test {
-    public enum Status {
+    public enum Status: Equatable {
         case success
         case failure
         case expectedFailure
         case skipped
         case mixed
+        case unknown(rawValue: String)
     }
 }
 
@@ -244,7 +245,7 @@ extension ReportModel.Module.File.RepeatableTest.Test {
         case "Expected Failure":
             status = .expectedFailure
         default:
-            throw Error.unknownStatus(status: test.testStatus._value)
+            status = .unknown(rawValue: test.testStatus._value)
         }
         
         guard let duration = Double(test.duration._value) else {
@@ -255,7 +256,6 @@ extension ReportModel.Module.File.RepeatableTest.Test {
     }
     
     enum Error: Swift.Error {
-        case unknownStatus(status: String)
         case invalidDuration(duration: String)
     }
     
