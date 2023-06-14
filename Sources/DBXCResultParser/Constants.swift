@@ -8,7 +8,7 @@
 import Foundation
 
 struct Constants {
-    private static let packageName = "TestReportParser"
+    private static let packageName = "DBXCResultParser"
     
     private static var cachesDirectory: URL {
         get throws {
