@@ -130,6 +130,8 @@ fileprivate extension ReportModel.Module.File.RepeatableTest.Test.Status {
             return "⚠️"
         case .expectedFailure:
             return "🤡"
+        case .unknown:
+            return "🤷"
         }
     }
 }
