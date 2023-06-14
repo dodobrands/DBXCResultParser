@@ -7,7 +7,7 @@
 
 import Foundation
 import XCTest
-@testable import TestReportParser
+@testable import DBXCResultParser
 
 class SeekerTests: XCTestCase {
     override func setUpWithError() throws {

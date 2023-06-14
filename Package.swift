@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let packageName = "TestReportParser"
+let packageName = "DBXCResultParser"
 let packageTestsName = packageName + "Tests"
 
 let package = Package(
