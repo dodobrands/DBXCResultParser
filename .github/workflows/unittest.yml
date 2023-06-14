@@ -5,12 +5,14 @@ name: Swift
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - 'main'
 
 jobs:
   build:
 
     runs-on: 'ios'
+    timeout-minutes: 10
 
     steps:
     - uses: actions/checkout@v3
