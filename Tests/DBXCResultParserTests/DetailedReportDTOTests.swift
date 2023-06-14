@@ -7,7 +7,7 @@
 
 import Foundation
 import XCTest
-@testable import TestReportParser
+@testable import DBXCResultParser
 
 class DetailedReportDTOTests: XCTestCase {
 

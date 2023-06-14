@@ -1,5 +1,5 @@
 import XCTest
-@testable import TestReportParser
+@testable import DBXCResultParser
 
 final class IntegrationTests: XCTestCase {
     override func setUpWithError() throws {
