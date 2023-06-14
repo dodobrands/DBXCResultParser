@@ -1,5 +1,5 @@
 import XCTest
-@testable import TestReportParser
+@testable import DBXCResultParser
 
 final class FormatterTests: XCTestCase {
     func test_filter_any_list() {

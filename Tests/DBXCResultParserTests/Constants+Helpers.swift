@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@testable import TestReportParser
+@testable import DBXCResultParser
 import XCTest
 
 extension Constants {
