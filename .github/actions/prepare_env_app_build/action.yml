@@ -1,0 +1,14 @@
+name: 'Prepare Environment for App Build'
+
+runs:
+  using: "composite"
+
+  steps:
+  - name: Get Xcode Version
+    shell: 'zsh {0}'
+    run: echo "XCODE_VERSION=$(<.xcode-version)" >> $GITHUB_ENV
+
+  - name: Select Xcode
+    uses: maxim-lobanov/setup-xcode@v1
+    with:
+      xcode-version: ${{ env.XCODE_VERSION }}
