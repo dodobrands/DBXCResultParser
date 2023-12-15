@@ -18,6 +18,6 @@ public class XCResultSeeker {
         return try FileManager
             .default
             .contentsOfDirectory(at: path, includingPropertiesForKeys: nil)
-            .filter{ $0.pathExtension == "xcresult" }
+            .filter { $0.pathExtension == "xcresult" }
     }
 }

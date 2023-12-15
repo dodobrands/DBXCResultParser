@@ -126,14 +126,18 @@ extension ReportModel.Module.File.RepeatableTest {
 }
 
 extension ReportModel.Module.File.RepeatableTest.Test {
-    public enum Status: Equatable {
+    public enum Status: Equatable, CaseIterable {
         case success
         case failure
         case expectedFailure
         case skipped
         case mixed
-        case unknown(rawValue: String)
+        case unknown
     }
+}
+
+extension Array where Element == ReportModel.Module.File.RepeatableTest.Test.Status {
+    static let allCases = ReportModel.Module.File.RepeatableTest.Test.Status.allCases
 }
 
 extension ReportModel {
@@ -212,12 +216,42 @@ fileprivate extension String {
 }
 
 extension Set where Element == ReportModel.Module.File.RepeatableTest {
+    public func filtered(testResults: [ReportModel.Module.File.RepeatableTest.Test.Status]) -> Set<Element> {
+        guard !testResults.isEmpty else {
+            return self
+        }
+        
+        let results = testResults
+            .flatMap { testResult -> Set<Element> in
+                switch testResult {
+                case .success:
+                    return self.succeeded
+                case .failure:
+                    return self.failed
+                case .mixed:
+                    return self.mixed
+                case .skipped:
+                    return self.skipped
+                case .expectedFailure:
+                    return self.expectedFailed
+                case .unknown:
+                    return self.unknown
+                }
+            }
+        
+        return Set(results)
+    }
+    
     var succeeded: Self {
         filter { $0.combinedStatus == .success }
     }
     
     var failed: Self {
         filter { $0.combinedStatus == .failure }
+    }
+    
+    var expectedFailed: Self {
+        filter { $0.combinedStatus == .expectedFailure }
     }
     
     var skipped: Self {
@@ -228,8 +262,8 @@ extension Set where Element == ReportModel.Module.File.RepeatableTest {
         filter { $0.combinedStatus == .mixed }
     }
     
-    func slow(_ duration: Duration) -> Self {
-        filter { $0.isSlow(duration) }
+    var unknown: Self {
+        filter { $0.combinedStatus == .unknown }
     }
 }
 
@@ -245,7 +279,7 @@ extension ReportModel.Module.File.RepeatableTest.Test {
         case "Expected Failure":
             status = .expectedFailure
         default:
-            status = .unknown(rawValue: test.testStatus._value)
+            status = .unknown
         }
         
         guard let duration = Double(test.duration._value) else {
@@ -283,5 +317,33 @@ extension Set where Element == ReportModel.Module.File.RepeatableTest {
 extension Set where Element == ReportModel.Module {
     subscript(_ name: String) -> Element? {
         first { $0.name == name }
+    }
+}
+
+extension Array where Element == ReportModel.Module.File.RepeatableTest {
+    var totalDuration: Duration {
+        assert(map { $0.totalDuration.unit }.elementsAreEqual)
+        let value = map { $0.totalDuration.value }.sum()
+        let unit = first?.totalDuration.unit ?? ReportModel.Module.File.RepeatableTest.Test.defaultDurationUnit
+        return .init(value: value, unit: unit)
+    }
+}
+
+extension ReportModel.Module.File.RepeatableTest.Test.Status {
+    var icon: String {
+        switch self {
+        case .success:
+            return "✅"
+        case .failure:
+            return "❌"
+        case .skipped:
+            return "⏭"
+        case .mixed:
+            return "⚠️"
+        case .expectedFailure:
+            return "🤡"
+        case .unknown:
+            return "🤷"
+        }
     }
 }
