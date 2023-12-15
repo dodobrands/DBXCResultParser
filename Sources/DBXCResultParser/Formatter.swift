@@ -8,6 +8,8 @@
 import Foundation
 
 class Formatter {
+    static var locale: Locale?
+    
     static func format(_ report: ReportModel,
                        filters: [Parser.Filter] = [],
                        format: Parser.Format) -> String {
@@ -171,6 +173,7 @@ extension String {
 extension MeasurementFormatter {
     static var singleTestDurationFormatter: MeasurementFormatter {
         let formatter = MeasurementFormatter()
+        formatter.locale = Formatter.locale
         formatter.unitOptions = [.providedUnit]
         formatter.numberFormatter.maximumFractionDigits = 0
         return formatter
@@ -178,6 +181,7 @@ extension MeasurementFormatter {
     
     static var totalTestsDurationFormatter: MeasurementFormatter {
         let formatter = MeasurementFormatter()
+        formatter.locale = Formatter.locale
         formatter.unitOptions = [.naturalScale]
         formatter.numberFormatter.maximumFractionDigits = 0
         return formatter
@@ -187,6 +191,7 @@ extension MeasurementFormatter {
 extension NumberFormatter {
     static var testsCountFormatter: NumberFormatter {
         let formatter = NumberFormatter()
+        formatter.locale = Formatter.locale
         formatter.maximumFractionDigits = 0
         return formatter
     }

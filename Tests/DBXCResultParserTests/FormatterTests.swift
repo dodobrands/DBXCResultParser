@@ -2,6 +2,16 @@ import XCTest
 @testable import DBXCResultParser
 
 final class FormatterTests: XCTestCase {
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        Formatter.locale = Locale(identifier: "en-US")
+    }
+    
+    override func tearDownWithError() throws {
+        Formatter.locale = nil
+        try super.tearDownWithError()
+    }
+    
     func test_filter_any_list() {
         let result = Formatter.format(generalReport, format: .list)
         
@@ -38,12 +48,12 @@ NetworkSpec
     
     func test_filter_any_count() {
         let result = Formatter.format(generalReport, format: .count)
-        XCTAssertEqual(result, "7 (0 secs)")
+        XCTAssertEqual(result, "7 (0 sec)")
     }
     
     func test_filter_failure_count() {
         let result = Formatter.format(generalReport, filters: [.failed], format: .count)
-        XCTAssertEqual(result, "3 (0 secs)")
+        XCTAssertEqual(result, "3 (0 sec)")
     }
     
     func test_filter_slow_list_milliseconds() {
