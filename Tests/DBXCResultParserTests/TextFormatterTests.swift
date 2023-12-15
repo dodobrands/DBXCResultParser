@@ -38,7 +38,7 @@ NotificationsSetupServiceTests
     
     func test_testResult_success_list() {
         let formatter = TextFormatter(format: .list, locale: locale)
-        let result = formatter.format(generalReport, testResults: [.succeeded])
+        let result = formatter.format(generalReport, testResults: [.success])
         
         XCTAssertEqual(result,
                        """
@@ -59,7 +59,7 @@ NetworkSpec
     
     func test_testResult_failure_count() {
         let formatter = TextFormatter(format: .count, locale: locale)
-        let result = formatter.format(generalReport, testResults: [.failed])
+        let result = formatter.format(generalReport, testResults: [.failure])
         
         XCTAssertEqual(result, "3 (0 sec)")
     }

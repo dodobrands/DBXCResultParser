@@ -28,7 +28,7 @@ class TextFormatter: FormatterProtocol {
     
     public func format(
         _ report: ReportModel,
-        testResults: [TestResult] = TestResult.allCases
+        testResults: [ReportModel.Module.File.RepeatableTest.Test.Status] = .allCases
     ) -> String {
         let files = report.modules
             .flatMap { Array($0.files) }
@@ -72,7 +72,7 @@ extension Array where Element == ReportModel.Module.File.RepeatableTest {
 }
 
 extension ReportModel.Module.File {
-    func report(testResults: [TestResult],
+    func report(testResults: [ReportModel.Module.File.RepeatableTest.Test.Status],
                 formatter: MeasurementFormatter) -> String? {
         let tests = repeatableTests.filtered(testResults: testResults).sorted { $0.name < $1.name }
         
@@ -129,30 +129,6 @@ fileprivate extension ReportModel.Module.File.RepeatableTest.Test.Status {
         case .unknown:
             return "🤷"
         }
-    }
-}
-
-extension Set where Element == ReportModel.Module.File.RepeatableTest {
-    func filtered(testResults: [TestResult]) -> Set<Element> {
-        guard !testResults.isEmpty else {
-            return self
-        }
-        
-        let results = testResults
-            .flatMap { testResult -> Set<Element> in
-                switch testResult {
-                case .succeeded:
-                    return self.succeeded
-                case .failed:
-                    return self.failed
-                case .mixed:
-                    return self.mixed
-                case .skipped:
-                    return self.skipped
-                }
-            }
-        
-        return Set(results)
     }
 }
 

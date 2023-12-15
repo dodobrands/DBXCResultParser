@@ -10,6 +10,6 @@ import Foundation
 public protocol FormatterProtocol {
     func format(
         _ report: ReportModel,
-        testResults: [TestResult]
+        testResults: [ReportModel.Module.File.RepeatableTest.Test.Status]
     ) -> String
 }
