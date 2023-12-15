@@ -19,7 +19,7 @@ env:
 jobs:
   tests:
 
-    runs-on: 'macos-latest'
+    runs-on: 'macos-13'
     timeout-minutes: 10
 
     steps:
