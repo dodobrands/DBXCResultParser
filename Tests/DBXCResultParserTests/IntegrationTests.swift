@@ -13,7 +13,7 @@ final class IntegrationTests: XCTestCase {
     }
     
     func test_parse_failed_list () throws {
-        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed], format: .list)
+        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed], format: .text(format: .list))
         let expectedResult = """
         CartHeaderCellSpec
         ❌ CartHeaderCell__regular_state_with_delivery_amount__should_snapshot()
@@ -24,7 +24,7 @@ final class IntegrationTests: XCTestCase {
     }
     
     func test_parse_slow_3s_list () throws {
-        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: .init(value: 3, unit: .seconds))], format: .list)
+        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: .init(value: 3, unit: .seconds))], format: .text(format: .list))
         let expectedResult = """
         ContactsViewControllerSpec
         ✅🕢 (3 sec) ContactsViewController__load_view__when_feedback_block_are_visible__when_chat_enabled__should_snapshot()
@@ -34,32 +34,32 @@ final class IntegrationTests: XCTestCase {
     }
     
     func test_parse_slow_3s_count() throws {
-        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: .init(value: 3, unit: .seconds))], format: .count)
+        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: .init(value: 3, unit: .seconds))], format: .text(format: .count))
         XCTAssertEqual(result, "2 (7 sec)")
     }
     
     func test_parse_failed_count() throws {
-        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed], format: .count)
+        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed], format: .text(format: .count))
         XCTAssertEqual(result, "77 (9 sec)")
     }
     
     func test_parse_failed_slow_3s_count() throws {
-        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed, .slow(duration: .init(value: 3, unit: .seconds))], format: .count)
+        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed, .slow(duration: .init(value: 3, unit: .seconds))], format: .text(format: .count))
         XCTAssertEqual(result, "79 (16 sec)")
     }
 
     func test_parse_any_count() throws {
-        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(format: .count)
+        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(format: .text(format: .count))
         XCTAssertEqual(result, "3708 (2 min)")
     }
 
     func test_parse_skipped_count() throws {
-        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.skipped], format: .count)
+        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.skipped], format: .text(format: .count))
         XCTAssertEqual(result, "3")
     }
     
     func test_parse_skipped_list() throws {
-        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.skipped], format: .list)
+        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.skipped], format: .text(format: .list))
         XCTAssertEqual(result, """
         StateSaveServiceTests
         ⏭ test_whenAutoPromocodeIsAppliedForRestaurant_thenShouldShowNotification()
@@ -69,7 +69,7 @@ final class IntegrationTests: XCTestCase {
     }
 
     func test_parse_mixed_list() throws {
-        let result = try Parser(xcresultPath: Constants.e2eTestsReportPath).parse(filters: [.mixed], format: .list)
+        let result = try Parser(xcresultPath: Constants.e2eTestsReportPath).parse(filters: [.mixed], format: .text(format: .list))
         XCTAssertEqual(result, """
         DeepLinksTests
         ⚠️ test_promocode_is_invalid_deeplink()
@@ -78,7 +78,7 @@ final class IntegrationTests: XCTestCase {
     
     func test_parse_slow_list() throws {
         let slowThreshold = Duration(value: 100, unit: .milliseconds)
-        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: slowThreshold)], format: .list)
+        let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: slowThreshold)], format: .text(format: .list))
         let expectedResult = """
         AlertViewSpec
         ✅🕢 (449 ms) EmailSubscriptionCell__snapshot()
@@ -94,7 +94,7 @@ final class IntegrationTests: XCTestCase {
     }
     
     func test_parse_failedMixed_list() throws {
-        let result = try Parser(xcresultPath: Constants.e2eTestsReportPath).parse(filters: [.failed, .mixed], format: .list)
+        let result = try Parser(xcresultPath: Constants.e2eTestsReportPath).parse(filters: [.failed, .mixed], format: .text(format: .list))
         XCTAssertEqual(result, """
         DeepLinksTests
         ❌ test_open_order_by_deeplink()

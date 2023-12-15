@@ -16,7 +16,10 @@ public class Parser {
     }
 
     public func parse(filters: [Filter] = [], format: Format) throws -> String {
-        Formatter.format(report, filters: filters, format: format)
+        switch format {
+        case .text(let format):
+            return Formatter.format(report, filters: filters, format: format)
+        }
     }
 }
 
@@ -30,7 +33,11 @@ extension Parser {
     }
     
     public enum Format {
-        case list
-        case count
+        case text(format: TextFormat)
+        
+        public enum TextFormat {
+            case list
+            case count
+        }
     }
 }

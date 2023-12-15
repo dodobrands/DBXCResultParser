@@ -12,7 +12,7 @@ class Formatter {
     
     static func format(_ report: ReportModel,
                        filters: [Parser.Filter] = [],
-                       format: Parser.Format) -> String {
+                       format: Parser.Format.TextFormat) -> String {
         let files = report.modules
             .flatMap { Array($0.files) }
             .sorted { $0.name < $1.name }
