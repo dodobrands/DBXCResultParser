@@ -28,7 +28,7 @@ class TextFormatter: FormatterProtocol {
     
     public func format(
         _ report: ReportModel,
-        filters: [Filter] = []
+        testResults: [TestResult] = TestResult.allCases
     ) -> String {
         let files = report.modules
             .flatMap { Array($0.files) }
@@ -36,13 +36,11 @@ class TextFormatter: FormatterProtocol {
         
         switch format {
         case .list:
-            let slowTestsDuration = filters.slowTestsDuration
             let singleTestsMeasurementFormatter = MeasurementFormatter.singleTestDurationFormatter
             singleTestsMeasurementFormatter.locale = locale
             let filesReports = files.compactMap { file in
-                file.report(filters: filters,
-                            formatter: singleTestsMeasurementFormatter,
-                            slowTestsDuration: slowTestsDuration)
+                file.report(testResults: testResults,
+                            formatter: singleTestsMeasurementFormatter)
             }
             return filesReports.joined(separator: "\n\n")
         case .count:
@@ -50,10 +48,10 @@ class TextFormatter: FormatterProtocol {
             numberFormatter.locale = locale
             let totalTestsMeasurementFormatter = MeasurementFormatter.totalTestsDurationFormatter
             totalTestsMeasurementFormatter.locale = locale
-            let tests = files.flatMap { $0.repeatableTests.filtered(filters: filters) }
+            let tests = files.flatMap { $0.repeatableTests.filtered(testResults: testResults) }
             let count = tests.count
             let duration = tests.totalDuration
-            let addDuration = filters != [.skipped] // don't add 0ms duration if requested only skipped tests
+            let addDuration = testResults != [.skipped] // don't add 0ms duration if requested only skipped tests
             return [
                 numberFormatter.string(from: NSNumber(value: count)) ?? String(count),
                 addDuration ? totalTestsMeasurementFormatter.string(from: duration).wrappedInBrackets : nil
@@ -74,10 +72,9 @@ extension Array where Element == ReportModel.Module.File.RepeatableTest {
 }
 
 extension ReportModel.Module.File {
-    func report(filters: [Filter],
-                formatter: MeasurementFormatter,
-                slowTestsDuration: Duration?) -> String? {
-        let tests = repeatableTests.filtered(filters: filters).sorted { $0.name < $1.name }
+    func report(testResults: [TestResult],
+                formatter: MeasurementFormatter) -> String? {
+        let tests = repeatableTests.filtered(testResults: testResults).sorted { $0.name < $1.name }
         
         guard !tests.isEmpty else {
             return nil
@@ -86,10 +83,7 @@ extension ReportModel.Module.File {
         var rows = tests
             .sorted { $0.name < $1.name }
             .map { test in
-                test.report(
-                    formatter: formatter,
-                    slowThresholdDuration: slowTestsDuration
-                )
+                test.report(formatter: formatter)
             }
         
         rows.insert(name, at: 0)
@@ -99,17 +93,8 @@ extension ReportModel.Module.File {
 }
 
 fileprivate extension ReportModel.Module.File.RepeatableTest {
-    private func reportIcons(_ slowThresholdDuration: Duration?) -> String {
-        [
-            combinedStatus.icon,
-            slowThresholdDuration.flatMap { slowIcon($0) }
-        ]
-            .compactMap { $0 }
-            .joined(separator: "")
-    }
-    
-    private func slowIcon(_ slowThresholdDuration: Duration) -> String? {
-        isSlow(slowThresholdDuration) ? "🕢" : nil
+    private func reportIcons() -> String {
+        combinedStatus.icon
     }
     
     private func reportDuration(formatter: MeasurementFormatter, slowThresholdDuration: Duration) -> String {
@@ -118,20 +103,9 @@ fileprivate extension ReportModel.Module.File.RepeatableTest {
         ).wrappedInBrackets
     }
     
-    private func slowReportDuration(
-        formatter: MeasurementFormatter,
-        slowThresholdDuration: Duration
-    ) -> String? {
-        guard isSlow(slowThresholdDuration) else {
-            return nil
-        }
-        return reportDuration(formatter: formatter, slowThresholdDuration: slowThresholdDuration)
-    }
-    
-    func report(formatter: MeasurementFormatter, slowThresholdDuration: Duration?) -> String {
+    func report(formatter: MeasurementFormatter) -> String {
         [
-            reportIcons(slowThresholdDuration),
-            slowThresholdDuration.flatMap { slowReportDuration(formatter:formatter, slowThresholdDuration: $0) },
+            reportIcons(),
             name
         ]
             .compactMap { $0 }
@@ -159,14 +133,14 @@ fileprivate extension ReportModel.Module.File.RepeatableTest.Test.Status {
 }
 
 extension Set where Element == ReportModel.Module.File.RepeatableTest {
-    func filtered(filters: [Filter]) -> Set<Element> {
-        guard !filters.isEmpty else {
+    func filtered(testResults: [TestResult]) -> Set<Element> {
+        guard !testResults.isEmpty else {
             return self
         }
         
-        let results = filters
-            .flatMap { filter -> Set<Element> in
-                switch filter {
+        let results = testResults
+            .flatMap { testResult -> Set<Element> in
+                switch testResult {
                 case .succeeded:
                     return self.succeeded
                 case .failed:
@@ -175,8 +149,6 @@ extension Set where Element == ReportModel.Module.File.RepeatableTest {
                     return self.mixed
                 case .skipped:
                     return self.skipped
-                case .slow(let duration):
-                    return self.slow(duration)
                 }
             }
         

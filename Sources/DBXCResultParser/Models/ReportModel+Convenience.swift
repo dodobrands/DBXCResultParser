@@ -12,6 +12,7 @@ extension ReportModel {
         let overviewReport = try OverviewReportDTO(from: xcresultPath)
         let detailedReport = try DetailedReportDTO(from: xcresultPath,
                                                    refId: overviewReport.testsRefId)
+        
         let coverageDTOs = try? Array<CoverageDTO>(from: xcresultPath)
             .filter { !$0.name.contains("TestHelpers") && !$0.name.contains("Tests") }
         
