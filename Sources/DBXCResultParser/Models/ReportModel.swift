@@ -347,9 +347,3 @@ extension ReportModel.Module.File.RepeatableTest.Test.Status {
         }
     }
 }
-
-extension ReportModel.Module.File.RepeatableTest {
-    func reportIcons() -> String {
-        combinedStatus.icon
-    }
-}

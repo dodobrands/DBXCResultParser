@@ -86,7 +86,7 @@ extension ReportModel.Module.File {
 fileprivate extension ReportModel.Module.File.RepeatableTest {
     func report(formatter: MeasurementFormatter) -> String {
         [
-            reportIcons(),
+            combinedStatus.icon,
             name
         ]
             .compactMap { $0 }
