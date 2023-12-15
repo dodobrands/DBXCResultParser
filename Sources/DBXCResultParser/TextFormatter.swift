@@ -7,12 +7,19 @@
 
 import Foundation
 
+extension TextFormatter {
+    public enum Format {
+        case list
+        case count
+    }
+}
+
 class TextFormatter {
     static var locale: Locale?
     
     static func format(_ report: ReportModel,
-                       filters: [Parser.Filter] = [],
-                       format: Parser.Format.TextFormat) -> String {
+                       filters: [Filter] = [],
+                       format: Format) -> String {
         let files = report.modules
             .flatMap { Array($0.files) }
             .sorted { $0.name < $1.name }
@@ -54,7 +61,7 @@ extension Array where Element == ReportModel.Module.File.RepeatableTest {
 }
 
 extension ReportModel.Module.File {
-    func report(filters: [Parser.Filter],
+    func report(filters: [Filter],
                 formatter: MeasurementFormatter,
                 slowTestsDuration: Duration?) -> String? {
         let tests = repeatableTests.filtered(filters: filters).sorted { $0.name < $1.name }
@@ -139,7 +146,7 @@ fileprivate extension ReportModel.Module.File.RepeatableTest.Test.Status {
 }
 
 extension Set where Element == ReportModel.Module.File.RepeatableTest {
-    func filtered(filters: [Parser.Filter]) -> Set<Element> {
+    func filtered(filters: [Filter]) -> Set<Element> {
         guard !filters.isEmpty else {
             return self
         }
@@ -194,22 +201,5 @@ extension NumberFormatter {
         formatter.locale = TextFormatter.locale
         formatter.maximumFractionDigits = 0
         return formatter
-    }
-}
-
-extension Array where Element == Parser.Filter {
-    var slowTestsDuration: Duration? {
-        var duration: Duration?
-        
-        forEach { filter in
-            switch filter {
-            case .slow(let value):
-                duration = value
-            default:
-                return
-            }
-        }
-        
-        return duration
     }
 }
