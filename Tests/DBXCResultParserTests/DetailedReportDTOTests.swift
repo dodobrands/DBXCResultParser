@@ -19,8 +19,12 @@ class DetailedReportDTOTests: XCTestCase {
         try super.tearDownWithError()
     }
     
-    func test() throws {
+    func test_parseWithExplicitRefId() throws {
         let overviewReport = try OverviewReportDTO(from: Constants.unitTestsReportPath)
         XCTAssertNoThrow(try DetailedReportDTO(from: Constants.unitTestsReportPath, refId: overviewReport.testsRefId))
+    }
+    
+    func test_parseWithImplicitRefId() throws {
+        XCTAssertNoThrow(try DetailedReportDTO(from: Constants.unitTestsReportPath))
     }
 }
