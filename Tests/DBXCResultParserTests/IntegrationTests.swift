@@ -4,9 +4,11 @@ import XCTest
 final class IntegrationTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
+        Formatter.locale = Locale(identifier: "en-US")
     }
     
     override func tearDownWithError() throws {
+        Formatter.locale = nil
         try super.tearDownWithError()
     }
     
@@ -25,25 +27,25 @@ final class IntegrationTests: XCTestCase {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: .init(value: 3, unit: .seconds))], format: .list)
         let expectedResult = """
         ContactsViewControllerSpec
-        ✅🕢 (3 secs) ContactsViewController__load_view__when_feedback_block_are_visible__when_chat_enabled__should_snapshot()
-        ✅🕢 (3 secs) ContactsViewController__load_view__when_location_button_is_visible__should_snapshot()
+        ✅🕢 (3 sec) ContactsViewController__load_view__when_feedback_block_are_visible__when_chat_enabled__should_snapshot()
+        ✅🕢 (3 sec) ContactsViewController__load_view__when_location_button_is_visible__should_snapshot()
         """
         XCTAssertEqual(String(result.prefix(expectedResult.count)), expectedResult)
     }
     
     func test_parse_slow_3s_count() throws {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.slow(duration: .init(value: 3, unit: .seconds))], format: .count)
-        XCTAssertEqual(result, "2 (7 secs)")
+        XCTAssertEqual(result, "2 (7 sec)")
     }
     
     func test_parse_failed_count() throws {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed], format: .count)
-        XCTAssertEqual(result, "77 (9 secs)")
+        XCTAssertEqual(result, "77 (9 sec)")
     }
     
     func test_parse_failed_slow_3s_count() throws {
         let result = try Parser(xcresultPath: Constants.unitTestsReportPath).parse(filters: [.failed, .slow(duration: .init(value: 3, unit: .seconds))], format: .count)
-        XCTAssertEqual(result, "79 (16 secs)")
+        XCTAssertEqual(result, "79 (16 sec)")
     }
 
     func test_parse_any_count() throws {
