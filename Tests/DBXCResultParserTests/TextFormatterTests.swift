@@ -2,18 +2,20 @@ import XCTest
 @testable import DBXCResultParser
 
 final class FormatterTests: XCTestCase {
+    var locale: Locale!
     override func setUpWithError() throws {
         try super.setUpWithError()
-        Formatter.locale = Locale(identifier: "en-US")
+        locale = Locale(identifier: "en-US")
     }
     
     override func tearDownWithError() throws {
-        Formatter.locale = nil
+        locale = nil
         try super.tearDownWithError()
     }
     
-    func test_filter_any_list() {
-        let result = Formatter.format(generalReport, format: .list)
+    func test_testResult_any_list() {
+        let formatter = TextFormatter(format: .list, locale: locale)
+        let result = formatter.format(generalReport)
         
         XCTAssertEqual(result,
                        """
@@ -34,8 +36,10 @@ NotificationsSetupServiceTests
 """)
     }
     
-    func test_filter_success_list() {
-        let result = Formatter.format(generalReport, filters: [.succeeded], format: .list)
+    func test_testResult_success_list() {
+        let formatter = TextFormatter(format: .list, locale: locale)
+        let result = formatter.format(generalReport, testResults: [.success])
+        
         XCTAssertEqual(result,
                        """
 AuthSpec
@@ -46,51 +50,18 @@ NetworkSpec
 """)
     }
     
-    func test_filter_any_count() {
-        let result = Formatter.format(generalReport, format: .count)
+    func test_testResult_any_count() {
+        let formatter = TextFormatter(format: .count, locale: locale)
+        let result = formatter.format(generalReport)
+        
         XCTAssertEqual(result, "7 (0 sec)")
     }
     
-    func test_filter_failure_count() {
-        let result = Formatter.format(generalReport, filters: [.failed], format: .count)
+    func test_testResult_failure_count() {
+        let formatter = TextFormatter(format: .count, locale: locale)
+        let result = formatter.format(generalReport, testResults: [.failure])
+        
         XCTAssertEqual(result, "3 (0 sec)")
-    }
-    
-    func test_filter_slow_list_milliseconds() {
-        let duration = Duration(value: 100, unit: .milliseconds)
-        let result = Formatter.format(slowReport(duration: duration),
-                                      filters: [.slow(duration: duration)], format: .list)
-        XCTAssertEqual(result, """
-WriterSpec
-✅🕢 (100 ms) Check file exists
-✅🕢 (200 ms) Read from file
-⚠️🕢 (125 ms) Write to file
-""")
-    }
-    
-    func test_filter_slow_list_minutes() {
-        let duration = Duration(value: 8, unit: .minutes)
-        let result = Formatter.format(slowReport(duration: duration),
-                                      filters: [.slow(duration: duration)], format: .list)
-        XCTAssertEqual(result, """
-WriterSpec
-✅🕢 (8 min) Check file exists
-✅🕢 (16 min) Read from file
-⚠️🕢 (10 min) Write to file
-""")
-    }
-    
-    func test_filter_failed_slow_list_minutes() {
-        let duration = Duration(value: 8, unit: .minutes)
-        let result = Formatter.format(slowReport(duration: duration),
-                                      filters: [.failed,.slow(duration: duration)], format: .list)
-        XCTAssertEqual(result, """
-WriterSpec
-✅🕢 (8 min) Check file exists
-❌ Check folder exists
-✅🕢 (16 min) Read from file
-⚠️🕢 (10 min) Write to file
-""")
     }
 }
 
