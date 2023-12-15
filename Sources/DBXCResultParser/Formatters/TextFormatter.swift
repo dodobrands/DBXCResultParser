@@ -84,12 +84,6 @@ extension ReportModel.Module.File {
 }
 
 fileprivate extension ReportModel.Module.File.RepeatableTest {
-    private func reportDuration(formatter: MeasurementFormatter, slowThresholdDuration: Duration) -> String {
-        formatter.string(
-            from: averageDuration.converted(to: slowThresholdDuration.unit)
-        ).wrappedInBrackets
-    }
-    
     func report(formatter: MeasurementFormatter) -> String {
         [
             reportIcons(),
