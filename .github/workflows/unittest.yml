@@ -8,6 +8,14 @@ on:
     branches:
       - 'main'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  SCHEME: "DBXCResultParser"
+  DESTINATION: "platform=OS X"
+
 jobs:
   tests:
 
@@ -16,9 +24,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
+
+    - name: Prepare Environment for App Build
+      uses: ./.github/actions/prepare_env_app_build    
+
+    - name: Resolve Dependencies
+      run: >
+        xcodebuild -resolvePackageDependencies
+        -scheme ${{ env.SCHEME }}
+        -destination '${{ env.DESTINATION }}'
+        -quiet
+
     - name: Build
-      run: swift build
-      
-    - name: Run tests
-      run: swift test
+      run: >
+        xcodebuild build-for-testing
+        -scheme ${{ env.SCHEME }}
+        -destination '${{ env.DESTINATION }}'
+        -quiet
+
+    - name: Test
+      run: >
+        xcodebuild test-without-building
+        -scheme ${{ env.SCHEME }}
+        -destination '${{ env.DESTINATION }}'
+        -resultBundlePath ${{ env.SCHEME }}
+        -quiet
