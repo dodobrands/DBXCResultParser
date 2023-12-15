@@ -14,12 +14,22 @@ extension TextFormatter {
     }
 }
 
-class TextFormatter {
-    static var locale: Locale?
+class TextFormatter: FormatterProtocol {
+    public let format: Format
+    public let locale: Locale?
     
-    static func format(_ report: ReportModel,
-                       filters: [Filter] = [],
-                       format: Format) -> String {
+    public init(
+        format: Format,
+        locale: Locale? = nil
+    ) {
+        self.format = format
+        self.locale = locale
+    }
+    
+    public func format(
+        _ report: ReportModel,
+        filters: [Filter] = []
+    ) -> String {
         let files = report.modules
             .flatMap { Array($0.files) }
             .sorted { $0.name < $1.name }
@@ -28,6 +38,7 @@ class TextFormatter {
         case .list:
             let slowTestsDuration = filters.slowTestsDuration
             let singleTestsMeasurementFormatter = MeasurementFormatter.singleTestDurationFormatter
+            singleTestsMeasurementFormatter.locale = locale
             let filesReports = files.compactMap { file in
                 file.report(filters: filters,
                             formatter: singleTestsMeasurementFormatter,
@@ -36,7 +47,9 @@ class TextFormatter {
             return filesReports.joined(separator: "\n\n")
         case .count:
             let numberFormatter = NumberFormatter.testsCountFormatter
+            numberFormatter.locale = locale
             let totalTestsMeasurementFormatter = MeasurementFormatter.totalTestsDurationFormatter
+            totalTestsMeasurementFormatter.locale = locale
             let tests = files.flatMap { $0.repeatableTests.filtered(filters: filters) }
             let count = tests.count
             let duration = tests.totalDuration
@@ -73,11 +86,11 @@ extension ReportModel.Module.File {
         var rows = tests
             .sorted { $0.name < $1.name }
             .map { test in
-            test.report(
-                formatter: formatter,
-                slowThresholdDuration: slowTestsDuration
-            )
-        }
+                test.report(
+                    formatter: formatter,
+                    slowThresholdDuration: slowTestsDuration
+                )
+            }
         
         rows.insert(name, at: 0)
         
@@ -153,19 +166,19 @@ extension Set where Element == ReportModel.Module.File.RepeatableTest {
         
         let results = filters
             .flatMap { filter -> Set<Element> in
-            switch filter {
-            case .succeeded:
-                return self.succeeded
-            case .failed:
-                return self.failed
-            case .mixed:
-                return self.mixed
-            case .skipped:
-                return self.skipped
-            case .slow(let duration):
-                return self.slow(duration)
+                switch filter {
+                case .succeeded:
+                    return self.succeeded
+                case .failed:
+                    return self.failed
+                case .mixed:
+                    return self.mixed
+                case .skipped:
+                    return self.skipped
+                case .slow(let duration):
+                    return self.slow(duration)
+                }
             }
-        }
         
         return Set(results)
     }
@@ -180,7 +193,6 @@ extension String {
 extension MeasurementFormatter {
     static var singleTestDurationFormatter: MeasurementFormatter {
         let formatter = MeasurementFormatter()
-        formatter.locale = TextFormatter.locale
         formatter.unitOptions = [.providedUnit]
         formatter.numberFormatter.maximumFractionDigits = 0
         return formatter
@@ -188,7 +200,6 @@ extension MeasurementFormatter {
     
     static var totalTestsDurationFormatter: MeasurementFormatter {
         let formatter = MeasurementFormatter()
-        formatter.locale = TextFormatter.locale
         formatter.unitOptions = [.naturalScale]
         formatter.numberFormatter.maximumFractionDigits = 0
         return formatter
@@ -198,7 +209,6 @@ extension MeasurementFormatter {
 extension NumberFormatter {
     static var testsCountFormatter: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.locale = TextFormatter.locale
         formatter.maximumFractionDigits = 0
         return formatter
     }
