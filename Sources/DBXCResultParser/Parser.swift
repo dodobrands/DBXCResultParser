@@ -18,7 +18,11 @@ public class Parser {
     public func parse(filters: [Filter] = [], format: Format) throws -> String {
         switch format {
         case .text(let format):
-            return Formatter.format(report, filters: filters, format: format)
+            return TextFormatter.format(
+                report, 
+                filters: filters,
+                format: format
+            )
         }
     }
 }

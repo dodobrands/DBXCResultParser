@@ -1,5 +1,5 @@
 //
-//  Formatter.swift
+//  TextFormatter.swift
 //  
 //
 //  Created by Алексей Берёзка on 31.12.2021.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Formatter {
+class TextFormatter {
     static var locale: Locale?
     
     static func format(_ report: ReportModel,
@@ -173,7 +173,7 @@ extension String {
 extension MeasurementFormatter {
     static var singleTestDurationFormatter: MeasurementFormatter {
         let formatter = MeasurementFormatter()
-        formatter.locale = Formatter.locale
+        formatter.locale = TextFormatter.locale
         formatter.unitOptions = [.providedUnit]
         formatter.numberFormatter.maximumFractionDigits = 0
         return formatter
@@ -181,7 +181,7 @@ extension MeasurementFormatter {
     
     static var totalTestsDurationFormatter: MeasurementFormatter {
         let formatter = MeasurementFormatter()
-        formatter.locale = Formatter.locale
+        formatter.locale = TextFormatter.locale
         formatter.unitOptions = [.naturalScale]
         formatter.numberFormatter.maximumFractionDigits = 0
         return formatter
@@ -191,7 +191,7 @@ extension MeasurementFormatter {
 extension NumberFormatter {
     static var testsCountFormatter: NumberFormatter {
         let formatter = NumberFormatter()
-        formatter.locale = Formatter.locale
+        formatter.locale = TextFormatter.locale
         formatter.maximumFractionDigits = 0
         return formatter
     }
