@@ -319,3 +319,37 @@ extension Set where Element == ReportModel.Module {
         first { $0.name == name }
     }
 }
+
+extension Array where Element == ReportModel.Module.File.RepeatableTest {
+    var totalDuration: Duration {
+        assert(map { $0.totalDuration.unit }.elementsAreEqual)
+        let value = map { $0.totalDuration.value }.sum()
+        let unit = first?.totalDuration.unit ?? ReportModel.Module.File.RepeatableTest.Test.defaultDurationUnit
+        return .init(value: value, unit: unit)
+    }
+}
+
+extension ReportModel.Module.File.RepeatableTest.Test.Status {
+    var icon: String {
+        switch self {
+        case .success:
+            return "✅"
+        case .failure:
+            return "❌"
+        case .skipped:
+            return "⏭"
+        case .mixed:
+            return "⚠️"
+        case .expectedFailure:
+            return "🤡"
+        case .unknown:
+            return "🤷"
+        }
+    }
+}
+
+extension ReportModel.Module.File.RepeatableTest {
+    func reportIcons() -> String {
+        combinedStatus.icon
+    }
+}

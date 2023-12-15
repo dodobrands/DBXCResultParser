@@ -62,15 +62,6 @@ class TextFormatter: FormatterProtocol {
     }
 }
 
-extension Array where Element == ReportModel.Module.File.RepeatableTest {
-    var totalDuration: Duration {
-        assert(map { $0.totalDuration.unit }.elementsAreEqual)
-        let value = map { $0.totalDuration.value }.sum()
-        let unit = first?.totalDuration.unit ?? ReportModel.Module.File.RepeatableTest.Test.defaultDurationUnit
-        return .init(value: value, unit: unit)
-    }
-}
-
 extension ReportModel.Module.File {
     func report(testResults: [ReportModel.Module.File.RepeatableTest.Test.Status],
                 formatter: MeasurementFormatter) -> String? {
@@ -93,10 +84,6 @@ extension ReportModel.Module.File {
 }
 
 fileprivate extension ReportModel.Module.File.RepeatableTest {
-    private func reportIcons() -> String {
-        combinedStatus.icon
-    }
-    
     private func reportDuration(formatter: MeasurementFormatter, slowThresholdDuration: Duration) -> String {
         formatter.string(
             from: averageDuration.converted(to: slowThresholdDuration.unit)
@@ -110,25 +97,6 @@ fileprivate extension ReportModel.Module.File.RepeatableTest {
         ]
             .compactMap { $0 }
             .joined(separator: " ")
-    }
-}
-
-fileprivate extension ReportModel.Module.File.RepeatableTest.Test.Status {
-    var icon: String {
-        switch self {
-        case .success:
-            return "✅"
-        case .failure:
-            return "❌"
-        case .skipped:
-            return "⏭"
-        case .mixed:
-            return "⚠️"
-        case .expectedFailure:
-            return "🤡"
-        case .unknown:
-            return "🤷"
-        }
     }
 }
 
