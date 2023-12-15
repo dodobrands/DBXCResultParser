@@ -18,7 +18,8 @@ extension OverviewReportDTO {
 }
 
 extension DetailedReportDTO {
-    init(from xcresultPath: URL, refId: String) throws {
+    init(from xcresultPath: URL, refId: String? = nil) throws {
+        let refId = try (refId ?? OverviewReportDTO(from: xcresultPath).testsRefId)
         let tempFilePath = try Constants.tempFilePath
         try Shell.execute("xcrun xcresulttool get --path \(xcresultPath.relativePath) --format json --id \(refId) > \(tempFilePath.relativePath)")
         let data = try Data(contentsOf: tempFilePath)
