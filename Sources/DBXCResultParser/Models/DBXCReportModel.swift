@@ -348,7 +348,7 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test.Status {
         case .failure:
             return "❌"
         case .skipped:
-            return "⏭"
+            return "⏭️"
         case .mixed:
             return "⚠️"
         case .expectedFailure:
