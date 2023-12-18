@@ -9,7 +9,7 @@ import Foundation
 
 public struct DBXCReportModel {
     public let modules: Set<Module>
-    public private(set) var warningCount: Int?
+    public let warningCount: Int?
 }
 
 extension DBXCReportModel {
@@ -145,6 +145,8 @@ extension DBXCReportModel {
         
         if let warningCount = overviewReportDTO.metrics.warningCount?._value {
             self.warningCount = Int(warningCount)
+        } else {
+            self.warningCount = nil
         }
         
         let filteredCoverages = coverageDTOs
@@ -214,6 +216,9 @@ fileprivate extension String {
 }
 
 extension Set where Element == DBXCReportModel.Module.File.RepeatableTest {
+    /// Filters tests based on statis
+    /// - Parameter testResults: statuses to leave in result
+    /// - Returns: set of elements matching any of the specified statuses
     public func filtered(testResults: [DBXCReportModel.Module.File.RepeatableTest.Test.Status]) -> Set<Element> {
         guard !testResults.isEmpty else {
             return self
@@ -240,26 +245,34 @@ extension Set where Element == DBXCReportModel.Module.File.RepeatableTest {
         return Set(results)
     }
     
+    // Property that filters the collection to include only elements whose status is `.success`.
     var succeeded: Self {
         filter { $0.combinedStatus == .success }
     }
     
+    // Property that filters the collection to include only elements whose status is `.failure`.
     var failed: Self {
         filter { $0.combinedStatus == .failure }
     }
     
+    // Property that filters the collection to include only elements whose status is `.expectedFailure`.
     var expectedFailed: Self {
         filter { $0.combinedStatus == .expectedFailure }
     }
     
+    // Property that filters the collection to include only elements whose status is `.skipped`.
     var skipped: Self {
         filter { $0.combinedStatus == .skipped }
     }
     
+    // Property that filters the collection to include only elements whose status is `.mixed`.
+    // This might indicate a combination of success and failure statuses or an intermediate state.
     var mixed: Self {
         filter { $0.combinedStatus == .mixed }
     }
     
+    // Property that filters the collection to include only elements whose status is `.unknown`.
+    // This status might be used when the status of an element has not been determined or is not applicable.
     var unknown: Self {
         filter { $0.combinedStatus == .unknown }
     }

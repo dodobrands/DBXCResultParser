@@ -8,16 +8,25 @@
 import Foundation
 
 extension DBXCTextFormatter {
+    /// Output format options
     public enum Format {
-        case list
-        case count
+        case list // Outputs detailed list of test results
+        case count // // Outputs a summary count of test results
     }
 }
 
 public class DBXCTextFormatter {
+    /// The format style to use for output
     public let format: Format
+    
+    /// /// The locale to use for formatting numbers and measurements
     public let locale: Locale?
     
+    /// Initializes a new text formatter with the specified format and locale.
+    ///
+    /// - Parameters:
+    ///   - format: The output format to use.
+    ///   - locale: The locale for number and measurement formatting. Defaults to `nil`.
     public init(
         format: Format,
         locale: Locale? = nil
@@ -26,6 +35,12 @@ public class DBXCTextFormatter {
         self.locale = locale
     }
     
+    /// Formats the test report data into a string based on the specified format.
+    ///
+    /// - Parameters:
+    ///   - report: The `DBXCReportModel` containing the test report data.
+    ///   - testResults: The test result statuses to include in the output. Defaults to all test statuses.
+    /// - Returns: A formatted string representation of the report data.
     public func format(
         _ report: DBXCReportModel,
         testResults: [DBXCReportModel.Module.File.RepeatableTest.Test.Status] = .allCases
