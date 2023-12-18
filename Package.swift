@@ -5,6 +5,7 @@ import PackageDescription
 
 let packageName = "DBXCResultParser"
 let packageTestsName = packageName + "Tests"
+let packageTestHelpersName = packageName + "TestHelpers"
 
 let package = Package(
     name: packageName,
@@ -15,7 +16,12 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: packageName,
-            targets: [packageName]),
+            targets: [packageName]
+        ),
+        .library(
+            name: packageTestHelpersName,
+            targets: [packageTestHelpersName]
+        ),
     ],
     dependencies: [
 
@@ -25,13 +31,20 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: packageName,
+            dependencies: []
+        ),
+        .target(
+            name: packageTestHelpersName, 
             dependencies: [
-
+                .init(stringLiteral: packageName)
             ]
         ),
         .testTarget(
             name: packageTestsName,
-            dependencies: [.init(stringLiteral: packageName)],
+            dependencies: [
+                .init(stringLiteral: packageName),
+                .init(stringLiteral: packageTestHelpersName)
+            ],
             resources: [
                 .process("Resources/AllTests.xcresult"),
                 .process("Resources/AllTests_coverage.xcresult"),
