@@ -33,7 +33,7 @@ NetworkSpec
 ✅ MakeRequest
 
 NotificationsSetupServiceTests
-⏭ enabledNotifications
+⏭️ enabledNotifications
 """)
     }
     
