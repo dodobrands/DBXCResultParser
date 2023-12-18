@@ -1,5 +1,5 @@
 //
-//  Shell.swift
+//  DBShell.swift
 //  
 //
 //  Created by Алексей Берёзка on 28.12.2021.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-class Shell {
+public class DBShell {
     @discardableResult
-    static func execute(_ command: String) throws -> String {
+    public static func execute(_ command: String) throws -> String {
         let task = Process()
         let pipe = Pipe()
         

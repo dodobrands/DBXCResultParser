@@ -1,5 +1,5 @@
 //
-//  TextFormatter.swift
+//  DBXCTextFormatter.swift
 //  
 //
 //  Created by Алексей Берёзка on 31.12.2021.
@@ -7,17 +7,26 @@
 
 import Foundation
 
-extension TextFormatter {
+extension DBXCTextFormatter {
+    /// Output format options
     public enum Format {
-        case list
-        case count
+        case list // Outputs detailed list of test results
+        case count // // Outputs a summary count of test results
     }
 }
 
-class TextFormatter: FormatterProtocol {
+public class DBXCTextFormatter {
+    /// The format style to use for output
     public let format: Format
+    
+    /// /// The locale to use for formatting numbers and measurements
     public let locale: Locale?
     
+    /// Initializes a new text formatter with the specified format and locale.
+    ///
+    /// - Parameters:
+    ///   - format: The output format to use.
+    ///   - locale: The locale for number and measurement formatting. Defaults to `nil`.
     public init(
         format: Format,
         locale: Locale? = nil
@@ -26,9 +35,15 @@ class TextFormatter: FormatterProtocol {
         self.locale = locale
     }
     
+    /// Formats the test report data into a string based on the specified format.
+    ///
+    /// - Parameters:
+    ///   - report: The `DBXCReportModel` containing the test report data.
+    ///   - testResults: The test result statuses to include in the output. Defaults to all test statuses.
+    /// - Returns: A formatted string representation of the report data.
     public func format(
-        _ report: ReportModel,
-        testResults: [ReportModel.Module.File.RepeatableTest.Test.Status] = .allCases
+        _ report: DBXCReportModel,
+        testResults: [DBXCReportModel.Module.File.RepeatableTest.Test.Status] = .allCases
     ) -> String {
         let files = report.modules
             .flatMap { Array($0.files) }
@@ -62,8 +77,8 @@ class TextFormatter: FormatterProtocol {
     }
 }
 
-extension ReportModel.Module.File {
-    func report(testResults: [ReportModel.Module.File.RepeatableTest.Test.Status],
+extension DBXCReportModel.Module.File {
+    func report(testResults: [DBXCReportModel.Module.File.RepeatableTest.Test.Status],
                 formatter: MeasurementFormatter) -> String? {
         let tests = repeatableTests.filtered(testResults: testResults).sorted { $0.name < $1.name }
         
@@ -83,7 +98,7 @@ extension ReportModel.Module.File {
     }
 }
 
-fileprivate extension ReportModel.Module.File.RepeatableTest {
+fileprivate extension DBXCReportModel.Module.File.RepeatableTest {
     func report(formatter: MeasurementFormatter) -> String {
         [
             combinedStatus.icon,
