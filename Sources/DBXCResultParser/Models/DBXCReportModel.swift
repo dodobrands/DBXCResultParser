@@ -149,9 +149,9 @@ extension DBXCReportModel {
             self.warningCount = nil
         }
         
-        let filteredCoverages = coverageDTOs
+        let coverages = coverageDTOs
             .map { Module.Coverage(from: $0)}
-            .filter { !$0.name.contains("TestHelpers") && !$0.name.contains("Tests") }
+        
         var modules = Set<Module>()
         
         func findCoverage(for moduleName: String, coverageModels: [Module.Coverage]) -> Module.Coverage? {
@@ -164,7 +164,7 @@ extension DBXCReportModel {
                 var module = modules[modulename] ?? .init(name: modulename,
                                                           files: [],
                                                           coverage: findCoverage(for: modulename,
-                                                                                 coverageModels: filteredCoverages))
+                                                                                 coverageModels: coverages))
                 try value2.tests._values.forEach { value3 in
                     try value3.subtests?._values.forEach { value4 in
                         try value4.subtests?._values.forEach { value5 in
