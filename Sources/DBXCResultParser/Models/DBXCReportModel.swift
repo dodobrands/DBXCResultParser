@@ -1,5 +1,5 @@
 //
-//  ReportModel.swift
+//  DBXCReportModel.swift
 //  
 //
 //  Created by Алексей Берёзка on 31.12.2021.
@@ -7,14 +7,12 @@
 
 import Foundation
 
-public typealias Duration = Measurement<UnitDuration>
-
-public struct ReportModel {
+public struct DBXCReportModel {
     public let modules: Set<Module>
     public private(set) var warningCount: Int?
 }
 
-extension ReportModel {
+extension DBXCReportModel {
     public struct Module: Hashable {
         public let name: String
         public internal(set) var files: Set<File>
@@ -30,7 +28,7 @@ extension ReportModel {
     }
 }
 
-extension ReportModel.Module {
+extension DBXCReportModel.Module {
     public struct Coverage: Equatable {
         public let name: String
         public let coveredLines: Int
@@ -56,7 +54,7 @@ extension ReportModel.Module {
     }
 }
 
-extension ReportModel.Module {
+extension DBXCReportModel.Module {
     public struct File: Hashable {
         public let name: String
         public internal(set) var repeatableTests: Set<RepeatableTest>
@@ -70,7 +68,7 @@ extension ReportModel.Module {
         }
     }
 }
-extension ReportModel.Module.File {
+extension DBXCReportModel.Module.File {
     public struct RepeatableTest: Hashable {
         public let name: String
         public internal(set) var tests: [Test]
@@ -85,13 +83,13 @@ extension ReportModel.Module.File {
     }
 }
 
-extension ReportModel.Module.File.RepeatableTest {
+extension DBXCReportModel.Module.File.RepeatableTest {
     public struct Test {
         public let status: Status
-        public let duration: Duration
+        public let duration: Measurement<UnitDuration>
     }
     
-    var combinedStatus: Test.Status {
+    public var combinedStatus: Test.Status {
         let statuses = tests.map { $0.status }
         if statuses.elementsAreEqual {
             return statuses.first ?? .success
@@ -100,7 +98,7 @@ extension ReportModel.Module.File.RepeatableTest {
         }
     }
     
-    var averageDuration: Duration {
+    public var averageDuration: Measurement<UnitDuration> {
         assert(tests.map { $0.duration.unit }.elementsAreEqual)
         
         let unit = tests.first?.duration.unit ?? Test.defaultDurationUnit
@@ -111,21 +109,21 @@ extension ReportModel.Module.File.RepeatableTest {
         )
     }
     
-    var totalDuration: Duration {
+    public var totalDuration: Measurement<UnitDuration> {
         assert(tests.map { $0.duration.unit }.elementsAreEqual)
         let value = tests.map { $0.duration.value }.sum()
         let unit = tests.first?.duration.unit ?? Test.defaultDurationUnit
         return .init(value: value, unit: unit)
     }
     
-    func isSlow(_ duration: Duration) -> Bool {
+    public func isSlow(_ duration: Measurement<UnitDuration>) -> Bool {
         let averageDuration = averageDuration
         let duration = duration.converted(to: averageDuration.unit)
         return averageDuration >= duration
     }
 }
 
-extension ReportModel.Module.File.RepeatableTest.Test {
+extension DBXCReportModel.Module.File.RepeatableTest.Test {
     public enum Status: Equatable, CaseIterable {
         case success
         case failure
@@ -136,11 +134,11 @@ extension ReportModel.Module.File.RepeatableTest.Test {
     }
 }
 
-extension Array where Element == ReportModel.Module.File.RepeatableTest.Test.Status {
-    static let allCases = ReportModel.Module.File.RepeatableTest.Test.Status.allCases
+public extension Array where Element == DBXCReportModel.Module.File.RepeatableTest.Test.Status {
+    static let allCases = DBXCReportModel.Module.File.RepeatableTest.Test.Status.allCases
 }
 
-extension ReportModel {
+extension DBXCReportModel {
     init(overviewReportDTO: OverviewReportDTO,
          detailedReportDTO: DetailedReportDTO,
          coverageDTOs: [CoverageDTO]) throws {
@@ -175,7 +173,7 @@ extension ReportModel {
                                 let testname = value6.name._value
                                 var repeatableTest = file.repeatableTests[testname] ?? .init(name: testname,
                                                                                              tests: [])
-                                let test = try ReportModel.Module.File.RepeatableTest.Test(value6)
+                                let test = try DBXCReportModel.Module.File.RepeatableTest.Test(value6)
                                 repeatableTest.tests.append(test)
                                 file.repeatableTests.update(with: repeatableTest)
                             }
@@ -203,7 +201,7 @@ extension ReportModel {
     }
 }
 
-extension ReportModel {
+extension DBXCReportModel {
     enum Error: Swift.Error {
         case missingFilename(testName: String)
     }
@@ -215,8 +213,8 @@ fileprivate extension String {
     }
 }
 
-extension Set where Element == ReportModel.Module.File.RepeatableTest {
-    public func filtered(testResults: [ReportModel.Module.File.RepeatableTest.Test.Status]) -> Set<Element> {
+extension Set where Element == DBXCReportModel.Module.File.RepeatableTest {
+    public func filtered(testResults: [DBXCReportModel.Module.File.RepeatableTest.Test.Status]) -> Set<Element> {
         guard !testResults.isEmpty else {
             return self
         }
@@ -267,7 +265,7 @@ extension Set where Element == ReportModel.Module.File.RepeatableTest {
     }
 }
 
-extension ReportModel.Module.File.RepeatableTest.Test {
+extension DBXCReportModel.Module.File.RepeatableTest.Test {
     init(_ test: DetailedReportDTO.Summaries.Value.TestableSummaries.Value.Tests.Value.Subtests.Value.Subtests.Value.Subtests.Value) throws {
         switch test.testStatus._value {
         case "Success":
@@ -302,34 +300,34 @@ extension Array where Element: Equatable {
     }
 }
 
-extension Set where Element == ReportModel.Module.File {
+extension Set where Element == DBXCReportModel.Module.File {
     subscript(_ name: String) -> Element? {
         first { $0.name == name }
     }
 }
 
-extension Set where Element == ReportModel.Module.File.RepeatableTest {
+extension Set where Element == DBXCReportModel.Module.File.RepeatableTest {
     subscript(_ name: String) -> Element? {
         first { $0.name == name }
     }
 }
 
-extension Set where Element == ReportModel.Module {
+extension Set where Element == DBXCReportModel.Module {
     subscript(_ name: String) -> Element? {
         first { $0.name == name }
     }
 }
 
-extension Array where Element == ReportModel.Module.File.RepeatableTest {
-    var totalDuration: Duration {
+extension Array where Element == DBXCReportModel.Module.File.RepeatableTest {
+    var totalDuration: Measurement<UnitDuration> {
         assert(map { $0.totalDuration.unit }.elementsAreEqual)
         let value = map { $0.totalDuration.value }.sum()
-        let unit = first?.totalDuration.unit ?? ReportModel.Module.File.RepeatableTest.Test.defaultDurationUnit
+        let unit = first?.totalDuration.unit ?? DBXCReportModel.Module.File.RepeatableTest.Test.defaultDurationUnit
         return .init(value: value, unit: unit)
     }
 }
 
-extension ReportModel.Module.File.RepeatableTest.Test.Status {
+extension DBXCReportModel.Module.File.RepeatableTest.Test.Status {
     var icon: String {
         switch self {
         case .success:

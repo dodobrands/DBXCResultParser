@@ -1,5 +1,5 @@
 //
-//  TextFormatter.swift
+//  DBXCTextFormatter.swift
 //  
 //
 //  Created by Алексей Берёзка on 31.12.2021.
@@ -7,14 +7,14 @@
 
 import Foundation
 
-extension TextFormatter {
+extension DBXCTextFormatter {
     public enum Format {
         case list
         case count
     }
 }
 
-class TextFormatter: FormatterProtocol {
+public class DBXCTextFormatter {
     public let format: Format
     public let locale: Locale?
     
@@ -27,8 +27,8 @@ class TextFormatter: FormatterProtocol {
     }
     
     public func format(
-        _ report: ReportModel,
-        testResults: [ReportModel.Module.File.RepeatableTest.Test.Status] = .allCases
+        _ report: DBXCReportModel,
+        testResults: [DBXCReportModel.Module.File.RepeatableTest.Test.Status] = .allCases
     ) -> String {
         let files = report.modules
             .flatMap { Array($0.files) }
@@ -62,8 +62,8 @@ class TextFormatter: FormatterProtocol {
     }
 }
 
-extension ReportModel.Module.File {
-    func report(testResults: [ReportModel.Module.File.RepeatableTest.Test.Status],
+extension DBXCReportModel.Module.File {
+    func report(testResults: [DBXCReportModel.Module.File.RepeatableTest.Test.Status],
                 formatter: MeasurementFormatter) -> String? {
         let tests = repeatableTests.filtered(testResults: testResults).sorted { $0.name < $1.name }
         
@@ -83,7 +83,7 @@ extension ReportModel.Module.File {
     }
 }
 
-fileprivate extension ReportModel.Module.File.RepeatableTest {
+fileprivate extension DBXCReportModel.Module.File.RepeatableTest {
     func report(formatter: MeasurementFormatter) -> String {
         [
             combinedStatus.icon,

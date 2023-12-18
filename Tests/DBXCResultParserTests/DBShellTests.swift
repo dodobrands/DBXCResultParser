@@ -9,7 +9,7 @@ import Foundation
 import XCTest
 @testable import DBXCResultParser
 
-class ShellTests: XCTestCase {
+class DBShellTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
     }
@@ -19,6 +19,6 @@ class ShellTests: XCTestCase {
     }
     
     func test() throws {
-        try XCTAssertEqual(Shell.execute("which swift"), "/usr/bin/swift")
+        try XCTAssertEqual(DBShell.execute("which swift"), "/usr/bin/swift")
     }
 }
