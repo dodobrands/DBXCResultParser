@@ -20,6 +20,6 @@ class OverviewReportDTOTests: XCTestCase {
     }
     
     func test() {
-        XCTAssertNoThrow(try OverviewReportDTO(from: Constants.unitTestsReportPath))
+        XCTAssertNoThrow(try OverviewReportDTO(from: Constants.testsReportPath))
     }
 }

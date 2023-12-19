@@ -46,9 +46,7 @@ let package = Package(
                 .init(stringLiteral: packageTestHelpersName)
             ],
             resources: [
-                .process("Resources/AllTests.xcresult"),
-                .process("Resources/AllTests_coverage.xcresult"),
-                .process("Resources/E2ETests.xcresult")
+                .process("Resources/DBXCResultParser.xcresult")
             ]
         ),
     ]
