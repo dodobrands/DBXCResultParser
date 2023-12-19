@@ -12,25 +12,13 @@ import XCTest
 extension Constants {
     static var resourcesPath: URL {
         get throws {
-            try unitTestsReportPath.deletingLastPathComponent()
+            try testsReportPath.deletingLastPathComponent()
         }
     }
     
-    static var unitTestsReportPath: URL {
+    static var testsReportPath: URL {
         get throws {
-            try path(filename: "AllTests", type: "xcresult")
-        }
-    }
-    
-    static var unitTestsWithCoverageReportPath: URL {
-        get throws {
-            try path(filename: "AllTests_coverage", type: "xcresult")
-        }
-    }
-    
-    static var e2eTestsReportPath: URL {
-        get throws {
-            try path(filename: "E2ETests", type: "xcresult")
+            try path(filename: "DBXCResultParser", type: "xcresult")
         }
     }
     

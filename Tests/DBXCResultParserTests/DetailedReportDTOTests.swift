@@ -20,11 +20,11 @@ class DetailedReportDTOTests: XCTestCase {
     }
     
     func test_parseWithExplicitRefId() throws {
-        let overviewReport = try OverviewReportDTO(from: Constants.unitTestsReportPath)
-        XCTAssertNoThrow(try DetailedReportDTO(from: Constants.unitTestsReportPath, refId: overviewReport.testsRefId))
+        let overviewReport = try OverviewReportDTO(from: Constants.testsReportPath)
+        XCTAssertNoThrow(try DetailedReportDTO(from: Constants.testsReportPath, refId: overviewReport.testsRefId))
     }
     
     func test_parseWithImplicitRefId() throws {
-        XCTAssertNoThrow(try DetailedReportDTO(from: Constants.unitTestsReportPath))
+        XCTAssertNoThrow(try DetailedReportDTO(from: Constants.testsReportPath))
     }
 }
