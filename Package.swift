@@ -105,9 +105,6 @@ let package = Package(
             dependencies: [
                 .init(stringLiteral: formatterTargetName),
                 .init(stringLiteral: testHelpersTargetName)
-            ],
-            resources: [
-                .copy("Resources/DBXCResultParser.xcresult")
             ]
         )
     ]
