@@ -19,12 +19,22 @@ extension DBXCTextFormatter {
 public class DBXCTextFormatter {
     public init() { }
     
-    /// Formats the test report data into a string based on the specified format.
+    
+    /// Formats a given report based on specified criteria.
+    ///
+    /// This method takes a `DBXCReportModel` instance and formats it according to the provided parameters.
+    /// It allows filtering based on the status of tests within the report and supports different formatting styles.
+    /// The method can also localize the output based on the provided locale.
     ///
     /// - Parameters:
-    ///   - report: The `DBXCReportModel` containing the test report data.
-    ///   - testResults: The test result statuses to include in the output. Defaults to all test statuses.
-    /// - Returns: A formatted string representation of the report data.
+    ///   - report: The report model instance to be formatted.
+    ///   - include: An array of `DBXCReportModel.Module.File.RepeatableTest.Test.Status` values that specifies which test statuses to include in the formatted report.
+    ///   - format: The formatting style to be applied to the report. 
+    ///   - locale: An optional `Locale` to localize the formatted report. If nil, the system locale is used.
+    ///
+    /// - Returns: A formatted string representation of the report based on the specified criteria.
+    ///
+    /// - Throws: This method may throw an error if the formatting fails for any reason, such as an issue with the report model.
     public func format(
         _ report: DBXCReportModel,
         include: [DBXCReportModel.Module.File.RepeatableTest.Test.Status] = .allCases,

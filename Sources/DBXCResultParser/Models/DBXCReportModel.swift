@@ -129,6 +129,8 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test {
         case failure
         case expectedFailure
         case skipped
+        
+        // there were multiple retries with different results
         case mixed
         case unknown
     }
