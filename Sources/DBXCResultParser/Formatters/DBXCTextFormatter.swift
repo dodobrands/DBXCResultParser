@@ -6,33 +6,39 @@
 //
 
 import Foundation
+import ArgumentParser
 
 extension DBXCTextFormatter {
     /// Output format options
-    public enum Format {
+    public enum Format: String, Decodable {
         case list // Outputs detailed list of test results
         case count // // Outputs a summary count of test results
     }
 }
 
-public class DBXCTextFormatter {
-    /// The format style to use for output
-    public let format: Format
+@main
+public class DBXCTextFormatter: ParsableCommand {
+    public required init() { }
+    
+    @Option(help: "Path to .xcresult")
+    public var xcresultPath: String
+    
+    @Option(help: "Result format")
+    public var format: Format = .list
     
     /// /// The locale to use for formatting numbers and measurements
-    public let locale: Locale?
+    @Option(help: "Locale to use for numbers and measurements formatting (default: system)")
+    public var locale: Locale?
     
-    /// Initializes a new text formatter with the specified format and locale.
-    ///
-    /// - Parameters:
-    ///   - format: The output format to use.
-    ///   - locale: The locale for number and measurement formatting. Defaults to `nil`.
-    public init(
-        format: Format,
-        locale: Locale? = nil
-    ) {
-        self.format = format
-        self.locale = locale
+    @Option(help: "Test statutes to include in report, comma separated")
+    public var include: String = DBXCReportModel.Module.File.RepeatableTest.Test.Status.allCases.map { $0.rawValue }.joined(separator: ",")
+    
+    public func run() throws {
+        let xcresultPath = URL(fileURLWithPath: xcresultPath)
+        let report = try DBXCReportModel(xcresultPath: xcresultPath)
+        let includeTestResults = include.split(separator: ",").compactMap { DBXCReportModel.Module.File.RepeatableTest.Test.Status(rawValue: String($0)) }
+        let result = format(report, testResults: includeTestResults)
+        print(result)
     }
     
     /// Formats the test report data into a string based on the specified format.
@@ -136,5 +142,17 @@ extension NumberFormatter {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = 0
         return formatter
+    }
+}
+
+extension Locale: ExpressibleByArgument {
+    public init?(argument: String) {
+        self.init(identifier: argument)
+    }
+}
+
+extension DBXCTextFormatter.Format: ExpressibleByArgument {
+    public init?(argument: String) {
+        self.init(rawValue: argument)
     }
 }

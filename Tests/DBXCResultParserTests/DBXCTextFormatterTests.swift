@@ -15,7 +15,9 @@ final class DBXCTextFormatterTests: XCTestCase {
     }
     
     func test_testResult_any_list() {
-        let formatter = DBXCTextFormatter(format: .list, locale: locale)
+        let formatter = DBXCTextFormatter()
+        formatter.format = .list
+        formatter.locale = locale
         let result = formatter.format(.genericReport)
         
         XCTAssertEqual(result,
@@ -38,7 +40,9 @@ NotificationsSetupServiceTests
     }
     
     func test_testResult_success_list() {
-        let formatter = DBXCTextFormatter(format: .list, locale: locale)
+        let formatter = DBXCTextFormatter()
+        formatter.format = .list
+        formatter.locale = locale
         let result = formatter.format(.genericReport, testResults: [.success])
         
         XCTAssertEqual(result,
@@ -52,14 +56,18 @@ NetworkSpec
     }
     
     func test_testResult_any_count() {
-        let formatter = DBXCTextFormatter(format: .count, locale: locale)
+        let formatter = DBXCTextFormatter()
+        formatter.format = .count
+        formatter.locale = locale
         let result = formatter.format(.genericReport)
         
         XCTAssertEqual(result, "7 (0 sec)")
     }
     
     func test_testResult_failure_count() {
-        let formatter = DBXCTextFormatter(format: .count, locale: locale)
+        let formatter = DBXCTextFormatter()
+        formatter.format = .count
+        formatter.locale = locale
         let result = formatter.format(.genericReport, testResults: [.failure])
         
         XCTAssertEqual(result, "3 (0 sec)")

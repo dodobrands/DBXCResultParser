@@ -124,7 +124,7 @@ extension DBXCReportModel.Module.File.RepeatableTest {
 }
 
 extension DBXCReportModel.Module.File.RepeatableTest.Test {
-    public enum Status: Equatable, CaseIterable {
+    public enum Status: String, Equatable, CaseIterable {
         case success
         case failure
         case expectedFailure
