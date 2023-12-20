@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  SCHEME: "DBXCResultParser-Package"
+  SCHEME: "DBXCResultParser"
   DESTINATION: "platform=OS X"
 
 jobs:
