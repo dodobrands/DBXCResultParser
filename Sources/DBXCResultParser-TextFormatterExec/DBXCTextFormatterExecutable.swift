@@ -6,25 +6,19 @@
 //
 
 import Foundation
+import DBXCResultParser
+import DBXCResultParser_TextFormatter
 import ArgumentParser
 
-extension DBXCTextFormatter {
-    /// Output format options
-    public enum Format: String, Decodable {
-        case list // Outputs detailed list of test results
-        case count // // Outputs a summary count of test results
-    }
-}
-
 @main
-public class DBXCTextFormatter: ParsableCommand {
+public class DBXCTextFormatterExecutable: ParsableCommand {
     public required init() { }
     
     @Option(help: "Path to .xcresult")
     public var xcresultPath: String
     
     @Option(help: "Result format")
-    public var format: Format = .list
+    public var format: DBXCTextFormatter.Format = .list
     
     /// /// The locale to use for formatting numbers and measurements
     @Option(help: "Locale to use for numbers and measurements formatting (default: system)")
