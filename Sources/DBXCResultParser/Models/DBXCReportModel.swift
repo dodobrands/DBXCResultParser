@@ -332,7 +332,7 @@ extension Set where Element == DBXCReportModel.Module {
 }
 
 extension Array where Element == DBXCReportModel.Module.File.RepeatableTest {
-    var totalDuration: Measurement<UnitDuration> {
+    public var totalDuration: Measurement<UnitDuration> {
         assert(map { $0.totalDuration.unit }.elementsAreEqual)
         let value = map { $0.totalDuration.value }.sum()
         let unit = first?.totalDuration.unit ?? DBXCReportModel.Module.File.RepeatableTest.Test.defaultDurationUnit
@@ -341,7 +341,7 @@ extension Array where Element == DBXCReportModel.Module.File.RepeatableTest {
 }
 
 extension DBXCReportModel.Module.File.RepeatableTest.Test.Status {
-    var icon: String {
+    public var icon: String {
         switch self {
         case .success:
             return "✅"
@@ -358,3 +358,4 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test.Status {
         }
     }
 }
+

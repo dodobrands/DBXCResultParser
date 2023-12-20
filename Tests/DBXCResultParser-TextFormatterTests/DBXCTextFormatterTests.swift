@@ -1,6 +1,7 @@
 import XCTest
 @testable import DBXCResultParser
 import DBXCResultParserTestHelpers
+import DBXCResultParser_TextFormatter
 
 final class DBXCTextFormatterTests: XCTestCase {
     var locale: Locale!
@@ -16,9 +17,7 @@ final class DBXCTextFormatterTests: XCTestCase {
     
     func test_testResult_any_list() {
         let formatter = DBXCTextFormatter()
-        formatter.format = .list
-        formatter.locale = locale
-        let result = formatter.format(.genericReport)
+        let result = formatter.format(.genericReport, format: .list, locale: locale)
         
         XCTAssertEqual(result,
                        """
@@ -41,9 +40,7 @@ NotificationsSetupServiceTests
     
     func test_testResult_success_list() {
         let formatter = DBXCTextFormatter()
-        formatter.format = .list
-        formatter.locale = locale
-        let result = formatter.format(.genericReport, testResults: [.success])
+        let result = formatter.format(.genericReport, include: [.success], format: .list, locale: locale)
         
         XCTAssertEqual(result,
                        """
@@ -57,18 +54,14 @@ NetworkSpec
     
     func test_testResult_any_count() {
         let formatter = DBXCTextFormatter()
-        formatter.format = .count
-        formatter.locale = locale
-        let result = formatter.format(.genericReport)
+        let result = formatter.format(.genericReport, format: .count, locale: locale)
         
         XCTAssertEqual(result, "7 (0 sec)")
     }
     
     func test_testResult_failure_count() {
         let formatter = DBXCTextFormatter()
-        formatter.format = .count
-        formatter.locale = locale
-        let result = formatter.format(.genericReport, testResults: [.failure])
+        let result = formatter.format(.genericReport, include: [.failure], format: .count, locale: locale)
         
         XCTAssertEqual(result, "3 (0 sec)")
     }
