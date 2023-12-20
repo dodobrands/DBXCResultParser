@@ -29,51 +29,22 @@ public class DBXCTextFormatterExecutable: ParsableCommand {
     
     public func run() throws {
         let xcresultPath = URL(fileURLWithPath: xcresultPath)
-        let report = try DBXCReportModel(xcresultPath: xcresultPath)
-        let includeTestResults = include.split(separator: ",").compactMap { DBXCReportModel.Module.File.RepeatableTest.Test.Status(rawValue: String($0)) }
-        let result = format(report, testResults: includeTestResults)
-        print(result)
-    }
-    
-    /// Formats the test report data into a string based on the specified format.
-    ///
-    /// - Parameters:
-    ///   - report: The `DBXCReportModel` containing the test report data.
-    ///   - testResults: The test result statuses to include in the output. Defaults to all test statuses.
-    /// - Returns: A formatted string representation of the report data.
-    public func format(
-        _ report: DBXCReportModel,
-        testResults: [DBXCReportModel.Module.File.RepeatableTest.Test.Status] = .allCases
-    ) -> String {
-        let files = report.modules
-            .flatMap { Array($0.files) }
-            .sorted { $0.name < $1.name }
         
-        switch format {
-        case .list:
-            let singleTestsMeasurementFormatter = MeasurementFormatter.singleTestDurationFormatter
-            singleTestsMeasurementFormatter.locale = locale
-            let filesReports = files.compactMap { file in
-                file.report(testResults: testResults,
-                            formatter: singleTestsMeasurementFormatter)
-            }
-            return filesReports.joined(separator: "\n\n")
-        case .count:
-            let numberFormatter = NumberFormatter.testsCountFormatter
-            numberFormatter.locale = locale
-            let totalTestsMeasurementFormatter = MeasurementFormatter.totalTestsDurationFormatter
-            totalTestsMeasurementFormatter.locale = locale
-            let tests = files.flatMap { $0.repeatableTests.filtered(testResults: testResults) }
-            let count = tests.count
-            let duration = tests.totalDuration
-            let addDuration = testResults != [.skipped] // don't add 0ms duration if requested only skipped tests
-            return [
-                numberFormatter.string(from: NSNumber(value: count)) ?? String(count),
-                addDuration ? totalTestsMeasurementFormatter.string(from: duration).wrappedInBrackets : nil
-            ]
-                .compactMap{ $0 }
-                .joined(separator: " ")
-        }
+        let report = try DBXCReportModel(xcresultPath: xcresultPath)
+        
+        let include = include.split(separator: ",")
+            .compactMap { DBXCReportModel.Module.File.RepeatableTest.Test.Status(rawValue: String($0)) }
+        
+        let formatter = DBXCTextFormatter()
+        
+        let result = formatter.format(
+            report,
+            include: include,
+            format: format,
+            locale: locale
+        )
+        
+        print(result)
     }
 }
 
