@@ -10,8 +10,23 @@ The `DBXCReportModel` package provides a Swift module for parsing `.xcresult` fi
 - Calculates total and average test durations, as well as combined test statuses.
 - Supports identifying slow tests based on average duration.
 - Includes utility functions for filtering tests based on status.
+- Can be executed as a command-line tool to generate test reports directly from the terminal.
 
-## Installation
+## Command-Line Tool Usage
+
+The package includes a command-line tool that can be executed to generate test reports. Here is an example of how to run it:
+
+```bash
+swift run DBXCResultParser --xcresult-path path/to/tests.xcresult
+```
+
+The available options are:
+- `--xcresult-path`: Specifies the path to the `.xcresult` file.
+- `--format`: Determines the output format (`list` or `count`).
+- `--locale`: Sets the locale for number and measurement formatting (e.g., "en-GB").
+- `--include`: Filters the test results to include only certain statuses (e.g., `failure,skipped`).
+
+## Usage
 
 To use `DBXCReportModel` in your Swift package, add it to the dependencies for your `Package.swift` file:
 
@@ -19,7 +34,7 @@ To use `DBXCReportModel` in your Swift package, add it to the dependencies for y
 let package = Package(
     name: "YourPackageName",
     dependencies: [
-        .package(url: "https://github.com/dodobrands/DBXCResultParser", from: "1.0.0")
+        .package(url: "https://github.com/dodobrands/DBXCResultParser", .upToNextMajor(from: "3.0.0"))
     ],
     targets: [
         .target(
@@ -29,8 +44,6 @@ let package = Package(
     ]
 )
 ```
-
-## Usage
 
 To parse an `.xcresult` file and access the report data, initialize a `DBXCReportModel` with the path to the `.xcresult` file:
 
@@ -71,7 +84,7 @@ The `DBXCTextFormatter` class provides a way to format the data from a `DBXCRepo
 
 ### Usage
 
-To format your test report data, create an instance of `DBXCTextFormatter` with the desired output format and optionally a locale for number and measurement formatting:
+To format your test report data, create an instance of `DBXCTextFormatter`:
 
 ```swift
 import DBXCReportModel
@@ -79,19 +92,18 @@ import DBXCReportModel
 // Assuming you have already created a `DBXCReportModel` instance as `reportModel`
 let reportModel: DBXCReportModel = ...
 
-// Create a text formatter for detailed list output
-let listFormatter = DBXCTextFormatter(format: .list)
+// Create a text formatter
+let formatter = DBXCTextFormatter()
 
-// Create a text formatter for summary count output with a specific locale
-let countFormatter = DBXCTextFormatter(format: .count, locale: Locale(identifier: "en_US"))
+// Set the desired output format and locale
+formatter.format = .list
+formatter.locale = Locale(identifier: "en_US")
 
 // Format the report data into a string
-let detailedListOutput = listFormatter.format(reportModel)
-let summaryCountOutput = countFormatter.format(reportModel)
+let formattedOutput = formatter.format(reportModel)
 
-// Print the formatted outputs
-print("Detailed List Output:\n\(detailedListOutput)")
-print("Summary Count Output:\n\(summaryCountOutput)")
+// Print the formatted output
+print("Formatted Output:\n\(formattedOutput)")
 ```
 
 The `format` method can also take an array of `DBXCReportModel.Module.File.RepeatableTest.Test.Status` to filter which test results are included in the output. By default, it includes all test statuses.
@@ -121,10 +133,12 @@ FileB.swift
 
 ### Customizing Number and Measurement Formatting
 
-The `DBXCTextFormatter` allows you to specify a locale when initializing it. This locale is used to format numbers and measurements according to the provided locale's conventions.
+The `DBXCTextFormatter` allows you to specify a locale when setting the property. This locale is used to format numbers and measurements according to the provided locale's conventions.
 
 ```swift
-let formatter = DBXCTextFormatter(format: .count, locale: Locale(identifier: "fr_FR"))
+let formatter = DBXCTextFormatter()
+formatter.format = .count
+formatter.locale = Locale(identifier: "fr_FR")
 let output = formatter.format(reportModel)
 print(output) // Will output numbers and durations formatted in French
 ```
