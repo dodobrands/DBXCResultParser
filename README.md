@@ -12,20 +12,6 @@ The `DBXCReportModel` package provides a Swift module for parsing `.xcresult` fi
 - Includes utility functions for filtering tests based on status.
 - Can be executed as a command-line tool to generate test reports directly from the terminal.
 
-## Command-Line Tool Usage
-
-The package includes a command-line tool that can be executed to generate test reports. Here is an example of how to run it:
-
-```bash
-swift run DBXCResultParser --xcresult-path path/to/tests.xcresult
-```
-
-The available options are:
-- `--xcresult-path`: Specifies the path to the `.xcresult` file.
-- `--format`: Determines the output format (`list` or `count`).
-- `--locale`: Sets the locale for number and measurement formatting (e.g., "en-GB").
-- `--include`: Filters the test results to include only certain statuses (e.g., `failure,skipped`).
-
 ## Usage
 
 To use `DBXCReportModel` in your Swift package, add it to the dependencies for your `Package.swift` file:
@@ -95,10 +81,6 @@ let reportModel: DBXCReportModel = ...
 // Create a text formatter
 let formatter = DBXCTextFormatter()
 
-// Set the desired output format and locale
-formatter.format = .list
-formatter.locale = Locale(identifier: "en_US")
-
 // Format the report data into a string
 let formattedOutput = formatter.format(reportModel)
 
@@ -108,14 +90,15 @@ print("Formatted Output:\n\(formattedOutput)")
 
 The `format` method can also take an array of `DBXCReportModel.Module.File.RepeatableTest.Test.Status` to filter which test results are included in the output. By default, it includes all test statuses.
 
+```swift
+let formattedOutput = formatter.format(reportModel, include: [.failure])
+```
+
 ### Output Formats
 
-- **List Format**: Outputs a detailed list of test results, including the name of each file and the status of each test.
-- **Count Format**: Outputs a summary count of test results, including the total number of tests and their combined duration.
-
-### Example Outputs
-
 #### List Format
+Outputs a detailed list of test results, including the name of each file and the status of each test.
+
 ```
 FileA.swift
 ✅ TestA1
@@ -127,21 +110,35 @@ FileB.swift
 ```
 
 #### Count Format
+Outputs a summary count of test results, including the total number of tests and their combined duration.
+
 ```
 12 tests (1m 23s)
 ```
 
 ### Customizing Number and Measurement Formatting
 
-The `DBXCTextFormatter` allows you to specify a locale when setting the property. This locale is used to format numbers and measurements according to the provided locale's conventions.
+The `DBXCTextFormatter` allows you to specify a locale when formatting the report. This locale is used to format numbers and measurements according to the provided locale's conventions.
 
 ```swift
 let formatter = DBXCTextFormatter()
-formatter.format = .count
-formatter.locale = Locale(identifier: "fr_FR")
-let output = formatter.format(reportModel)
+let output = formatter.format(reportModel, locale: Locale(identifier: "fr_FR"))
 print(output) // Will output numbers and durations formatted in French
 ```
+
+## Command-Line Tool Usage
+
+The package includes a command-line tool that can be executed to generate test reports. Here is an example of how to run it:
+
+```bash
+swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult
+```
+
+The available options are:
+- `--xcresult-path`: Specifies the path to the `.xcresult` file.
+- `--format`: Determines the output format (`list` or `count`).
+- `--locale`: Sets the locale for number and measurement formatting (e.g., "en-GB").
+- `--include`: Filters the test results to include only certain statuses (e.g., `failure,skipped`).
 
 ## License
 
