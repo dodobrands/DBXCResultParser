@@ -17,7 +17,7 @@ extension DBXCReportModel {
     ///   - excludingCoverageNames: An array of strings representing the names of the targets to be excluded 
     ///                             from the code coverage report. Defaults to an empty array, meaning no 
     ///                             targets will be excluded.
-    /// - Throws: An error if the `.xcresult` file cannot be parsed or if required data is missing.
+    /// - Throws: An error if the `.xcresult` file cannot be parsed.
     public init(
         xcresultPath: URL,
         excludingCoverageNames: [String] = []
