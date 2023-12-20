@@ -4,13 +4,52 @@
 import PackageDescription
 
 let packageName = "DBXCResultParser"
-let packageTestsName = packageName + "Tests"
-let packageTestHelpersName = packageName + "TestHelpers"
+
+let parserLibraryName = packageName
+let formatterLibraryName = parserLibraryName + "-TextFormatter"
+let executableFormatterLibraryName = formatterLibraryName + "Exec"
+let testHelpersLibraryName = parserLibraryName + "TestHelpers"
+
+let parserTargetName = parserLibraryName
+let formatterTargetName = formatterLibraryName
+let executableFormatterTargetName = formatterTargetName + "Exec"
+let testHelpersTargetName = testHelpersLibraryName
+
+let parserTestsTargetName = parserTargetName + "Tests"
+let formatterTestsTargetName = formatterTargetName + "Tests"
+
 
 let package = Package(
     name: packageName,
     platforms: [
         .macOS(.v10_15)
+    ],
+    products: [
+        .library(
+            name: parserLibraryName, 
+            targets: [
+                parserTargetName
+            ]
+        ),
+        .library(
+            name: formatterLibraryName, 
+            targets: [
+                parserTargetName,
+                formatterTargetName
+            ]
+        ),
+        .library(
+            name: testHelpersLibraryName, 
+            targets: [
+                testHelpersLibraryName
+            ]
+        ),
+        .executable(
+            name: executableFormatterLibraryName,
+            targets: [
+                executableFormatterTargetName
+            ]
+        )
     ],
     dependencies: [
         .package(
@@ -19,10 +58,8 @@ let package = Package(
         ),
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
-        .executableTarget(
-            name: packageName,
+        .target(
+            name: parserTargetName,
             dependencies: [
                 .product(
                     name: "ArgumentParser",
@@ -31,21 +68,48 @@ let package = Package(
             ]
         ),
         .target(
-            name: packageTestHelpersName, 
+            name: formatterTargetName,
             dependencies: [
-                .init(stringLiteral: packageName)
+                .init(stringLiteral: parserTargetName)
+            ]
+        ),
+        .executableTarget(
+            name: executableFormatterTargetName,
+            dependencies: [
+                .init(stringLiteral: parserTargetName),
+                .init(stringLiteral: formatterTargetName),
+                .product(
+                    name: "ArgumentParser",
+                    package: "swift-argument-parser"
+                )
+            ]
+        ),
+        .target(
+            name: testHelpersTargetName, 
+            dependencies: [
+                .init(stringLiteral: parserTargetName)
             ]
         ),
         .testTarget(
-            name: packageTestsName,
+            name: parserTestsTargetName,
             dependencies: [
-                .init(stringLiteral: packageName),
-                .init(stringLiteral: packageTestHelpersName)
+                .init(stringLiteral: parserTargetName),
+                .init(stringLiteral: testHelpersTargetName)
             ],
             resources: [
                 .copy("Resources/DBXCResultParser.xcresult")
             ]
         ),
+        .testTarget(
+            name: formatterTestsTargetName,
+            dependencies: [
+                .init(stringLiteral: formatterTargetName),
+                .init(stringLiteral: testHelpersTargetName)
+            ],
+            resources: [
+                .copy("Resources/DBXCResultParser.xcresult")
+            ]
+        )
     ]
 )
 

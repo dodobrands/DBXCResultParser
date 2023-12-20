@@ -3,6 +3,7 @@
 import Foundation
 import XCTest
 @testable import DBXCResultParser
+import DBXCResultParserTestHelpers
 
 class CoverageDTOTests: XCTestCase {
     
