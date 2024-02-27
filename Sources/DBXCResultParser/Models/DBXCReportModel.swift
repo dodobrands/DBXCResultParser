@@ -144,7 +144,7 @@ extension DBXCReportModel {
     init(
         actionsInvocationRecordDTO: ActionsInvocationRecordDTO,
         actionTestPlanRunSummariesDTO: ActionTestPlanRunSummariesDTO,
-        coverageDTOs: [CoverageDTO]
+        coverageDTOs: [CoverageDTO]?
     ) throws {
         
         if let warningCount = actionsInvocationRecordDTO.metrics.warningCount?._value {
@@ -153,22 +153,18 @@ extension DBXCReportModel {
             self.warningCount = nil
         }
         
-        let coverages = coverageDTOs
-            .map { Module.Coverage(from: $0)}
+        let coverages = coverageDTOs?.map { Module.Coverage(from: $0)}
         
         var modules = Set<Module>()
-        
-        func findCoverage(for moduleName: String, coverageModels: [Module.Coverage]) -> Module.Coverage? {
-            coverageModels.first { $0.name.split(separator: ".")[0] + "Tests" == moduleName }
-        }
         
         try actionTestPlanRunSummariesDTO.summaries._values.forEach { value1 in
             try value1.testableSummaries._values.forEach { value2 in
                 let modulename = value2.name._value
-                var module = modules[modulename] ?? .init(name: modulename,
-                                                          files: [],
-                                                          coverage: findCoverage(for: modulename,
-                                                                                 coverageModels: coverages))
+                var module = modules[modulename] ?? DBXCReportModel.Module(
+                    name: modulename,
+                    files: [],
+                    coverage: coverages?.forModule(named: modulename)
+                )
                 try value2.tests._values.forEach { value3 in
                     try value3.subtests?._values.forEach { value4 in
                         try value4.subtests?._values.forEach { value5 in
@@ -341,6 +337,15 @@ extension Array where Element == DBXCReportModel.Module.File.RepeatableTest {
         let value = map { $0.totalDuration.value }.sum()
         let unit = first?.totalDuration.unit ?? DBXCReportModel.Module.File.RepeatableTest.Test.defaultDurationUnit
         return .init(value: value, unit: unit)
+    }
+}
+
+extension Array where Element == DBXCReportModel.Module.Coverage {
+    func forModule(named name: String) -> Element? {
+        first {
+            guard let prefix = $0.name.split(separator: ".").first else { return false }
+            return prefix + "Tests" == name
+        }
     }
 }
 

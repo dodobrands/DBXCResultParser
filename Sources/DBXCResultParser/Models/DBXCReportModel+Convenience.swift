@@ -40,7 +40,7 @@ extension DBXCReportModel {
         self = try DBXCReportModel(
             actionsInvocationRecordDTO: actionsInvocationRecordDTO,
             actionTestPlanRunSummariesDTO: actionTestPlanRunSummariesDTO,
-            coverageDTOs: coverageDTOs ?? []
+            coverageDTOs: coverageDTOs
         )
     }
 }
