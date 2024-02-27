@@ -1,5 +1,5 @@
 //
-//  OverviewReportDTOTests.swift
+//  ActionsInvocationRecordDTOTests.swift
 //  
 //
 //  Created by Алексей Берёзка on 30.12.2021.
@@ -9,7 +9,7 @@ import Foundation
 import XCTest
 @testable import DBXCResultParser
 
-class OverviewReportDTOTests: XCTestCase {
+class ActionsInvocationRecordDTOTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -20,6 +20,6 @@ class OverviewReportDTOTests: XCTestCase {
     }
     
     func test() {
-        XCTAssertNoThrow(try OverviewReportDTO(from: Constants.testsReportPath))
+        XCTAssertNoThrow(try ActionsInvocationRecordDTO(from: Constants.testsReportPath))
     }
 }

@@ -98,7 +98,8 @@ fileprivate extension DBXCReportModel.Module.File.RepeatableTest {
     func report(formatter: MeasurementFormatter) -> String {
         [
             combinedStatus.icon,
-            name
+            name,
+            message?.wrappedInBrackets
         ]
             .compactMap { $0 }
             .joined(separator: " ")

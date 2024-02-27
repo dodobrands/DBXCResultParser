@@ -63,10 +63,11 @@ extension DBXCReportModel.Module.File.RepeatableTest {
     
     public static func failed(
         named name: String,
-        times: Int = 1
+        times: Int = 1,
+        message: String? = nil
     ) -> Self {
         let tests = Array(
-            repeating: DBXCReportModel.Module.File.RepeatableTest.Test.testMake(status: .failure),
+            repeating: DBXCReportModel.Module.File.RepeatableTest.Test.testMake(status: .failure, message: message),
             count: times
         )
         return .testMake(name: name, tests: tests)
@@ -79,9 +80,17 @@ extension DBXCReportModel.Module.File.RepeatableTest {
     }
     
     public static func skipped(
-        named name: String
+        named name: String,
+        message: String? = nil
     ) -> Self {
-        .testMake(name: name, tests: [.testMake(status: .skipped)])
+        .testMake(name: name, tests: [.testMake(status: .skipped, message: message)])
+    }
+    
+    public static func expectedFailed(
+        named name: String,
+        message: String? = nil
+    ) -> Self {
+        .testMake(name: name, tests: [.testMake(status: .expectedFailure, message: message)])
     }
     
     public static func mixedFailedSucceeded(
@@ -99,8 +108,13 @@ extension DBXCReportModel.Module.File.RepeatableTest {
 extension DBXCReportModel.Module.File.RepeatableTest.Test {
     public static func testMake(
         status: Status = .success,
-        duration: Measurement<UnitDuration> = .testMake()
+        duration: Measurement<UnitDuration> = .testMake(),
+        message: String? = nil
     ) -> Self {
-        .init(status: status, duration: duration)
+        .init(
+            status: status,
+            duration: duration,
+            message: message
+        )
     }
 }

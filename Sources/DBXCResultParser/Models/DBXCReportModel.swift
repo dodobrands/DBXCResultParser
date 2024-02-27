@@ -87,6 +87,7 @@ extension DBXCReportModel.Module.File.RepeatableTest {
     public struct Test {
         public let status: Status
         public let duration: Measurement<UnitDuration>
+        public let message: String?
     }
     
     public var combinedStatus: Test.Status {
@@ -96,6 +97,10 @@ extension DBXCReportModel.Module.File.RepeatableTest {
         } else {
             return .mixed
         }
+    }
+    
+    public var message: String? {
+        tests.first?.message
     }
     
     public var averageDuration: Measurement<UnitDuration> {
@@ -140,59 +145,7 @@ public extension Array where Element == DBXCReportModel.Module.File.RepeatableTe
     static let allCases = DBXCReportModel.Module.File.RepeatableTest.Test.Status.allCases
 }
 
-extension DBXCReportModel {
-    init(overviewReportDTO: OverviewReportDTO,
-         detailedReportDTO: DetailedReportDTO,
-         coverageDTOs: [CoverageDTO]) throws {
-        
-        if let warningCount = overviewReportDTO.metrics.warningCount?._value {
-            self.warningCount = Int(warningCount)
-        } else {
-            self.warningCount = nil
-        }
-        
-        let coverages = coverageDTOs
-            .map { Module.Coverage(from: $0)}
-        
-        var modules = Set<Module>()
-        
-        func findCoverage(for moduleName: String, coverageModels: [Module.Coverage]) -> Module.Coverage? {
-            coverageModels.first { $0.name.split(separator: ".")[0] + "Tests" == moduleName }
-        }
-        
-        try detailedReportDTO.summaries._values.forEach { value1 in
-            try value1.testableSummaries._values.forEach { value2 in
-                let modulename = value2.name._value
-                var module = modules[modulename] ?? .init(name: modulename,
-                                                          files: [],
-                                                          coverage: findCoverage(for: modulename,
-                                                                                 coverageModels: coverages))
-                try value2.tests._values.forEach { value3 in
-                    try value3.subtests?._values.forEach { value4 in
-                        try value4.subtests?._values.forEach { value5 in
-                            let filename = value5.name._value
-                            var file = module.files[filename] ?? .init(name: filename,
-                                                                       repeatableTests: [])
-                            try value5.subtests?._values.forEach { value6 in
-                                let testname = value6.name._value
-                                var repeatableTest = file.repeatableTests[testname] ?? .init(name: testname,
-                                                                                             tests: [])
-                                let test = try DBXCReportModel.Module.File.RepeatableTest.Test(value6)
-                                repeatableTest.tests.append(test)
-                                file.repeatableTests.update(with: repeatableTest)
-                            }
-                            module.files.update(with: file)
-                        }
-                    }
-                }
-                
-                modules.update(with: module)
-            }
-        }
-        
-        self.modules = modules
-    }
-    
+extension DBXCReportModel {    
     public var totalCoverage: Double? {
         let coverages = modules.map { $0.coverage }.compactMap { $0 }
         guard coverages.count > 0 else { return nil }
@@ -281,7 +234,10 @@ extension Set where Element == DBXCReportModel.Module.File.RepeatableTest {
 }
 
 extension DBXCReportModel.Module.File.RepeatableTest.Test {
-    init(_ test: DetailedReportDTO.Summaries.Value.TestableSummaries.Value.Tests.Value.Subtests.Value.Subtests.Value.Subtests.Value) throws {
+    init(
+        _ test: ActionTestPlanRunSummariesDTO.Summaries.Value.TestableSummaries.Value.Tests.Value.Subtests.Value.Subtests.Value.Subtests.Value,
+        xcresultPath: URL
+    ) throws {
         switch test.testStatus._value {
         case "Success":
             status = .success
@@ -300,6 +256,10 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test {
         }
         
         self.duration = .init(value: duration * 1000, unit: Self.defaultDurationUnit)
+        
+        let summaryRefId = test.summaryRef?.id._value
+        let summaryDto = try summaryRefId.map { try ActionTestSummaryDTO(from: xcresultPath, refId: $0) }
+        message = summaryDto?.message
     }
     
     enum Error: Swift.Error {
@@ -339,6 +299,15 @@ extension Array where Element == DBXCReportModel.Module.File.RepeatableTest {
         let value = map { $0.totalDuration.value }.sum()
         let unit = first?.totalDuration.unit ?? DBXCReportModel.Module.File.RepeatableTest.Test.defaultDurationUnit
         return .init(value: value, unit: unit)
+    }
+}
+
+extension Array where Element == DBXCReportModel.Module.Coverage {
+    func forModule(named name: String) -> Element? {
+        first {
+            guard let prefix = $0.name.split(separator: ".").first else { return false }
+            return prefix + "Tests" == name
+        }
     }
 }
 

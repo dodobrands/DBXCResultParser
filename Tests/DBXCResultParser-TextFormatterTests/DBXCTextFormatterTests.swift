@@ -23,8 +23,10 @@ final class DBXCTextFormatterTests: XCTestCase {
                        """
 AuthSpec
 ✅ login
-❌ logout
+❌ logout (Failed to logout)
 ⚠️ openSettings
+⏭️ parse_performance (Parse is very slow, turned off tests)
+🤡 rename_user (Rename is temporary broken)
 
 CaptchaSpec
 ❌ Another Handle Request
@@ -56,7 +58,7 @@ NetworkSpec
         let formatter = DBXCTextFormatter()
         let result = formatter.format(.genericReport, format: .count, locale: locale)
         
-        XCTAssertEqual(result, "7 (0 sec)")
+        XCTAssertEqual(result, "9 (0 sec)")
     }
     
     func test_testResult_failure_count() {
@@ -76,9 +78,11 @@ extension DBXCReportModel {
                 .testMake(
                     name: "AuthSpec",
                     repeatableTests: [
-                        .failed(named: "logout"),
+                        .failed(named: "logout", message: "Failed to logout"),
                         .succeeded(named: "login"),
-                        .mixedFailedSucceeded(named: "openSettings")
+                        .mixedFailedSucceeded(named: "openSettings"),
+                        .expectedFailed(named: "rename_user", message: "Rename is temporary broken"),
+                        .skipped(named: "parse_performance", message: "Parse is very slow, turned off tests")
                     ]
                 )
             ]
