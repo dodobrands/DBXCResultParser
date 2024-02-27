@@ -105,7 +105,7 @@ Outputs a detailed list of test results, including the name of each file and the
 ```
 FileA.swift
 ✅ TestA1
-❌ TestA2
+❌ TestA2 (Failure reason)
 
 FileB.swift
 ✅ TestB1
