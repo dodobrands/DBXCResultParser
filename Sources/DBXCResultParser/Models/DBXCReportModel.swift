@@ -142,6 +142,7 @@ public extension Array where Element == DBXCReportModel.Module.File.RepeatableTe
 
 extension DBXCReportModel {
     init(
+        xcresultPath: URL,
         actionsInvocationRecordDTO: ActionsInvocationRecordDTO,
         actionTestPlanRunSummariesDTO: ActionTestPlanRunSummariesDTO,
         coverageDTOs: [CoverageDTO]?
