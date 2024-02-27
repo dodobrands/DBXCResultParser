@@ -23,12 +23,14 @@ extension DBXCReportModel {
         excludingCoverageNames: [String] = []
     ) throws {
         // Parse the overview report from the xcresult file, which contains general test execution information.
-        let overviewReport = try OverviewReportDTO(from: xcresultPath)
+        let actionsInvocationRecordDTO = try ActionsInvocationRecordDTO(from: xcresultPath)
         
         // Parse the detailed report using the reference ID obtained from the overview report.
         // This report provides a more granular look at the test results, including individual test cases.
-        let detailedReport = try DetailedReportDTO(from: xcresultPath,
-                                                   refId: overviewReport.testsRefId)
+        let actionTestPlanRunSummariesDTO = try ActionTestPlanRunSummariesDTO(
+            from: xcresultPath,
+            refId: actionsInvocationRecordDTO.testsRefId
+        )
         
         // Attempt to parse the code coverage data from the xcresult file, excluding specified targets.
         let coverageDTOs = try? Array<CoverageDTO>(from: xcresultPath)
@@ -36,8 +38,8 @@ extension DBXCReportModel {
         
         // Initialize the DBXCReportModel with the parsed report data, including the filtered coverage data.
         self = try DBXCReportModel(
-            overviewReportDTO: overviewReport,
-            detailedReportDTO: detailedReport,
+            actionsInvocationRecordDTO: actionsInvocationRecordDTO,
+            actionTestPlanRunSummariesDTO: actionTestPlanRunSummariesDTO,
             coverageDTOs: coverageDTOs ?? []
         )
     }

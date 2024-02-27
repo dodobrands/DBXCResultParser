@@ -1,5 +1,5 @@
 //
-//  DetailedReportDTOTests.swift
+//  ActionTestPlanRunSummariesDTOTests.swift
 //  
 //
 //  Created by Алексей Берёзка on 30.12.2021.
@@ -9,7 +9,7 @@ import Foundation
 import XCTest
 @testable import DBXCResultParser
 
-class DetailedReportDTOTests: XCTestCase {
+class ActionTestPlanRunSummariesDTOTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -20,11 +20,11 @@ class DetailedReportDTOTests: XCTestCase {
     }
     
     func test_parseWithExplicitRefId() throws {
-        let overviewReport = try OverviewReportDTO(from: Constants.testsReportPath)
-        XCTAssertNoThrow(try DetailedReportDTO(from: Constants.testsReportPath, refId: overviewReport.testsRefId))
+        let overviewReport = try ActionsInvocationRecordDTO(from: Constants.testsReportPath)
+        XCTAssertNoThrow(try ActionTestPlanRunSummariesDTO(from: Constants.testsReportPath, refId: overviewReport.testsRefId))
     }
     
     func test_parseWithImplicitRefId() throws {
-        XCTAssertNoThrow(try DetailedReportDTO(from: Constants.testsReportPath))
+        XCTAssertNoThrow(try ActionTestPlanRunSummariesDTO(from: Constants.testsReportPath))
     }
 }

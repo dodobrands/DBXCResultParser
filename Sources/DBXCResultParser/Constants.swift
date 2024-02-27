@@ -40,10 +40,10 @@ struct Constants {
         }
     }
     
-    static var detailsFilePath: URL {
+    static var actionTestPlanRunSummaries: URL {
         get throws {
             try appCachesDirectory
-                .appendingPathComponent("details", isDirectory: false)
+                .appendingPathComponent("ActionTestPlanRunSummaries", isDirectory: false)
                 .appendingPathExtension("json")
         }
     }

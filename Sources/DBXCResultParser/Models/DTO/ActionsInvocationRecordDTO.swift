@@ -1,5 +1,5 @@
 //
-//  OverviewReportDTO.swift
+//  ActionsInvocationRecordDTO.swift
 //
 //
 //  Created by Mikhail Rubanov on 24.05.2021.
@@ -7,30 +7,30 @@
 
 import Foundation
 
-struct OverviewReportDTO: Codable {
+struct ActionsInvocationRecordDTO: Codable {
     let actions: Actions
     let metrics: Metrics
 }
 
-extension OverviewReportDTO {
+extension ActionsInvocationRecordDTO {
     struct Actions: Codable {
         let _values: [Value]
     }
 }
 
-extension OverviewReportDTO.Actions {
+extension ActionsInvocationRecordDTO.Actions {
     struct Value: Codable {
         let actionResult: ActionResult
     }
 }
 
-extension OverviewReportDTO.Actions.Value {
+extension ActionsInvocationRecordDTO.Actions.Value {
     struct ActionResult: Codable {
         let testsRef: StringReference?
     }
 }
 
-extension OverviewReportDTO {
+extension ActionsInvocationRecordDTO {
     var testsRefId: String {
         get throws {
             let testRefs = actions._values.compactMap { $0.actionResult.testsRef }
@@ -48,13 +48,13 @@ extension OverviewReportDTO {
     }
 }
 
-extension OverviewReportDTO {
+extension ActionsInvocationRecordDTO {
     struct Metrics: Codable {
         let warningCount: WarningCount?
     }
 }
 
-extension OverviewReportDTO.Metrics {
+extension ActionsInvocationRecordDTO.Metrics {
     struct WarningCount: Codable {
         let _value: String
     }

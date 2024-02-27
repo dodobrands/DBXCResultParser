@@ -141,11 +141,13 @@ public extension Array where Element == DBXCReportModel.Module.File.RepeatableTe
 }
 
 extension DBXCReportModel {
-    init(overviewReportDTO: OverviewReportDTO,
-         detailedReportDTO: DetailedReportDTO,
-         coverageDTOs: [CoverageDTO]) throws {
+    init(
+        actionsInvocationRecordDTO: ActionsInvocationRecordDTO,
+        actionTestPlanRunSummariesDTO: ActionTestPlanRunSummariesDTO,
+        coverageDTOs: [CoverageDTO]
+    ) throws {
         
-        if let warningCount = overviewReportDTO.metrics.warningCount?._value {
+        if let warningCount = actionsInvocationRecordDTO.metrics.warningCount?._value {
             self.warningCount = Int(warningCount)
         } else {
             self.warningCount = nil
@@ -160,7 +162,7 @@ extension DBXCReportModel {
             coverageModels.first { $0.name.split(separator: ".")[0] + "Tests" == moduleName }
         }
         
-        try detailedReportDTO.summaries._values.forEach { value1 in
+        try actionTestPlanRunSummariesDTO.summaries._values.forEach { value1 in
             try value1.testableSummaries._values.forEach { value2 in
                 let modulename = value2.name._value
                 var module = modules[modulename] ?? .init(name: modulename,
@@ -281,7 +283,7 @@ extension Set where Element == DBXCReportModel.Module.File.RepeatableTest {
 }
 
 extension DBXCReportModel.Module.File.RepeatableTest.Test {
-    init(_ test: DetailedReportDTO.Summaries.Value.TestableSummaries.Value.Tests.Value.Subtests.Value.Subtests.Value.Subtests.Value) throws {
+    init(_ test: ActionTestPlanRunSummariesDTO.Summaries.Value.TestableSummaries.Value.Tests.Value.Subtests.Value.Subtests.Value.Subtests.Value) throws {
         switch test.testStatus._value {
         case "Success":
             status = .success

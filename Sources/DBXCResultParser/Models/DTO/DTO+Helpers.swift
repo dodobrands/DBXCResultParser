@@ -7,24 +7,24 @@
 
 import Foundation
 
-extension OverviewReportDTO {
+extension ActionsInvocationRecordDTO {
     init(from xcresultPath: URL) throws {
         let filePath = try Constants.actionsInvocationRecord
         try DBShell.execute("xcrun xcresulttool get --path \(xcresultPath.relativePath) --format json > \(filePath.relativePath)")
         let data = try Data(contentsOf: filePath)
         try FileManager.default.removeItem(atPath: filePath.relativePath)
-        self = try JSONDecoder().decode(OverviewReportDTO.self, from: data)
+        self = try JSONDecoder().decode(ActionsInvocationRecordDTO.self, from: data)
     }
 }
 
-extension DetailedReportDTO {
+extension ActionTestPlanRunSummariesDTO {
     init(from xcresultPath: URL, refId: String? = nil) throws {
-        let refId = try (refId ?? OverviewReportDTO(from: xcresultPath).testsRefId)
-        let filePath = try Constants.detailsFilePath
+        let refId = try (refId ?? ActionsInvocationRecordDTO(from: xcresultPath).testsRefId)
+        let filePath = try Constants.actionTestPlanRunSummaries
         try DBShell.execute("xcrun xcresulttool get --path \(xcresultPath.relativePath) --format json --id \(refId) > \(filePath.relativePath)")
         let data = try Data(contentsOf: filePath)
         try FileManager.default.removeItem(atPath: filePath.relativePath)
-        self = try JSONDecoder().decode(DetailedReportDTO.self, from: data)
+        self = try JSONDecoder().decode(ActionTestPlanRunSummariesDTO.self, from: data)
     }
 }
 
