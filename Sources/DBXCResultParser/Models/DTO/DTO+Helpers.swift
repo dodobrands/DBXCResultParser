@@ -9,10 +9,10 @@ import Foundation
 
 extension OverviewReportDTO {
     init(from xcresultPath: URL) throws {
-        let tempFilePath = try Constants.tempFilePath
-        try DBShell.execute("xcrun xcresulttool get --path \(xcresultPath.relativePath) --format json > \(tempFilePath.relativePath)")
-        let data = try Data(contentsOf: tempFilePath)
-        try FileManager.default.removeItem(atPath: tempFilePath.relativePath)
+        let filePath = try Constants.actionsInvocationRecord
+        try DBShell.execute("xcrun xcresulttool get --path \(xcresultPath.relativePath) --format json > \(filePath.relativePath)")
+        let data = try Data(contentsOf: filePath)
+        try FileManager.default.removeItem(atPath: filePath.relativePath)
         self = try JSONDecoder().decode(OverviewReportDTO.self, from: data)
     }
 }
@@ -20,17 +20,17 @@ extension OverviewReportDTO {
 extension DetailedReportDTO {
     init(from xcresultPath: URL, refId: String? = nil) throws {
         let refId = try (refId ?? OverviewReportDTO(from: xcresultPath).testsRefId)
-        let tempFilePath = try Constants.tempFilePath
-        try DBShell.execute("xcrun xcresulttool get --path \(xcresultPath.relativePath) --format json --id \(refId) > \(tempFilePath.relativePath)")
-        let data = try Data(contentsOf: tempFilePath)
-        try FileManager.default.removeItem(atPath: tempFilePath.relativePath)
+        let filePath = try Constants.detailsFilePath
+        try DBShell.execute("xcrun xcresulttool get --path \(xcresultPath.relativePath) --format json --id \(refId) > \(filePath.relativePath)")
+        let data = try Data(contentsOf: filePath)
+        try FileManager.default.removeItem(atPath: filePath.relativePath)
         self = try JSONDecoder().decode(DetailedReportDTO.self, from: data)
     }
 }
 
 extension Array where Element == CoverageDTO {
     init(from xcresultPath: URL) throws {
-        let tempFilePath = try Constants.tempFilePath
+        let tempFilePath = try Constants.actionsInvocationRecord
         try DBShell.execute("xcrun xccov view --report --only-targets --json \(xcresultPath.relativePath) > \(tempFilePath.relativePath)")
         let data = try Data(contentsOf: tempFilePath)
         try FileManager.default.removeItem(atPath: tempFilePath.relativePath)

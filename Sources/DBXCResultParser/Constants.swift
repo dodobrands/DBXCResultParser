@@ -32,10 +32,18 @@ struct Constants {
         }
     }
     
-    static var tempFilePath: URL {
+    static var actionsInvocationRecord: URL {
         get throws {
             try appCachesDirectory
-                .appendingPathComponent("temp", isDirectory: false)
+                .appendingPathComponent("ActionsInvocationRecord", isDirectory: false)
+                .appendingPathExtension("json")
+        }
+    }
+    
+    static var detailsFilePath: URL {
+        get throws {
+            try appCachesDirectory
+                .appendingPathComponent("details", isDirectory: false)
                 .appendingPathExtension("json")
         }
     }
