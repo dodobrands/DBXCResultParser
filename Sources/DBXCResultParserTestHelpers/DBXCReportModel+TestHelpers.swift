@@ -99,8 +99,13 @@ extension DBXCReportModel.Module.File.RepeatableTest {
 extension DBXCReportModel.Module.File.RepeatableTest.Test {
     public static func testMake(
         status: Status = .success,
-        duration: Measurement<UnitDuration> = .testMake()
+        duration: Measurement<UnitDuration> = .testMake(),
+        message: String? = nil
     ) -> Self {
-        .init(status: status, duration: duration)
+        .init(
+            status: status,
+            duration: duration,
+            message: message
+        )
     }
 }

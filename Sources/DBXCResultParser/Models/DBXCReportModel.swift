@@ -87,6 +87,7 @@ extension DBXCReportModel.Module.File.RepeatableTest {
     public struct Test {
         public let status: Status
         public let duration: Measurement<UnitDuration>
+        public let message: String?
     }
     
     public var combinedStatus: Test.Status {
@@ -174,10 +175,11 @@ extension DBXCReportModel {
                                                                        repeatableTests: [])
                             try value5.subtests?._values.forEach { value6 in
                                 let testname = value6.name._value
-                                var repeatableTest = file.repeatableTests[testname] ?? .init(name: testname,
-                                                                                             tests: [])
-                                let test = try DBXCReportModel.Module.File.RepeatableTest.Test(value6)
-                                repeatableTest.tests.append(test)
+                                let test = try DBXCReportModel.Module.File.RepeatableTest.Test(value6, xcresultPath: xcresultPath)
+                                let repeatableTest = file.repeatableTests[testname] ?? DBXCReportModel.Module.File.RepeatableTest(
+                                    name: testname,
+                                    tests: [test]
+                                )
                                 file.repeatableTests.update(with: repeatableTest)
                             }
                             module.files.update(with: file)
@@ -280,7 +282,10 @@ extension Set where Element == DBXCReportModel.Module.File.RepeatableTest {
 }
 
 extension DBXCReportModel.Module.File.RepeatableTest.Test {
-    init(_ test: ActionTestPlanRunSummariesDTO.Summaries.Value.TestableSummaries.Value.Tests.Value.Subtests.Value.Subtests.Value.Subtests.Value) throws {
+    init(
+        _ test: ActionTestPlanRunSummariesDTO.Summaries.Value.TestableSummaries.Value.Tests.Value.Subtests.Value.Subtests.Value.Subtests.Value,
+        xcresultPath: URL
+    ) throws {
         switch test.testStatus._value {
         case "Success":
             status = .success
@@ -299,6 +304,10 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test {
         }
         
         self.duration = .init(value: duration * 1000, unit: Self.defaultDurationUnit)
+        
+        let summaryRefId = test.summaryRef?.id._value
+        let summaryDto = try summaryRefId.map { try ActionTestSummaryDTO(from: xcresultPath, refId: $0) }
+        message = summaryDto?.message
     }
     
     enum Error: Swift.Error {

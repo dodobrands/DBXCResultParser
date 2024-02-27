@@ -38,6 +38,7 @@ extension DBXCReportModel {
         
         // Initialize the DBXCReportModel with the parsed report data, including the filtered coverage data.
         self = try DBXCReportModel(
+            xcresultPath: xcresultPath,
             actionsInvocationRecordDTO: actionsInvocationRecordDTO,
             actionTestPlanRunSummariesDTO: actionTestPlanRunSummariesDTO,
             coverageDTOs: coverageDTOs

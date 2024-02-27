@@ -28,6 +28,17 @@ extension ActionTestPlanRunSummariesDTO {
     }
 }
 
+extension ActionTestSummaryDTO {
+    init(from xcresultPath: URL, refId: String? = nil) throws {
+        let refId = try (refId ?? ActionsInvocationRecordDTO(from: xcresultPath).testsRefId)
+        let filePath = try Constants.actionTestSummary
+        try DBShell.execute("xcrun xcresulttool get --path \(xcresultPath.relativePath) --format json --id \(refId) > \(filePath.relativePath)")
+        let data = try Data(contentsOf: filePath)
+        try FileManager.default.removeItem(atPath: filePath.relativePath)
+        self = try JSONDecoder().decode(ActionTestSummaryDTO.self, from: data)
+    }
+}
+
 extension Array where Element == CoverageDTO {
     init(from xcresultPath: URL) throws {
         let tempFilePath = try Constants.actionsInvocationRecord

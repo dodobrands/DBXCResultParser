@@ -30,5 +30,9 @@ class DBXCReportModelTests: XCTestCase {
         let successTest = try XCTUnwrap(file.repeatableTests.first { $0.name == "test()" })
         let failedTest = try XCTUnwrap(file.repeatableTests.first { $0.name == "test_failing()" })
         let skippedTest = try XCTUnwrap(file.repeatableTests.first { $0.name == "test_skipping()" })
+        
+        XCTAssertEqual(failedTest.tests.first?.message, "failed - Failure message")
+        XCTAssertEqual(skippedTest.tests.first?.message, "Test skipped - Skip message")
+        XCTAssertNil(successTest.tests.first?.message)
     }
 }

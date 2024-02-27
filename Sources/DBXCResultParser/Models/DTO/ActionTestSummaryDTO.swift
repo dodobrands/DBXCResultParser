@@ -7,18 +7,43 @@
 
 import Foundation
 
-struct ActionTestSummaryDTO {
-    let skipNoticeSummary: SkipNoticeSummary
+struct ActionTestSummaryDTO: Decodable {
+    let skipNoticeSummary: SkipNoticeSummary?
+    let failureSummaries: FailureSummaries?
 }
 
 extension ActionTestSummaryDTO {
-    struct SkipNoticeSummary {
+    struct SkipNoticeSummary: Decodable {
         let message: MessageDTO
     }
 }
 
 extension ActionTestSummaryDTO.SkipNoticeSummary {
-    struct MessageDTO {
+    struct MessageDTO: Decodable {
         let _value: String
+    }
+}
+
+extension ActionTestSummaryDTO {
+    struct FailureSummaries: Decodable {
+        let _values: [ValueDTO]
+    }
+}
+
+extension ActionTestSummaryDTO.FailureSummaries {
+    struct ValueDTO: Decodable {
+        let message: MessageDTO
+    }
+}
+
+extension ActionTestSummaryDTO.FailureSummaries {
+    struct MessageDTO: Decodable {
+        let _value: String
+    }
+}
+
+extension ActionTestSummaryDTO {
+    var message: String? {
+        skipNoticeSummary?.message._value ?? failureSummaries?._values.map { $0.message._value }.first
     }
 }

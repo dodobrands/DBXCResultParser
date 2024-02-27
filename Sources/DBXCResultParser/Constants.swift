@@ -47,6 +47,14 @@ struct Constants {
                 .appendingPathExtension("json")
         }
     }
+    
+    static var actionTestSummary: URL {
+        get throws {
+            try appCachesDirectory
+                .appendingPathComponent("ActionTestSummary", isDirectory: false)
+                .appendingPathExtension("json")
+        }
+    }
 }
 
 extension Constants {
