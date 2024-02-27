@@ -99,6 +99,10 @@ extension DBXCReportModel.Module.File.RepeatableTest {
         }
     }
     
+    public var message: String? {
+        tests.first?.message
+    }
+    
     public var averageDuration: Measurement<UnitDuration> {
         assert(tests.map { $0.duration.unit }.elementsAreEqual)
         
