@@ -10,17 +10,12 @@ import Foundation
 struct ActionTestSummaryDTO: Decodable {
     let skipNoticeSummary: SkipNoticeSummary?
     let failureSummaries: FailureSummaries?
+    let expectedFailures: ExpectedFailures?
 }
 
 extension ActionTestSummaryDTO {
     struct SkipNoticeSummary: Decodable {
         let message: MessageDTO
-    }
-}
-
-extension ActionTestSummaryDTO.SkipNoticeSummary {
-    struct MessageDTO: Decodable {
-        let _value: String
     }
 }
 
@@ -32,18 +27,37 @@ extension ActionTestSummaryDTO {
 
 extension ActionTestSummaryDTO.FailureSummaries {
     struct ValueDTO: Decodable {
-        let message: MessageDTO
+        let message: ActionTestSummaryDTO.MessageDTO
     }
 }
 
-extension ActionTestSummaryDTO.FailureSummaries {
-    struct MessageDTO: Decodable {
-        let _value: String
+extension ActionTestSummaryDTO {
+    struct ExpectedFailures: Decodable {
+        let _values: [ValueDTO]
+    }
+}
+
+extension ActionTestSummaryDTO.ExpectedFailures {
+    struct ValueDTO: Decodable {
+        let failureSummary: FailureSummary
+    }
+}
+
+extension ActionTestSummaryDTO.ExpectedFailures.ValueDTO {
+    struct FailureSummary: Decodable {
+        let message: ActionTestSummaryDTO.MessageDTO
     }
 }
 
 extension ActionTestSummaryDTO {
     var message: String? {
-        skipNoticeSummary?.message._value ?? failureSummaries?._values.map { $0.message._value }.first
+        let message = skipNoticeSummary?.message ?? failureSummaries?._values.first?.message ?? expectedFailures?._values.first?.failureSummary.message
+        return message?._value
+    }
+}
+
+extension ActionTestSummaryDTO {
+    struct MessageDTO: Decodable {
+        let _value: String
     }
 }

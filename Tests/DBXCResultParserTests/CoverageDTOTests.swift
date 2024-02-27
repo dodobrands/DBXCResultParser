@@ -23,9 +23,9 @@ class CoverageDTOTests: XCTestCase {
         let result = try Array<CoverageDTO>(from: Constants.testsReportPath)
         XCTAssertEqual(result.count, 5) // as targets count
         let expectedResult = CoverageDTO.testMake(
-            coveredLines: 428,
-            executableLines: 487,
-            lineCoverage: 0.8788501026694046,
+            coveredLines: 477,
+            executableLines: 532,
+            lineCoverage: 0.8966165413533834,
             name: "DBXCResultParser"
         )
         
