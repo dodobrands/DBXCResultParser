@@ -16,20 +16,19 @@ class DBXCReportModelTests: XCTestCase {
     
     func test() throws {
         let report = try DBXCReportModel(xcresultPath: Constants.testsReportPath)
-        XCTAssertEqual(report.modules.count, 1)
+        XCTAssertEqual(report.modules.count, 2)
         
-        let module = try XCTUnwrap(report.modules.first)
-        XCTAssertEqual(module.name, "DBXCResultParserTests")
-        XCTAssertEqual(module.coverage?.coveredLines, 299)
+        let module = try XCTUnwrap(report.modules.first { $0.name == "DBXCResultParserTests" })
+        XCTAssertEqual(module.coverage?.coveredLines, 428)
         
         let files = module.files.sorted { $0.name < $1.name }
         XCTAssertEqual(files.count, 5)
         
-        let file = try XCTUnwrap(files.first)
-        XCTAssertEqual(file.name, "CoverageDTOTests")
-        XCTAssertEqual(file.repeatableTests.count, 1)
+        let file = try XCTUnwrap(files.first { $0.name == "DBXCReportModelTests" })
+        XCTAssertEqual(file.repeatableTests.count, 3)
         
-        let test = try XCTUnwrap(file.repeatableTests.first)
-        XCTAssertEqual(test.name, "test_file_with_coverage()")
+        let successTest = try XCTUnwrap(file.repeatableTests.first { $0.name == "test()" })
+        let failedTest = try XCTUnwrap(file.repeatableTests.first { $0.name == "test_failing()" })
+        let skippedTest = try XCTUnwrap(file.repeatableTests.first { $0.name == "test_skipping()" })
     }
 }

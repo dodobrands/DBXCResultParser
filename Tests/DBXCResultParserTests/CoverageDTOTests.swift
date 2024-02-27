@@ -21,11 +21,11 @@ class CoverageDTOTests: XCTestCase {
     
     func test_coverageDtoData() throws {
         let result = try Array<CoverageDTO>(from: Constants.testsReportPath)
-        XCTAssertEqual(result.count, 3) // as targets count
+        XCTAssertEqual(result.count, 5) // as targets count
         let expectedResult = CoverageDTO.testMake(
-            coveredLines: 299,
-            executableLines: 582,
-            lineCoverage: 0.5137457044673539,
+            coveredLines: 428,
+            executableLines: 487,
+            lineCoverage: 0.8788501026694046,
             name: "DBXCResultParser"
         )
         
