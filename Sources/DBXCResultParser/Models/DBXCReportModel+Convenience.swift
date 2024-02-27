@@ -22,11 +22,9 @@ extension DBXCReportModel {
         xcresultPath: URL,
         excludingCoverageNames: [String] = []
     ) throws {
-        // Parse the overview report from the xcresult file, which contains general test execution information.
+        
         let actionsInvocationRecordDTO = try ActionsInvocationRecordDTO(from: xcresultPath)
         
-        // Parse the detailed report using the reference ID obtained from the overview report.
-        // This report provides a more granular look at the test results, including individual test cases.
         let actionTestPlanRunSummariesDTO = try ActionTestPlanRunSummariesDTO(
             from: xcresultPath,
             refId: actionsInvocationRecordDTO.testsRefId
@@ -36,12 +34,48 @@ extension DBXCReportModel {
         let coverageDTOs = try? Array<CoverageDTO>(from: xcresultPath)
             .filter { !excludingCoverageNames.contains($0.name) }
         
-        // Initialize the DBXCReportModel with the parsed report data, including the filtered coverage data.
-        self = try DBXCReportModel(
-            xcresultPath: xcresultPath,
-            actionsInvocationRecordDTO: actionsInvocationRecordDTO,
-            actionTestPlanRunSummariesDTO: actionTestPlanRunSummariesDTO,
-            coverageDTOs: coverageDTOs
-        )
+        if let warningCount = actionsInvocationRecordDTO.metrics.warningCount?._value {
+            self.warningCount = Int(warningCount)
+        } else {
+            self.warningCount = nil
+        }
+        
+        let coverages = coverageDTOs?.map { Module.Coverage(from: $0)}
+        
+        var modules = Set<Module>()
+        
+        try actionTestPlanRunSummariesDTO.summaries._values.forEach { value1 in
+            try value1.testableSummaries._values.forEach { value2 in
+                let modulename = value2.name._value
+                var module = modules[modulename] ?? DBXCReportModel.Module(
+                    name: modulename,
+                    files: [],
+                    coverage: coverages?.forModule(named: modulename)
+                )
+                try value2.tests._values.forEach { value3 in
+                    try value3.subtests?._values.forEach { value4 in
+                        try value4.subtests?._values.forEach { value5 in
+                            let filename = value5.name._value
+                            var file = module.files[filename] ?? .init(name: filename,
+                                                                       repeatableTests: [])
+                            try value5.subtests?._values.forEach { value6 in
+                                let testname = value6.name._value
+                                let test = try DBXCReportModel.Module.File.RepeatableTest.Test(value6, xcresultPath: xcresultPath)
+                                let repeatableTest = file.repeatableTests[testname] ?? DBXCReportModel.Module.File.RepeatableTest(
+                                    name: testname,
+                                    tests: [test]
+                                )
+                                file.repeatableTests.update(with: repeatableTest)
+                            }
+                            module.files.update(with: file)
+                        }
+                    }
+                }
+                
+                modules.update(with: module)
+            }
+        }
+        
+        self.modules = modules
     }
 }

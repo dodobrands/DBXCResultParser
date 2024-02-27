@@ -141,59 +141,7 @@ public extension Array where Element == DBXCReportModel.Module.File.RepeatableTe
     static let allCases = DBXCReportModel.Module.File.RepeatableTest.Test.Status.allCases
 }
 
-extension DBXCReportModel {
-    init(
-        xcresultPath: URL,
-        actionsInvocationRecordDTO: ActionsInvocationRecordDTO,
-        actionTestPlanRunSummariesDTO: ActionTestPlanRunSummariesDTO,
-        coverageDTOs: [CoverageDTO]?
-    ) throws {
-        
-        if let warningCount = actionsInvocationRecordDTO.metrics.warningCount?._value {
-            self.warningCount = Int(warningCount)
-        } else {
-            self.warningCount = nil
-        }
-        
-        let coverages = coverageDTOs?.map { Module.Coverage(from: $0)}
-        
-        var modules = Set<Module>()
-        
-        try actionTestPlanRunSummariesDTO.summaries._values.forEach { value1 in
-            try value1.testableSummaries._values.forEach { value2 in
-                let modulename = value2.name._value
-                var module = modules[modulename] ?? DBXCReportModel.Module(
-                    name: modulename,
-                    files: [],
-                    coverage: coverages?.forModule(named: modulename)
-                )
-                try value2.tests._values.forEach { value3 in
-                    try value3.subtests?._values.forEach { value4 in
-                        try value4.subtests?._values.forEach { value5 in
-                            let filename = value5.name._value
-                            var file = module.files[filename] ?? .init(name: filename,
-                                                                       repeatableTests: [])
-                            try value5.subtests?._values.forEach { value6 in
-                                let testname = value6.name._value
-                                let test = try DBXCReportModel.Module.File.RepeatableTest.Test(value6, xcresultPath: xcresultPath)
-                                let repeatableTest = file.repeatableTests[testname] ?? DBXCReportModel.Module.File.RepeatableTest(
-                                    name: testname,
-                                    tests: [test]
-                                )
-                                file.repeatableTests.update(with: repeatableTest)
-                            }
-                            module.files.update(with: file)
-                        }
-                    }
-                }
-                
-                modules.update(with: module)
-            }
-        }
-        
-        self.modules = modules
-    }
-    
+extension DBXCReportModel {    
     public var totalCoverage: Double? {
         let coverages = modules.map { $0.coverage }.compactMap { $0 }
         guard coverages.count > 0 else { return nil }

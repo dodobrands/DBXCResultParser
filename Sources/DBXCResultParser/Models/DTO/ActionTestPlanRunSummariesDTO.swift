@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// This report provides a more granular look at the test results, including individual test cases.
 struct ActionTestPlanRunSummariesDTO: Decodable {
     let summaries: Summaries
 }

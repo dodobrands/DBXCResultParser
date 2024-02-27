@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Contains general test execution information
 struct ActionsInvocationRecordDTO: Codable {
     let actions: Actions
     let metrics: Metrics
