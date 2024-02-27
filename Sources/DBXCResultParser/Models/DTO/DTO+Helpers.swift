@@ -10,6 +10,7 @@ import Foundation
 extension ActionsInvocationRecordDTO {
     init(from xcresultPath: URL) throws {
         let result = try DBShell.execute("xcrun xcresulttool get --path \(xcresultPath.relativePath) --format json")
+        print("Parsed ActionsInvocationRecordDTO: \n \(result)")
         let data = try result.data(using: .utf8) ?! UnwrapError.valueIsNil
         self = try JSONDecoder().decode(ActionsInvocationRecordDTO.self, from: data)
     }
@@ -19,6 +20,7 @@ extension ActionTestPlanRunSummariesDTO {
     init(from xcresultPath: URL, refId: String? = nil) throws {
         let refId = try (refId ?? ActionsInvocationRecordDTO(from: xcresultPath).testsRefId)
         let result = try DBShell.execute("xcrun xcresulttool get --path \(xcresultPath.relativePath) --format json --id \(refId)")
+        print("Parsed ActionTestPlanRunSummariesDTO: \n \(result)")
         let data = try result.data(using: .utf8) ?! UnwrapError.valueIsNil
         self = try JSONDecoder().decode(ActionTestPlanRunSummariesDTO.self, from: data)
     }
