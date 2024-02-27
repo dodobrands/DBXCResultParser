@@ -22,7 +22,7 @@ let formatterTestsTargetName = formatterTargetName + "Tests"
 let package = Package(
     name: packageName,
     platforms: [
-        .macOS(.v10_15)
+        .macOS(.v13)
     ],
     products: [
         .library(
