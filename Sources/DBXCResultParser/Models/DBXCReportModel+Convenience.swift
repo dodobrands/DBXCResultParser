@@ -60,11 +60,12 @@ extension DBXCReportModel {
                                                                        repeatableTests: [])
                             try value5.subtests?._values.forEach { value6 in
                                 let testname = value6.name._value
-                                let test = try DBXCReportModel.Module.File.RepeatableTest.Test(value6, xcresultPath: xcresultPath)
-                                let repeatableTest = file.repeatableTests[testname] ?? DBXCReportModel.Module.File.RepeatableTest(
+                                var repeatableTest = file.repeatableTests[testname] ?? DBXCReportModel.Module.File.RepeatableTest(
                                     name: testname,
-                                    tests: [test]
+                                    tests: []
                                 )
+                                let test = try DBXCReportModel.Module.File.RepeatableTest.Test(value6, xcresultPath: xcresultPath)
+                                repeatableTest.tests.append(test)
                                 file.repeatableTests.update(with: repeatableTest)
                             }
                             module.files.update(with: file)
