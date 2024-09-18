@@ -52,6 +52,7 @@ jobs:
 
     - name: Report
       uses: kishikawakatsumi/xcresulttool@v1
+      continue-on-error: true
       with:
         path: ${{ env.SCHEME }}.xcresult
       if: success() || failure()
