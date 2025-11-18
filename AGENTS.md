@@ -71,3 +71,54 @@ The package exports:
 ## Testing
 
 Test resources are stored in `Tests/DBXCResultParserTests/Resources/DBXCResultParser.xcresult` - this is a sample `.xcresult` file used for testing.
+
+## GitHub Workflow
+
+### Using GitHub CLI (`gh`)
+
+All GitHub operations (creating PRs, issues, etc.) should be performed using the GitHub CLI (`gh`) tool. This ensures consistency and allows for better automation.
+
+### Creating Pull Requests
+
+When creating a pull request, always use the pull request template located at `.github/pull_request_template.md`:
+
+```bash
+gh pr create --template .github/pull_request_template.md
+```
+
+Or if you want to fill it interactively:
+
+```bash
+gh pr create --fill
+```
+
+The template includes sections for:
+- Summary
+- Key Changes
+- Additional Changes
+
+### Creating Issues
+
+When creating issues, always use the issue template located at `.github/ISSUE_TEMPLATE.md`:
+
+```bash
+gh issue create --template .github/ISSUE_TEMPLATE.md
+```
+
+Or if you want to fill it interactively:
+
+```bash
+gh issue create --fill
+```
+
+The template includes sections for:
+- Summary
+- Rationale
+
+### General GitHub CLI Usage
+
+- Create PR: `gh pr create`
+- List PRs: `gh pr list`
+- View PR: `gh pr view <number>`
+- Create issue: `gh issue create`
+- List issues: `gh issue list`
