@@ -103,7 +103,7 @@ struct DBXCReportModelActualTests {
 
         let expectedFailedTest = try #require(
             file.repeatableTests.first(where: { $0.name == "test_expectedFailure()" }))
-        // In new format, expectedFailure tests show "Failure is expected" instead of detailed message
+        // expectedFailure tests show "Failure is expected" instead of detailed message
         #expect(
             expectedFailedTest.tests.first?.message == "Failure is expected")
 

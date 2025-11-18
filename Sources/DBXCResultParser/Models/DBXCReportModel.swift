@@ -234,7 +234,7 @@ extension Set where Element == DBXCReportModel.Module.File.RepeatableTest {
 }
 
 extension DBXCReportModel.Module.File.RepeatableTest.Test {
-    /// Initializes from new format TestResultsDTO.TestNode (Repetition node)
+    /// Initializes from TestResultsDTO.TestNode (Repetition node)
     init(from repetitionNode: TestResultsDTO.TestNode) throws {
         guard repetitionNode.nodeType == .repetition else {
             throw Error.invalidNodeType

@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// New format DTO for test-results tests command
+/// DTO for test-results tests command
 struct TestResultsDTO: Decodable {
     let devices: [Device]
     let testNodes: [TestNode]

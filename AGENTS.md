@@ -47,7 +47,7 @@ Options:
 
 **DTO Layer** (`Sources/DBXCResultParser/Models/DTO/`)
 - Data Transfer Objects that mirror the JSON structure from `xcresulttool`
-- `TestResultsDTO`: Test results data from `xcresulttool get test-results tests` (new format)
+- `TestResultsDTO`: Test results data from `xcresulttool get test-results tests`
 - `CoverageDTO`: Code coverage data from `xccov`
 - DTOs are initialized by executing `xcresulttool` commands via `DBShell` and parsing JSON output
 

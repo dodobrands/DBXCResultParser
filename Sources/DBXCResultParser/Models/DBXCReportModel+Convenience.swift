@@ -22,16 +22,6 @@ extension DBXCReportModel {
         xcresultPath: URL,
         excludingCoverageNames: [String] = []
     ) async throws {
-        try await self.init(
-            fromNewFormat: xcresultPath, excludingCoverageNames: excludingCoverageNames)
-    }
-
-    /// Initializes a new instance using the test-results API format
-    /// This initializer uses the xcresulttool API
-    public init(
-        fromNewFormat xcresultPath: URL,
-        excludingCoverageNames: [String] = []
-    ) async throws {
         let testResultsDTO = try await TestResultsDTO(from: xcresultPath)
 
         // Attempt to parse the code coverage data from the xcresult file, excluding specified targets.
