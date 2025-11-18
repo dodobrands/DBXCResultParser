@@ -41,14 +41,20 @@ public class DBXCTextFormatterExecutable: ParsableCommand {
                 DBXCReportModel.Module.File.RepeatableTest.Test.Status(rawValue: String($0))
             }
 
-        let localeValue: Locale?
+        let localeValue: Locale
         if let localeString = locale {
-            guard !localeString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            let trimmedLocale = localeString.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmedLocale.isEmpty else {
                 throw LocaleError.invalidLocaleIdentifier(localeString)
             }
-            localeValue = Locale(identifier: localeString)
+            let createdLocale = Locale(identifier: trimmedLocale)
+            // Validate that the locale identifier is valid
+            guard Locale.availableIdentifiers.contains(trimmedLocale) else {
+                throw LocaleError.invalidLocaleIdentifier(localeString)
+            }
+            localeValue = createdLocale
         } else {
-            localeValue = nil
+            localeValue = Locale.current
         }
 
         let formatter = DBXCTextFormatter()
