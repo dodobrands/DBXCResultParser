@@ -114,30 +114,6 @@ struct DBXCReportModelActualTests {
         #expect(flackyTest.tests.last?.status == .success)
         #expect(flackyTest.combinedStatus == .mixed)
     }
-
-    @Test
-    func test_warningCount_extractedFromBuildResults() async throws {
-        // warningCount is extracted from build-results API (if available)
-        // For test-only xcresult files, warningCount can be 0 (no warnings) or nil (no build action)
-        let report = try await DBXCReportModel(xcresultPath: Constants.testsReportPath)
-        // warningCount should be non-negative if present
-        if let warningCount = report.warningCount {
-            #expect(warningCount >= 0)
-        }
-    }
-
-    @Test
-    func test_warningCount_withTestHelper() throws {
-        // Test that warningCount can be set via test helper
-        let reportWithWarnings = DBXCReportModel.testMake(warningCount: 5)
-        #expect(reportWithWarnings.warningCount == 5)
-
-        let reportWithoutWarnings = DBXCReportModel.testMake(warningCount: nil)
-        #expect(reportWithoutWarnings.warningCount == nil)
-
-        let reportWithZeroWarnings = DBXCReportModel.testMake(warningCount: 0)
-        #expect(reportWithZeroWarnings.warningCount == 0)
-    }
 }
 //
 //import XCTest

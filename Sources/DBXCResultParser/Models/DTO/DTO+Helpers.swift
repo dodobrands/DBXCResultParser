@@ -29,28 +29,6 @@ extension TestResultsDTO {
     }
 }
 
-extension BuildResultsDTO {
-    init(from xcresultPath: URL) async throws {
-        let output = try await DBShell.execute(
-            "xcrun",
-            arguments: [
-                "xcresulttool", "get", "build-results",
-                "--path", xcresultPath.relativePath,
-                "--compact",
-            ]
-        )
-        guard let data = output.data(using: .utf8) else {
-            throw DecodingError.dataCorrupted(
-                DecodingError.Context(
-                    codingPath: [],
-                    debugDescription: "Failed to convert output to Data"
-                )
-            )
-        }
-        self = try JSONDecoder().decode(BuildResultsDTO.self, from: data)
-    }
-}
-
 extension Array where Element == CoverageDTO {
     init(from xcresultPath: URL) async throws {
         let output = try await DBShell.execute(

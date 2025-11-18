@@ -39,10 +39,6 @@ extension DBXCReportModel {
         let coverageDTOs = try? await [CoverageDTO](from: xcresultPath)
             .filter { !excludingCoverageNames.contains($0.name) }
 
-        // Get warningCount from build-results (if available)
-        let buildResultsDTO = try? await BuildResultsDTO(from: xcresultPath)
-        self.warningCount = buildResultsDTO?.warningCount
-
         let coverages = coverageDTOs?.map { Module.Coverage(from: $0) }
 
         var modules = Set<Module>()

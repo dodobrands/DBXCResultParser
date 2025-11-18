@@ -9,7 +9,6 @@ import Foundation
 
 public struct DBXCReportModel {
     public let modules: Set<Module>
-    public let warningCount: Int?
 }
 
 extension DBXCReportModel {
