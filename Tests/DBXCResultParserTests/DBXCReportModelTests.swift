@@ -3,76 +3,76 @@ import Testing
 
 @testable import DBXCResultParser
 
-extension Tag {
-    @Tag static var xcresultGeneration: Self
-}
+//extension Tag {
+//    @Tag static var xcresultGeneration: Self
+//}
+//
+//@Suite
+//struct DBXCReportModelTests {
+//
+//    // Set to true to enable xcresult generation tests.
+//    // These tests are used to generate .xcresult file with a new Xcode version.
+//    //
+//    // To run only these tests: in Xcode's test navigator, go to the Tags section and click Run next to the xcresultGeneration tag.
+//    //
+//    // Originally planned to create a script that would run tests with xcresultGeneration tag via swift test
+//    // and automatically generate .xcresult file with correct name (including Xcode version) in the right location,
+//    // but ran into limitation: swift test doesn't support filtering by tags (at least in Xcode 26).
+//    //
+//    // Therefore, tests are controlled by this constant instead of using the tag for filtering,
+//    // and finding the generated .xcresult file, moving it to the right location, and renaming are done manually.
+//    let generateXcresult = false
+//
+//    @Test(.tags(.xcresultGeneration))
+//    func test_success() throws {
+//        guard generateXcresult else {
+//            return  // Skip test if constant is not enabled
+//        }
+//        #expect(true)
+//    }
+//
+//    @Test(.tags(.xcresultGeneration))
+//    func test_failure() throws {
+//        guard generateXcresult else {
+//            return
+//        }
+//        Issue.record("Failure message")
+//    }
+//
+//    @Test(.tags(.xcresultGeneration), .disabled("Skip message"))
+//    func test_skip() throws {
+//        guard generateXcresult else {
+//            return
+//        }
+//
+//        return
+//    }
+//
+//    @Test(.tags(.xcresultGeneration))
+//    func test_expectedFailure() throws {
+//        guard generateXcresult else {
+//            return
+//        }
+//        withKnownIssue {
+//            #expect(1 == 2)
+//        }
+//    }
+//
+//    nonisolated(unsafe) static var shouldFail = true
+//    @Test(.tags(.xcresultGeneration))
+//    func test_flacky() throws {
+//        guard generateXcresult else {
+//            return
+//        }
+//        if Self.shouldFail {
+//            Issue.record("Flacky failure message")
+//        }
+//
+//        Self.shouldFail = false
+//    }
+//}
 
-@Suite
-struct DBXCReportModelTests {
-
-    // Set to true to enable xcresult generation tests.
-    // These tests are used to generate .xcresult file with a new Xcode version.
-    //
-    // To run only these tests: in Xcode's test navigator, go to the Tags section and click Run next to the xcresultGeneration tag.
-    //
-    // Originally planned to create a script that would run tests with xcresultGeneration tag via swift test
-    // and automatically generate .xcresult file with correct name (including Xcode version) in the right location,
-    // but ran into limitation: swift test doesn't support filtering by tags (at least in Xcode 26).
-    //
-    // Therefore, tests are controlled by this constant instead of using the tag for filtering,
-    // and finding the generated .xcresult file, moving it to the right location, and renaming are done manually.
-    let generateXcresult = false
-
-    @Test(.tags(.xcresultGeneration))
-    func test_success() throws {
-        guard generateXcresult else {
-            return  // Skip test if constant is not enabled
-        }
-        #expect(true)
-    }
-
-    @Test(.tags(.xcresultGeneration))
-    func test_failure() throws {
-        guard generateXcresult else {
-            return
-        }
-        Issue.record("Failure message")
-    }
-
-    @Test(.tags(.xcresultGeneration))
-    func test_skip() throws {
-        guard generateXcresult else {
-            return
-        }
-        // This test always skips by logic
-        return
-    }
-
-    @Test(.tags(.xcresultGeneration))
-    func test_expectedFailure() throws {
-        guard generateXcresult else {
-            return
-        }
-        withKnownIssue {
-            #expect(1 == 2)
-        }
-    }
-
-    nonisolated(unsafe) static var shouldFail = true
-    @Test(.tags(.xcresultGeneration))
-    func test_flacky() throws {
-        guard generateXcresult else {
-            return
-        }
-        if Self.shouldFail {
-            Issue.record("Flacky failure message")
-        }
-
-        Self.shouldFail = false
-    }
-}
-
-extension DBXCReportModelTests {
+struct DBXCReportModelActualTests {
 
     @Test
     func test() async throws {
@@ -115,3 +115,32 @@ extension DBXCReportModelTests {
         #expect(flackyTest.combinedStatus == .mixed)
     }
 }
+//
+//import XCTest
+//class DBXCReportModelTests: XCTestCase {
+//    func test_success() {
+//        XCTAssertTrue(true)
+//    }
+//
+//    func test_failure() {
+//        XCTFail("Failure message")
+//    }
+//
+//    func test_skip() throws {
+//        throw XCTSkip("Skip message")
+//    }
+//
+//    func test_expectedFailure() {
+//        XCTExpectFailure("Failure is expected")
+//        XCTAssertEqual(1, 2)
+//    }
+//
+//    static nonisolated(unsafe) var shouldFail = true
+//    func test_flacky() {
+//        if Self.shouldFail {
+//            XCTFail("Flacky failure message")
+//        }
+//
+//        Self.shouldFail = false
+//    }
+//}
