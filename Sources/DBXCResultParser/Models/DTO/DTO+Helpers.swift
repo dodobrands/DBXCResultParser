@@ -9,10 +9,11 @@ import Foundation
 
 extension ActionsInvocationRecordDTO {
     init(from xcresultPath: URL) async throws {
+        // Note: This still uses legacy API for now, will be migrated to new format
         let output = try await DBShell.execute(
             "xcrun",
             arguments: [
-                "xcresulttool", "get", "--legacy",
+                "xcresulttool", "get", "object", "--legacy",
                 "--path", xcresultPath.relativePath,
                 "--format", "json",
             ]
@@ -31,6 +32,7 @@ extension ActionsInvocationRecordDTO {
 
 extension ActionTestPlanRunSummariesDTO {
     init(from xcresultPath: URL, refId: String? = nil) async throws {
+        // Note: This still uses legacy API for now, will be migrated to new format
         let finalRefId: String
         if let providedRefId = refId {
             finalRefId = providedRefId
@@ -41,7 +43,7 @@ extension ActionTestPlanRunSummariesDTO {
         let output = try await DBShell.execute(
             "xcrun",
             arguments: [
-                "xcresulttool", "get", "--legacy",
+                "xcresulttool", "get", "object", "--legacy",
                 "--path", xcresultPath.relativePath,
                 "--format", "json",
                 "--id", finalRefId,
@@ -61,6 +63,7 @@ extension ActionTestPlanRunSummariesDTO {
 
 extension ActionTestSummaryDTO {
     init(from xcresultPath: URL, refId: String? = nil) async throws {
+        // Note: This still uses legacy API for now, will be migrated to new format
         let finalRefId: String
         if let providedRefId = refId {
             finalRefId = providedRefId
@@ -71,7 +74,7 @@ extension ActionTestSummaryDTO {
         let output = try await DBShell.execute(
             "xcrun",
             arguments: [
-                "xcresulttool", "get", "--legacy",
+                "xcresulttool", "get", "object", "--legacy",
                 "--path", xcresultPath.relativePath,
                 "--format", "json",
                 "--id", finalRefId,
@@ -86,6 +89,28 @@ extension ActionTestSummaryDTO {
             )
         }
         self = try JSONDecoder().decode(ActionTestSummaryDTO.self, from: data)
+    }
+}
+
+extension TestResultsDTO {
+    init(from xcresultPath: URL) async throws {
+        let output = try await DBShell.execute(
+            "xcrun",
+            arguments: [
+                "xcresulttool", "get", "test-results", "tests",
+                "--path", xcresultPath.relativePath,
+                "--compact",
+            ]
+        )
+        guard let data = output.data(using: .utf8) else {
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: [],
+                    debugDescription: "Failed to convert output to Data"
+                )
+            )
+        }
+        self = try JSONDecoder().decode(TestResultsDTO.self, from: data)
     }
 }
 

@@ -268,8 +268,38 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test {
         }
     }
 
+    /// Initializes from new format TestResultsDTO.TestNode (Repetition node)
+    init(from repetitionNode: TestResultsDTO.TestNode) throws {
+        guard repetitionNode.nodeType == .repetition else {
+            throw Error.invalidNodeType
+        }
+
+        guard let result = repetitionNode.result else {
+            throw Error.missingResult
+        }
+
+        switch result {
+        case .passed:
+            status = .success
+        case .failed:
+            status = .failure
+        case .skipped:
+            status = .skipped
+        case .expectedFailure:
+            status = .expectedFailure
+        }
+
+        let durationSeconds = repetitionNode.durationInSeconds ?? 0.0
+        self.duration = .init(value: durationSeconds * 1000, unit: Self.defaultDurationUnit)
+
+        // Extract message from failure message children
+        self.message = repetitionNode.failureMessage ?? repetitionNode.skipMessage
+    }
+
     enum Error: Swift.Error {
         case invalidDuration(duration: String)
+        case invalidNodeType
+        case missingResult
     }
 
     static let defaultDurationUnit = UnitDuration.milliseconds
