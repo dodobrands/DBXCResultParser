@@ -10,7 +10,7 @@ import XCTest
 
 @testable import DBXCResultParser
 
-extension Constants {
+struct Constants {
     static var resourcesPath: URL {
         get throws {
             try testsReportPath.deletingLastPathComponent()
