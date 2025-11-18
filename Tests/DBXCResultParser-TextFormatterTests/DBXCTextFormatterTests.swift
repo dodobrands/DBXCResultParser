@@ -1,76 +1,71 @@
 import DBXCResultParserTestHelpers
 import DBXCResultParser_TextFormatter
-import XCTest
+import Foundation
+import Testing
 
 @testable import DBXCResultParser
 
-final class DBXCTextFormatterTests: XCTestCase {
-    var locale: Locale!
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-        locale = Locale(identifier: "en-US")
-    }
+@Suite
+struct DBXCTextFormatterTests {
+    let locale = Locale(identifier: "en-US")
 
-    override func tearDownWithError() throws {
-        locale = nil
-        try super.tearDownWithError()
-    }
-
+    @Test
     func test_testResult_any_list() {
         let formatter = DBXCTextFormatter()
         let result = formatter.format(.genericReport, format: .list, locale: locale)
 
-        XCTAssertEqual(
-            result,
-            """
-            AuthSpec
-            ✅ login
-            ❌ logout (Failed to logout)
-            ⚠️ openSettings
-            ⏭️ parse_performance (Parse is very slow, turned off tests)
-            🤡 rename_user (Rename is temporary broken)
+        #expect(
+            result == """
+                AuthSpec
+                ✅ login
+                ❌ logout (Failed to logout)
+                ⚠️ openSettings
+                ⏭️ parse_performance (Parse is very slow, turned off tests)
+                🤡 rename_user (Rename is temporary broken)
 
-            CaptchaSpec
-            ❌ Another Handle Request
-            ❌ Handle Request
+                CaptchaSpec
+                ❌ Another Handle Request
+                ❌ Handle Request
 
-            NetworkSpec
-            ✅ MakeRequest
+                NetworkSpec
+                ✅ MakeRequest
 
-            NotificationsSetupServiceTests
-            ⏭️ enabledNotifications
-            """)
+                NotificationsSetupServiceTests
+                ⏭️ enabledNotifications
+                """)
     }
 
+    @Test
     func test_testResult_success_list() {
         let formatter = DBXCTextFormatter()
         let result = formatter.format(
             .genericReport, include: [.success], format: .list, locale: locale)
 
-        XCTAssertEqual(
-            result,
-            """
-            AuthSpec
-            ✅ login
+        #expect(
+            result == """
+                AuthSpec
+                ✅ login
 
-            NetworkSpec
-            ✅ MakeRequest
-            """)
+                NetworkSpec
+                ✅ MakeRequest
+                """)
     }
 
+    @Test
     func test_testResult_any_count() {
         let formatter = DBXCTextFormatter()
         let result = formatter.format(.genericReport, format: .count, locale: locale)
 
-        XCTAssertEqual(result, "9 (0 sec)")
+        #expect(result == "9 (0 sec)")
     }
 
+    @Test
     func test_testResult_failure_count() {
         let formatter = DBXCTextFormatter()
         let result = formatter.format(
             .genericReport, include: [.failure], format: .count, locale: locale)
 
-        XCTAssertEqual(result, "3 (0 sec)")
+        #expect(result == "3 (0 sec)")
     }
 }
 
