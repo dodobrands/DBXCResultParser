@@ -239,7 +239,7 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test {
         _ test: ActionTestPlanRunSummariesDTO.Summaries.Value.TestableSummaries.Value.Tests.Value
             .Subtests.Value.Subtests.Value.Subtests.Value,
         xcresultPath: URL
-    ) throws {
+    ) async throws {
         switch test.testStatus._value {
         case "Success":
             status = .success
@@ -260,10 +260,12 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test {
         self.duration = .init(value: duration * 1000, unit: Self.defaultDurationUnit)
 
         let summaryRefId = test.summaryRef?.id._value
-        let summaryDto = try summaryRefId.map {
-            try ActionTestSummaryDTO(from: xcresultPath, refId: $0)
+        if let summaryRefId = summaryRefId {
+            let summaryDto = try await ActionTestSummaryDTO(from: xcresultPath, refId: summaryRefId)
+            message = summaryDto.message
+        } else {
+            message = nil
         }
-        message = summaryDto?.message
     }
 
     enum Error: Swift.Error {
