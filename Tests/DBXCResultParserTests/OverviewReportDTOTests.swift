@@ -14,7 +14,7 @@ import Testing
 struct ActionsInvocationRecordDTOTests {
 
     @Test
-    func test() throws {
-        _ = try ActionsInvocationRecordDTO(from: Constants.testsReportPath)
+    func test() async throws {
+        _ = try await ActionsInvocationRecordDTO(from: Constants.testsReportPath)
     }
 }

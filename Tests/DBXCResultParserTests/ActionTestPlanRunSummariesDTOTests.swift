@@ -14,14 +14,14 @@ import Testing
 struct ActionTestPlanRunSummariesDTOTests {
 
     @Test
-    func test_parseWithExplicitRefId() throws {
-        let overviewReport = try ActionsInvocationRecordDTO(from: Constants.testsReportPath)
-        _ = try ActionTestPlanRunSummariesDTO(
-            from: Constants.testsReportPath, refId: overviewReport.testsRefId)
+    func test_parseWithExplicitRefId() async throws {
+        let overviewReport = try await ActionsInvocationRecordDTO(from: Constants.testsReportPath)
+        _ = try await ActionTestPlanRunSummariesDTO(
+            from: Constants.testsReportPath, refId: try overviewReport.testsRefId)
     }
 
     @Test
-    func test_parseWithImplicitRefId() throws {
-        _ = try ActionTestPlanRunSummariesDTO(from: Constants.testsReportPath)
+    func test_parseWithImplicitRefId() async throws {
+        _ = try await ActionTestPlanRunSummariesDTO(from: Constants.testsReportPath)
     }
 }

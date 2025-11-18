@@ -10,13 +10,13 @@ import Testing
 struct CoverageDTOTests {
 
     @Test
-    func test_coverageDtoParse() throws {
-        _ = try [CoverageDTO](from: Constants.testsReportPath)
+    func test_coverageDtoParse() async throws {
+        _ = try await [CoverageDTO](from: Constants.testsReportPath)
     }
 
     @Test
-    func test_coverageDtoData() throws {
-        let result = try [CoverageDTO](from: Constants.testsReportPath)
+    func test_coverageDtoData() async throws {
+        let result = try await [CoverageDTO](from: Constants.testsReportPath)
         #expect(result.count == 5)  // as targets count
         let expectedResult = CoverageDTO.testMake(
             coveredLines: 481,
