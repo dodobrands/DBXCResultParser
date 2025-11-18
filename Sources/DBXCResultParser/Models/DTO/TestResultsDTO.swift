@@ -1,13 +1,5 @@
-//
-//  TestResultsDTO.swift
-//
-//
-//  Created by Aleksey Berezka on 2025-01-XX.
-//
-
 import Foundation
 
-/// DTO for test-results tests command
 struct TestResultsDTO: Decodable {
     let devices: [Device]
     let testNodes: [TestNode]
