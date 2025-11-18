@@ -20,9 +20,12 @@ public class DBXCTextFormatterExecutable: ParsableCommand {
     @Option(help: "Result format")
     public var format: DBXCTextFormatter.Format = .list
 
-    /// /// The locale to use for formatting numbers and measurements
-    @Option(help: "Locale to use for numbers and measurements formatting (default: system)")
-    public var locale: Locale?
+    /// The locale to use for formatting numbers and measurements
+    @Option(
+        help:
+            "Locale identifier to use for numbers and measurements formatting (e.g., 'en-US', 'ru-RU')"
+    )
+    public var locale: String?
 
     @Option(help: "Test statutes to include in report, comma separated")
     public var include: String = DBXCReportModel.Module.File.RepeatableTest.Test.Status.allCases.map
@@ -38,13 +41,23 @@ public class DBXCTextFormatterExecutable: ParsableCommand {
                 DBXCReportModel.Module.File.RepeatableTest.Test.Status(rawValue: String($0))
             }
 
+        let localeValue: Locale?
+        if let localeString = locale {
+            guard !localeString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                throw LocaleError.invalidLocaleIdentifier(localeString)
+            }
+            localeValue = Locale(identifier: localeString)
+        } else {
+            localeValue = nil
+        }
+
         let formatter = DBXCTextFormatter()
 
         let result = formatter.format(
             report,
             include: include,
             format: format,
-            locale: locale
+            locale: localeValue
         )
 
         print(result)
@@ -116,9 +129,14 @@ extension NumberFormatter {
     }
 }
 
-extension Locale: ExpressibleByArgument {
-    public init?(argument: String) {
-        self.init(identifier: argument)
+enum LocaleError: Error {
+    case invalidLocaleIdentifier(String)
+
+    var localizedDescription: String {
+        switch self {
+        case .invalidLocaleIdentifier(let identifier):
+            return "Invalid locale identifier: '\(identifier)'"
+        }
     }
 }
 
