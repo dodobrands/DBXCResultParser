@@ -12,10 +12,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  SCHEME: "DBXCResultParser-Package"
-  DESTINATION: "platform=OS X"
-
 jobs:
   tests:
 
