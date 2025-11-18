@@ -57,14 +57,16 @@ extension TestResultsDTO.TestNode {
     }
 
     /// Extracts failure message from children nodes
-    /// Extracts message after "-" separator (e.g., "File.swift:51: failed - Failure message" -> "Failure message")
+    /// Extracts message after "failed -" separator (e.g., "File.swift:51: failed - Failure message" -> "Failure message")
     var failureMessage: String? {
         guard let children = children,
             let messageNode = children.first(where: { $0.nodeType == .failureMessage })
         else { return nil }
-        let parts = messageNode.name.split(separator: "-", maxSplits: 1)
-        return parts.count > 1
-            ? String(parts[1]).trimmingCharacters(in: .whitespaces) : messageNode.name
+        let message = messageNode.name
+        if let range = message.range(of: "failed -") {
+            return String(message[range.upperBound...]).trimmingCharacters(in: .whitespaces)
+        }
+        return message
     }
 
     /// Extracts skip message from children nodes
