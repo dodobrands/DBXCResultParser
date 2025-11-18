@@ -36,7 +36,8 @@ public class DBXCTextFormatter {
     /// - Throws: This method may throw an error if the formatting fails for any reason, such as an issue with the report model.
     public func format(
         _ report: DBXCReportModel,
-        include: [DBXCReportModel.Module.File.RepeatableTest.Test.Status] = .allCases,
+        include: [DBXCReportModel.Module.File.RepeatableTest.Test.Status] = DBXCReportModel.Module
+            .File.RepeatableTest.Test.Status.allCases,
         format: Format = .list,
         locale: Locale? = nil
     ) -> String {

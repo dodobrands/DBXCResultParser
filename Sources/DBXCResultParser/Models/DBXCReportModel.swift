@@ -143,10 +143,6 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test {
     }
 }
 
-extension Array where Element == DBXCReportModel.Module.File.RepeatableTest.Test.Status {
-    public static let allCases = DBXCReportModel.Module.File.RepeatableTest.Test.Status.allCases
-}
-
 extension DBXCReportModel {
     public var totalCoverage: Double? {
         let coverages = modules.map { $0.coverage }.compactMap { $0 }

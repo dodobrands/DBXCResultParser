@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version:6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -64,12 +64,18 @@ let package = Package(
                     name: "ArgumentParser",
                     package: "swift-argument-parser"
                 )
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
             ]
         ),
         .target(
             name: formatterTargetName,
             dependencies: [
                 .init(stringLiteral: parserTargetName)
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
             ]
         ),
         .executableTarget(
@@ -81,12 +87,18 @@ let package = Package(
                     name: "ArgumentParser",
                     package: "swift-argument-parser"
                 ),
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
             ]
         ),
         .target(
             name: testHelpersTargetName,
             dependencies: [
                 .init(stringLiteral: parserTargetName)
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
             ]
         ),
         .testTarget(
@@ -97,6 +109,9 @@ let package = Package(
             ],
             resources: [
                 .copy("Resources/DBXCResultParser.xcresult")
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
             ]
         ),
         .testTarget(
@@ -104,6 +119,9 @@ let package = Package(
             dependencies: [
                 .init(stringLiteral: formatterTargetName),
                 .init(stringLiteral: testHelpersTargetName),
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v6)
             ]
         ),
     ]
