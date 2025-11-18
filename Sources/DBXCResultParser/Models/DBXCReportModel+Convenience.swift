@@ -44,8 +44,8 @@ extension DBXCReportModel {
 
         var modules = Set<Module>()
 
-        try actionTestPlanRunSummariesDTO.summaries._values.forEach { value1 in
-            try value1.testableSummaries._values.forEach { value2 in
+        for value1 in actionTestPlanRunSummariesDTO.summaries._values {
+            for value2 in value1.testableSummaries._values {
                 let modulename = value2.name._value
                 var module =
                     modules[modulename]
@@ -54,29 +54,36 @@ extension DBXCReportModel {
                         files: [],
                         coverage: coverages?.forModule(named: modulename)
                     )
-                try value2.tests._values.forEach { value3 in
-                    try value3.subtests?._values.forEach { value4 in
-                        try value4.subtests?._values.forEach { value5 in
-                            let filename = value5.name._value
-                            var file =
-                                module.files[filename]
-                                ?? .init(
-                                    name: filename,
-                                    repeatableTests: [])
-                            try value5.subtests?._values.forEach { value6 in
-                                let testname = value6.name._value
-                                var repeatableTest =
-                                    file.repeatableTests[testname]
-                                    ?? DBXCReportModel.Module.File.RepeatableTest(
-                                        name: testname,
-                                        tests: []
-                                    )
-                                let test = try DBXCReportModel.Module.File.RepeatableTest.Test(
-                                    value6, xcresultPath: xcresultPath)
-                                repeatableTest.tests.append(test)
-                                file.repeatableTests.update(with: repeatableTest)
+                for value3 in value2.tests._values {
+                    if let subtests3 = value3.subtests {
+                        for value4 in subtests3._values {
+                            if let subtests4 = value4.subtests {
+                                for value5 in subtests4._values {
+                                    let filename = value5.name._value
+                                    var file =
+                                        module.files[filename]
+                                        ?? .init(
+                                            name: filename,
+                                            repeatableTests: [])
+                                    if let subtests5 = value5.subtests {
+                                        for value6 in subtests5._values {
+                                            let testname = value6.name._value
+                                            var repeatableTest =
+                                                file.repeatableTests[testname]
+                                                ?? DBXCReportModel.Module.File.RepeatableTest(
+                                                    name: testname,
+                                                    tests: []
+                                                )
+                                            let test = try DBXCReportModel.Module.File
+                                                .RepeatableTest.Test(
+                                                    value6, xcresultPath: xcresultPath)
+                                            repeatableTest.tests.append(test)
+                                            file.repeatableTests.update(with: repeatableTest)
+                                        }
+                                    }
+                                    module.files.update(with: file)
+                                }
                             }
-                            module.files.update(with: file)
                         }
                     }
                 }

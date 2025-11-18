@@ -62,7 +62,8 @@ public class DBXCTextFormatter {
             let tests = files.flatMap { $0.repeatableTests.filtered(testResults: include) }
             let count = tests.count
             let duration = tests.totalDuration
-            let addDuration = include != [.skipped]  // don't add 0ms duration if requested only skipped tests
+            // don't add 0ms duration if requested only skipped tests
+            let addDuration = include != [.skipped]
             return [
                 numberFormatter.string(from: NSNumber(value: count)) ?? String(count),
                 addDuration
