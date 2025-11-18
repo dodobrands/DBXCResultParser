@@ -70,12 +70,16 @@ extension TestResultsDTO.TestNode {
     }
 
     /// Extracts skip message from children nodes
+    /// Extracts message after "skipped -" separator (e.g., "Test skipped - Skip message" -> "Skip message")
     var skipMessage: String? {
         guard let children = children else { return nil }
-        // Skip message can be in Failure Message node or directly as a child
         let messageNode = children.first {
             $0.nodeType == .failureMessage && $0.name.lowercased().contains("skip")
         }
-        return messageNode?.name
+        guard let message = messageNode?.name else { return nil }
+        if let range = message.range(of: "skipped -") {
+            return String(message[range.upperBound...]).trimmingCharacters(in: .whitespaces)
+        }
+        return message
     }
 }

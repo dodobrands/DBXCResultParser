@@ -131,7 +131,14 @@ extension DBXCReportModel {
                             let message: String?
                             if !directMessages.isEmpty {
                                 // Extract message from direct children (for skipped/expectedFailure)
-                                message = directMessages.first?.name
+                                let rawMessage = directMessages.first?.name ?? ""
+                                // Extract message after separator if present
+                                if let skippedRange = rawMessage.range(of: "skipped -") {
+                                    message = String(rawMessage[skippedRange.upperBound...])
+                                        .trimmingCharacters(in: .whitespaces)
+                                } else {
+                                    message = rawMessage
+                                }
                             } else {
                                 message = testCase.failureMessage ?? testCase.skipMessage
                             }
