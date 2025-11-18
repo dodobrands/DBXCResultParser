@@ -8,10 +8,15 @@
 import Foundation
 
 extension ActionsInvocationRecordDTO {
-    init(from xcresultPath: URL) throws {
-        let command =
-            "xcrun xcresulttool get --legacy --path '\(xcresultPath.relativePath)' --format json"
-        let output = try DBShell.execute(command)
+    init(from xcresultPath: URL) async throws {
+        let output = try await DBShell.shared.execute(
+            "xcrun",
+            arguments: [
+                "xcresulttool", "get", "--legacy",
+                "--path", xcresultPath.relativePath,
+                "--format", "json",
+            ]
+        )
         guard let data = output.data(using: .utf8) else {
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
@@ -25,11 +30,23 @@ extension ActionsInvocationRecordDTO {
 }
 
 extension ActionTestPlanRunSummariesDTO {
-    init(from xcresultPath: URL, refId: String? = nil) throws {
-        let refId = try (refId ?? ActionsInvocationRecordDTO(from: xcresultPath).testsRefId)
-        let command =
-            "xcrun xcresulttool get --legacy --path '\(xcresultPath.relativePath)' --format json --id '\(refId)'"
-        let output = try DBShell.execute(command)
+    init(from xcresultPath: URL, refId: String? = nil) async throws {
+        let finalRefId: String
+        if let providedRefId = refId {
+            finalRefId = providedRefId
+        } else {
+            let record = try await ActionsInvocationRecordDTO(from: xcresultPath)
+            finalRefId = try record.testsRefId
+        }
+        let output = try await DBShell.shared.execute(
+            "xcrun",
+            arguments: [
+                "xcresulttool", "get", "--legacy",
+                "--path", xcresultPath.relativePath,
+                "--format", "json",
+                "--id", finalRefId,
+            ]
+        )
         guard let data = output.data(using: .utf8) else {
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
@@ -43,11 +60,23 @@ extension ActionTestPlanRunSummariesDTO {
 }
 
 extension ActionTestSummaryDTO {
-    init(from xcresultPath: URL, refId: String? = nil) throws {
-        let refId = try (refId ?? ActionsInvocationRecordDTO(from: xcresultPath).testsRefId)
-        let command =
-            "xcrun xcresulttool get --legacy --path '\(xcresultPath.relativePath)' --format json --id '\(refId)'"
-        let output = try DBShell.execute(command)
+    init(from xcresultPath: URL, refId: String? = nil) async throws {
+        let finalRefId: String
+        if let providedRefId = refId {
+            finalRefId = providedRefId
+        } else {
+            let record = try await ActionsInvocationRecordDTO(from: xcresultPath)
+            finalRefId = try record.testsRefId
+        }
+        let output = try await DBShell.shared.execute(
+            "xcrun",
+            arguments: [
+                "xcresulttool", "get", "--legacy",
+                "--path", xcresultPath.relativePath,
+                "--format", "json",
+                "--id", finalRefId,
+            ]
+        )
         guard let data = output.data(using: .utf8) else {
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
@@ -61,10 +90,14 @@ extension ActionTestSummaryDTO {
 }
 
 extension Array where Element == CoverageDTO {
-    init(from xcresultPath: URL) throws {
-        let command =
-            "xcrun xccov view --report --only-targets --json '\(xcresultPath.relativePath)'"
-        let output = try DBShell.execute(command)
+    init(from xcresultPath: URL) async throws {
+        let output = try await DBShell.shared.execute(
+            "xcrun",
+            arguments: [
+                "xccov", "view", "--report", "--only-targets", "--json",
+                xcresultPath.relativePath,
+            ]
+        )
         guard let data = output.data(using: .utf8) else {
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
