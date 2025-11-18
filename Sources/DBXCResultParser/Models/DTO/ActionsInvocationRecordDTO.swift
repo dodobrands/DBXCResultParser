@@ -35,15 +35,15 @@ extension ActionsInvocationRecordDTO {
     var testsRefId: String {
         get throws {
             let testRefs = actions._values.compactMap { $0.actionResult.testsRef }
-            
+
             guard let testsRef = testRefs.first?.id._value else {
                 throw Error.noTestRef
             }
-            
+
             return testsRef
         }
     }
-    
+
     enum Error: Swift.Error {
         case noTestRef
     }

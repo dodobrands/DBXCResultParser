@@ -1,11 +1,12 @@
 //
 //  CoverageDTO+TestHelpers.swift
-//  
+//
 //
 //  Created by Aleksey Berezka on 19.12.2023.
 //
 
 import Foundation
+
 @testable import DBXCResultParser
 
 extension CoverageDTO {
@@ -18,9 +19,9 @@ extension CoverageDTO {
     ) -> CoverageDTO {
         self.init(
             buildProductPath: buildProductPath,
-            coveredLines: coveredLines, 
-            executableLines: executableLines, 
-            lineCoverage: lineCoverage, 
+            coveredLines: coveredLines,
+            executableLines: executableLines,
+            lineCoverage: lineCoverage,
             name: name
         )
     }

@@ -1,11 +1,12 @@
 //
 //  DBXCReportModel+TestHelpers.swift
-//  
+//
 //
 //  Created by Aleksey Berezka on 18.12.2023.
 //
 
 import Foundation
+
 @testable import DBXCResultParser
 
 extension DBXCReportModel {
@@ -14,7 +15,7 @@ extension DBXCReportModel {
         warningCount: Int? = nil
     ) -> Self {
         .init(
-            modules: modules, 
+            modules: modules,
             warningCount: warningCount
         )
     }
@@ -22,7 +23,7 @@ extension DBXCReportModel {
 
 extension DBXCReportModel.Module {
     public static func testMake(
-        name: String = "", 
+        name: String = "",
         files: Set<File> = [],
         coverage: Coverage = .testMake()
     ) -> Self {
@@ -37,16 +38,17 @@ extension DBXCReportModel.Module.Coverage {
         totalLines: Int = 0,
         coverage: Double = 0.0
     ) -> Self {
-        Self(name: name,
-             coveredLines: coveredLines,
-             totalLines: totalLines,
-             coverage: coverage)
+        Self(
+            name: name,
+            coveredLines: coveredLines,
+            totalLines: totalLines,
+            coverage: coverage)
     }
 }
 
 extension DBXCReportModel.Module.File {
     public static func testMake(
-        name: String = "", 
+        name: String = "",
         repeatableTests: Set<RepeatableTest> = []
     ) -> Self {
         .init(name: name, repeatableTests: repeatableTests)
@@ -60,39 +62,40 @@ extension DBXCReportModel.Module.File.RepeatableTest {
     ) -> Self {
         .init(name: name, tests: tests)
     }
-    
+
     public static func failed(
         named name: String,
         times: Int = 1,
         message: String? = nil
     ) -> Self {
         let tests = Array(
-            repeating: DBXCReportModel.Module.File.RepeatableTest.Test.testMake(status: .failure, message: message),
+            repeating: DBXCReportModel.Module.File.RepeatableTest.Test.testMake(
+                status: .failure, message: message),
             count: times
         )
         return .testMake(name: name, tests: tests)
     }
-    
+
     public static func succeeded(
         named name: String
     ) -> Self {
         .testMake(name: name, tests: [.testMake(status: .success)])
     }
-    
+
     public static func skipped(
         named name: String,
         message: String? = nil
     ) -> Self {
         .testMake(name: name, tests: [.testMake(status: .skipped, message: message)])
     }
-    
+
     public static func expectedFailed(
         named name: String,
         message: String? = nil
     ) -> Self {
         .testMake(name: name, tests: [.testMake(status: .expectedFailure, message: message)])
     }
-    
+
     public static func mixedFailedSucceeded(
         named name: String,
         failedTimes: Int = 1
