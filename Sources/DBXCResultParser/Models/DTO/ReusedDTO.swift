@@ -1,6 +1,6 @@
 //
 //  ReusedDTO.swift
-//  
+//
 //
 //  Created by Алексей Берёзка on 05.01.2022.
 //

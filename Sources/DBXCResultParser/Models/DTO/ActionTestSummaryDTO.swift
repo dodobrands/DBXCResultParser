@@ -51,7 +51,9 @@ extension ActionTestSummaryDTO.ExpectedFailures.ValueDTO {
 
 extension ActionTestSummaryDTO {
     var message: String? {
-        let message = skipNoticeSummary?.message ?? failureSummaries?._values.first?.message ?? expectedFailures?._values.first?.failureSummary.message
+        let message =
+            skipNoticeSummary?.message ?? failureSummaries?._values.first?.message
+            ?? expectedFailures?._values.first?.failureSummary.message
         return message?._value
     }
 }

@@ -1,6 +1,6 @@
 //
 //  Measurement+TestHelpers.swift
-//  
+//
 //
 //  Created by Aleksey Berezka on 18.12.2023.
 //
@@ -14,11 +14,11 @@ extension Measurement where UnitType: UnitDuration {
     ) -> Measurement<UnitDuration> {
         .init(value: value, unit: unit)
     }
-    
+
     public static func * (left: Self, right: Int) -> Self {
         .init(value: left.value * Double(right), unit: left.unit)
     }
-    
+
     public static func / (left: Self, right: Int) -> Self {
         .init(value: left.value / Double(right), unit: left.unit)
     }
