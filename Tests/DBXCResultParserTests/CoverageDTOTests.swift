@@ -2,27 +2,22 @@
 
 import DBXCResultParserTestHelpers
 import Foundation
-import XCTest
+import Testing
 
 @testable import DBXCResultParser
 
-class CoverageDTOTests: XCTestCase {
+@Suite
+struct CoverageDTOTests {
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-    }
-
-    override func tearDownWithError() throws {
-        try super.tearDownWithError()
-    }
-
+    @Test
     func test_coverageDtoParse() throws {
-        XCTAssertNoThrow(try [CoverageDTO](from: Constants.testsReportPath))
+        _ = try [CoverageDTO](from: Constants.testsReportPath)
     }
 
+    @Test
     func test_coverageDtoData() throws {
         let result = try [CoverageDTO](from: Constants.testsReportPath)
-        XCTAssertEqual(result.count, 5)  // as targets count
+        #expect(result.count == 5)  // as targets count
         let expectedResult = CoverageDTO.testMake(
             coveredLines: 481,
             executableLines: 535,
@@ -30,10 +25,10 @@ class CoverageDTOTests: XCTestCase {
             name: "DBXCResultParser"
         )
 
-        let target = try XCTUnwrap(result.first { $0.name == expectedResult.name })
+        let target = try #require(result.first(where: { $0.name == expectedResult.name }))
 
-        XCTAssertEqual(target.coveredLines, expectedResult.coveredLines)
-        XCTAssertEqual(target.executableLines, expectedResult.executableLines)
-        XCTAssertEqual(target.lineCoverage, expectedResult.lineCoverage)
+        #expect(target.coveredLines == expectedResult.coveredLines)
+        #expect(target.executableLines == expectedResult.executableLines)
+        #expect(target.lineCoverage == expectedResult.lineCoverage)
     }
 }
