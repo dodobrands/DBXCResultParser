@@ -8,13 +8,11 @@
 import Foundation
 import Subprocess
 
-public actor DBShell {
-    public static let shared = DBShell()
-
-    private init() {}
-
+public class DBShell {
     @discardableResult
-    public func execute(_ executable: String, arguments: [String] = []) async throws -> String {
+    public static func execute(_ executable: String, arguments: [String] = []) async throws
+        -> String
+    {
         let result = try await run(
             .name(executable),
             arguments: .init(arguments),

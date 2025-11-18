@@ -14,7 +14,7 @@ import Testing
 struct DBShellTests {
     @Test
     func test() async throws {
-        let result = try await DBShell.shared.execute("which", arguments: ["swift"])
+        let result = try await DBShell.execute("which", arguments: ["swift"])
         #expect(result == "/usr/bin/swift")
     }
 }

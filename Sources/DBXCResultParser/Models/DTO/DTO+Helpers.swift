@@ -9,7 +9,7 @@ import Foundation
 
 extension ActionsInvocationRecordDTO {
     init(from xcresultPath: URL) async throws {
-        let output = try await DBShell.shared.execute(
+        let output = try await DBShell.execute(
             "xcrun",
             arguments: [
                 "xcresulttool", "get", "--legacy",
@@ -38,7 +38,7 @@ extension ActionTestPlanRunSummariesDTO {
             let record = try await ActionsInvocationRecordDTO(from: xcresultPath)
             finalRefId = try record.testsRefId
         }
-        let output = try await DBShell.shared.execute(
+        let output = try await DBShell.execute(
             "xcrun",
             arguments: [
                 "xcresulttool", "get", "--legacy",
@@ -68,7 +68,7 @@ extension ActionTestSummaryDTO {
             let record = try await ActionsInvocationRecordDTO(from: xcresultPath)
             finalRefId = try record.testsRefId
         }
-        let output = try await DBShell.shared.execute(
+        let output = try await DBShell.execute(
             "xcrun",
             arguments: [
                 "xcresulttool", "get", "--legacy",
@@ -91,7 +91,7 @@ extension ActionTestSummaryDTO {
 
 extension Array where Element == CoverageDTO {
     init(from xcresultPath: URL) async throws {
-        let output = try await DBShell.shared.execute(
+        let output = try await DBShell.execute(
             "xcrun",
             arguments: [
                 "xccov", "view", "--report", "--only-targets", "--json",

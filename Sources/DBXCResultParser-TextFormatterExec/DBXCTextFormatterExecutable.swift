@@ -116,7 +116,7 @@ extension NumberFormatter {
     }
 }
 
-extension Locale: ExpressibleByArgument {
+extension Locale: @retroactive ExpressibleByArgument {
     public init?(argument: String) {
         self.init(identifier: argument)
     }
