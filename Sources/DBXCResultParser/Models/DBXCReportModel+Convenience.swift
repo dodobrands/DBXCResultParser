@@ -46,91 +46,111 @@ extension DBXCReportModel {
 
         var modules = Set<Module>()
 
-        // Process test nodes: Unit test bundle -> Test Suite -> Test Case -> Repetition
-        for testNode in testResultsDTO.testNodes {
-            guard testNode.nodeType == .unitTestBundle else { continue }
-
-            // Extract module name from unit test bundle name (e.g., "DBXCResultParserTests")
-            let moduleName = testNode.name
-
-            var module =
-                modules[moduleName]
-                ?? DBXCReportModel.Module(
-                    name: moduleName,
-                    files: [],
-                    coverage: coverages?.forModule(named: moduleName)
-                )
-
-            // Process test suites (files)
-            guard let testSuites = testNode.children else { continue }
-            for testSuite in testSuites {
-                guard testSuite.nodeType == .testSuite else { continue }
-
-                // Extract file name from test suite name (e.g., "DBXCReportModelTests")
-                let fileName = testSuite.name
-                var file =
-                    module.files[fileName]
-                    ?? .init(name: fileName, repeatableTests: [])
-
-                // Process test cases
-                guard let testCases = testSuite.children else { continue }
-                for testCase in testCases {
-                    guard testCase.nodeType == .testCase else { continue }
-
-                    let testName = testCase.name
-                    var repeatableTest =
-                        file.repeatableTests[testName]
-                        ?? DBXCReportModel.Module.File.RepeatableTest(
-                            name: testName,
-                            tests: []
-                        )
-
-                    // Process repetitions (individual test runs)
-                    if let repetitions = testCase.children {
-                        // Has repetitions (multiple runs)
-                        for repetition in repetitions {
-                            guard repetition.nodeType == .repetition else { continue }
-                            let test = try DBXCReportModel.Module.File.RepeatableTest.Test(
-                                from: repetition)
-                            repeatableTest.tests.append(test)
-                        }
-                    } else {
-                        // No repetitions, treat test case as single test
-                        // Create a test from the test case itself
-                        guard let result = testCase.result else { continue }
-                        let status: DBXCReportModel.Module.File.RepeatableTest.Test.Status
-                        switch result {
-                        case .passed:
-                            status = .success
-                        case .failed:
-                            status = .failure
-                        case .skipped:
-                            status = .skipped
-                        case .expectedFailure:
-                            status = .expectedFailure
-                        }
-                        let durationSeconds = testCase.durationInSeconds ?? 0.0
-                        let duration = Measurement<UnitDuration>(
-                            value: durationSeconds * 1000,
-                            unit: DBXCReportModel.Module.File.RepeatableTest.Test
-                                .defaultDurationUnit
-                        )
-                        let message = testCase.failureMessage ?? testCase.skipMessage
-                        let test = DBXCReportModel.Module.File.RepeatableTest.Test(
-                            status: status,
-                            duration: duration,
-                            message: message
-                        )
-                        repeatableTest.tests.append(test)
-                    }
-
-                    file.repeatableTests.update(with: repeatableTest)
-                }
-
-                module.files.update(with: file)
+        // Process test nodes: Test Plan -> Unit test bundle -> Test Suite -> Test Case -> Repetition
+        for rootNode in testResultsDTO.testNodes {
+            // Root node is "Test Plan", process its children (Unit test bundles)
+            guard rootNode.nodeType == .testPlan, let unitTestBundles = rootNode.children else {
+                continue
             }
 
-            modules.update(with: module)
+            for testNode in unitTestBundles {
+                guard testNode.nodeType == .unitTestBundle else { continue }
+
+                // Extract module name from unit test bundle name (e.g., "DBXCResultParserTests")
+                let moduleName = testNode.name
+
+                var module =
+                    modules[moduleName]
+                    ?? DBXCReportModel.Module(
+                        name: moduleName,
+                        files: [],
+                        coverage: coverages?.forModule(named: moduleName)
+                    )
+
+                // Process test suites (files)
+                guard let testSuites = testNode.children else { continue }
+                for testSuite in testSuites {
+                    guard testSuite.nodeType == .testSuite else { continue }
+
+                    // Extract file name from test suite name (e.g., "DBXCReportModelTests")
+                    let fileName = testSuite.name
+                    var file =
+                        module.files[fileName]
+                        ?? .init(name: fileName, repeatableTests: [])
+
+                    // Process test cases
+                    guard let testCases = testSuite.children else { continue }
+                    for testCase in testCases {
+                        guard testCase.nodeType == .testCase else { continue }
+
+                        let testName = testCase.name
+                        var repeatableTest =
+                            file.repeatableTests[testName]
+                            ?? DBXCReportModel.Module.File.RepeatableTest(
+                                name: testName,
+                                tests: []
+                            )
+
+                        // Process repetitions (individual test runs)
+                        // Check if children are repetitions or direct messages (for skipped/expectedFailure)
+                        let repetitions =
+                            testCase.children?.filter { $0.nodeType == .repetition } ?? []
+                        let directMessages =
+                            testCase.children?.filter { $0.nodeType == .failureMessage } ?? []
+
+                        if !repetitions.isEmpty {
+                            // Has repetitions (multiple runs)
+                            for repetition in repetitions {
+                                let test = try DBXCReportModel.Module.File.RepeatableTest.Test(
+                                    from: repetition)
+                                repeatableTest.tests.append(test)
+                            }
+                        } else {
+                            // No repetitions, treat test case as single test
+                            // Create a test from the test case itself
+                            guard let result = testCase.result else { continue }
+                            let status: DBXCReportModel.Module.File.RepeatableTest.Test.Status
+                            switch result {
+                            case .passed:
+                                status = .success
+                            case .failed:
+                                status = .failure
+                            case .skipped:
+                                status = .skipped
+                            case .expectedFailure:
+                                status = .expectedFailure
+                            }
+                            let durationSeconds = testCase.durationInSeconds ?? 0.0
+                            let duration = Measurement<UnitDuration>(
+                                value: durationSeconds * 1000,
+                                unit: DBXCReportModel.Module.File.RepeatableTest.Test
+                                    .defaultDurationUnit
+                            )
+                            // For skipped/expectedFailure, message might be in direct children
+                            // For failed tests without repetitions, check testCase's failureMessage
+                            let message: String?
+                            if !directMessages.isEmpty {
+                                // Extract message from direct children (for skipped/expectedFailure)
+                                message = directMessages.first?.name
+                            } else {
+                                message = testCase.failureMessage ?? testCase.skipMessage
+                            }
+                            let test = DBXCReportModel.Module.File.RepeatableTest.Test(
+                                status: status,
+                                duration: duration,
+                                message: message
+                            )
+                            repeatableTest.tests.append(test)
+                        }
+
+                        file.repeatableTests.update(with: repeatableTest)
+                    }
+
+                    module.files.update(with: file)
+                }
+
+                modules.update(with: module)
+            }
         }
 
         self.modules = modules

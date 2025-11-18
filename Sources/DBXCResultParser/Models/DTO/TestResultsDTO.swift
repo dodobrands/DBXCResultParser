@@ -46,6 +46,7 @@ extension TestResultsDTO.TestNode {
         case unitTestBundle = "Unit test bundle"
         case repetition = "Repetition"
         case failureMessage = "Failure Message"
+        case testPlan = "Test Plan"
     }
 
     enum Result: String, Decodable {
@@ -56,14 +57,29 @@ extension TestResultsDTO.TestNode {
     }
 
     /// Extracts failure message from children nodes
+    /// For test cases, checks direct children; for repetitions, checks repetition's children
     var failureMessage: String? {
         guard let children = children else { return nil }
-        return children.first { $0.nodeType == .failureMessage }?.name
+        let messageNode = children.first { $0.nodeType == .failureMessage }
+        guard let message = messageNode?.name else { return nil }
+        // Remove file path prefix if present (e.g., "File.swift:123: message" -> "message")
+        if let colonIndex = message.firstIndex(of: ":") {
+            let afterColon = message[message.index(after: colonIndex)...]
+            if let secondColonIndex = afterColon.firstIndex(of: ":") {
+                return String(afterColon[afterColon.index(after: secondColonIndex)...])
+                    .trimmingCharacters(in: .whitespaces)
+            }
+        }
+        return message
     }
 
     /// Extracts skip message from children nodes
     var skipMessage: String? {
         guard let children = children else { return nil }
-        return children.first { $0.nodeType == .failureMessage && name.contains("skipped") }?.name
+        // Skip message can be in Failure Message node or directly as a child
+        let messageNode = children.first {
+            $0.nodeType == .failureMessage && $0.name.lowercased().contains("skip")
+        }
+        return messageNode?.name
     }
 }

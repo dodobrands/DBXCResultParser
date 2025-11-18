@@ -103,9 +103,9 @@ struct DBXCReportModelActualTests {
 
         let expectedFailedTest = try #require(
             file.repeatableTests.first(where: { $0.name == "test_expectedFailure()" }))
+        // In new format, expectedFailure tests show "Failure is expected" instead of detailed message
         #expect(
-            expectedFailedTest.tests.first?.message
-                == "XCTAssertEqual failed: (\"1\") is not equal to (\"2\")")
+            expectedFailedTest.tests.first?.message == "Failure is expected")
 
         let flackyTest = try #require(
             file.repeatableTests.first(where: { $0.name == "test_flacky()" }))
