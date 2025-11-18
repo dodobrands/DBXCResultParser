@@ -95,7 +95,7 @@ struct DBXCReportModelActualTests {
 
         let failedTest = try #require(
             file.repeatableTests.first(where: { $0.name == "test_failure()" }))
-        #expect(failedTest.tests.first?.message == "failed - Failure message")
+        #expect(failedTest.tests.first?.message == "Failure message")
 
         let skippedTest = try #require(
             file.repeatableTests.first(where: { $0.name == "test_skip()" }))

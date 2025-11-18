@@ -57,20 +57,14 @@ extension TestResultsDTO.TestNode {
     }
 
     /// Extracts failure message from children nodes
-    /// For test cases, checks direct children; for repetitions, checks repetition's children
+    /// Extracts message after "-" separator (e.g., "File.swift:51: failed - Failure message" -> "Failure message")
     var failureMessage: String? {
-        guard let children = children else { return nil }
-        let messageNode = children.first { $0.nodeType == .failureMessage }
-        guard let message = messageNode?.name else { return nil }
-        // Remove file path prefix if present (e.g., "File.swift:123: message" -> "message")
-        if let colonIndex = message.firstIndex(of: ":") {
-            let afterColon = message[message.index(after: colonIndex)...]
-            if let secondColonIndex = afterColon.firstIndex(of: ":") {
-                return String(afterColon[afterColon.index(after: secondColonIndex)...])
-                    .trimmingCharacters(in: .whitespaces)
-            }
-        }
-        return message
+        guard let children = children,
+            let messageNode = children.first(where: { $0.nodeType == .failureMessage })
+        else { return nil }
+        let parts = messageNode.name.split(separator: "-", maxSplits: 1)
+        return parts.count > 1
+            ? String(parts[1]).trimmingCharacters(in: .whitespaces) : messageNode.name
     }
 
     /// Extracts skip message from children nodes
