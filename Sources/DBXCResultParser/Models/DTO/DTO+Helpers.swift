@@ -7,14 +7,14 @@
 
 import Foundation
 
-extension ActionsInvocationRecordDTO {
+extension TestResultsDTO {
     init(from xcresultPath: URL) async throws {
         let output = try await DBShell.execute(
             "xcrun",
             arguments: [
-                "xcresulttool", "get", "--legacy",
+                "xcresulttool", "get", "test-results", "tests",
                 "--path", xcresultPath.relativePath,
-                "--format", "json",
+                "--compact",
             ]
         )
         guard let data = output.data(using: .utf8) else {
@@ -25,67 +25,7 @@ extension ActionsInvocationRecordDTO {
                 )
             )
         }
-        self = try JSONDecoder().decode(ActionsInvocationRecordDTO.self, from: data)
-    }
-}
-
-extension ActionTestPlanRunSummariesDTO {
-    init(from xcresultPath: URL, refId: String? = nil) async throws {
-        let finalRefId: String
-        if let providedRefId = refId {
-            finalRefId = providedRefId
-        } else {
-            let record = try await ActionsInvocationRecordDTO(from: xcresultPath)
-            finalRefId = try record.testsRefId
-        }
-        let output = try await DBShell.execute(
-            "xcrun",
-            arguments: [
-                "xcresulttool", "get", "--legacy",
-                "--path", xcresultPath.relativePath,
-                "--format", "json",
-                "--id", finalRefId,
-            ]
-        )
-        guard let data = output.data(using: .utf8) else {
-            throw DecodingError.dataCorrupted(
-                DecodingError.Context(
-                    codingPath: [],
-                    debugDescription: "Failed to convert output to Data"
-                )
-            )
-        }
-        self = try JSONDecoder().decode(ActionTestPlanRunSummariesDTO.self, from: data)
-    }
-}
-
-extension ActionTestSummaryDTO {
-    init(from xcresultPath: URL, refId: String? = nil) async throws {
-        let finalRefId: String
-        if let providedRefId = refId {
-            finalRefId = providedRefId
-        } else {
-            let record = try await ActionsInvocationRecordDTO(from: xcresultPath)
-            finalRefId = try record.testsRefId
-        }
-        let output = try await DBShell.execute(
-            "xcrun",
-            arguments: [
-                "xcresulttool", "get", "--legacy",
-                "--path", xcresultPath.relativePath,
-                "--format", "json",
-                "--id", finalRefId,
-            ]
-        )
-        guard let data = output.data(using: .utf8) else {
-            throw DecodingError.dataCorrupted(
-                DecodingError.Context(
-                    codingPath: [],
-                    debugDescription: "Failed to convert output to Data"
-                )
-            )
-        }
-        self = try JSONDecoder().decode(ActionTestSummaryDTO.self, from: data)
+        self = try JSONDecoder().decode(TestResultsDTO.self, from: data)
     }
 }
 

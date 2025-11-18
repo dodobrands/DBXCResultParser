@@ -9,7 +9,6 @@ import Foundation
 
 public struct DBXCReportModel {
     public let modules: Set<Module>
-    public let warningCount: Int?
 }
 
 extension DBXCReportModel {
@@ -235,41 +234,38 @@ extension Set where Element == DBXCReportModel.Module.File.RepeatableTest {
 }
 
 extension DBXCReportModel.Module.File.RepeatableTest.Test {
-    init(
-        _ test: ActionTestPlanRunSummariesDTO.Summaries.Value.TestableSummaries.Value.Tests.Value
-            .Subtests.Value.Subtests.Value.Subtests.Value,
-        xcresultPath: URL
-    ) async throws {
-        switch test.testStatus._value {
-        case "Success":
+    /// Initializes from TestResultsDTO.TestNode (Repetition node)
+    init(from repetitionNode: TestResultsDTO.TestNode) throws {
+        guard repetitionNode.nodeType == .repetition else {
+            throw Error.invalidNodeType
+        }
+
+        guard let result = repetitionNode.result else {
+            throw Error.missingResult
+        }
+
+        switch result {
+        case .passed:
             status = .success
-        case "Failure":
+        case .failed:
             status = .failure
-        case "Skipped":
+        case .skipped:
             status = .skipped
-        case "Expected Failure":
+        case .expectedFailure:
             status = .expectedFailure
-        default:
-            status = .unknown
         }
 
-        guard let duration = Double(test.duration._value) else {
-            throw Error.invalidDuration(duration: test.duration._value)
-        }
+        let durationSeconds = repetitionNode.durationInSeconds ?? 0.0
+        self.duration = .init(value: durationSeconds * 1000, unit: Self.defaultDurationUnit)
 
-        self.duration = .init(value: duration * 1000, unit: Self.defaultDurationUnit)
-
-        let summaryRefId = test.summaryRef?.id._value
-        if let summaryRefId = summaryRefId {
-            let summaryDto = try await ActionTestSummaryDTO(from: xcresultPath, refId: summaryRefId)
-            message = summaryDto.message
-        } else {
-            message = nil
-        }
+        // Extract message from failure message children
+        self.message = repetitionNode.failureMessage ?? repetitionNode.skipMessage
     }
 
     enum Error: Swift.Error {
         case invalidDuration(duration: String)
+        case invalidNodeType
+        case missingResult
     }
 
     static let defaultDurationUnit = UnitDuration.milliseconds

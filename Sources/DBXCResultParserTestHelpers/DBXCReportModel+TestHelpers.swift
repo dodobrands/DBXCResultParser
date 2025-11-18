@@ -11,12 +11,10 @@ import Foundation
 
 extension DBXCReportModel {
     public static func testMake(
-        modules: Set<Module> = [],
-        warningCount: Int? = nil
+        modules: Set<Module> = []
     ) -> Self {
         .init(
-            modules: modules,
-            warningCount: warningCount
+            modules: modules
         )
     }
 }
