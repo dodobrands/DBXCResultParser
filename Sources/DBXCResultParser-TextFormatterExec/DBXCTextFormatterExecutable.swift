@@ -43,14 +43,13 @@ public class DBXCTextFormatterExecutable: ParsableCommand {
 
         let localeValue: Locale
         if let localeString = locale {
-            let trimmedLocale = localeString.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !trimmedLocale.isEmpty else {
-                throw LocaleError.invalidLocaleIdentifier(localeString)
+            guard !localeString.isEmpty else {
+                throw DBXCResultParserError.invalidLocaleIdentifier(localeString)
             }
-            let createdLocale = Locale(identifier: trimmedLocale)
+            let createdLocale = Locale(identifier: localeString)
             // Validate that the locale identifier is valid
-            guard Locale.availableIdentifiers.contains(trimmedLocale) else {
-                throw LocaleError.invalidLocaleIdentifier(localeString)
+            guard Locale.availableIdentifiers.contains(localeString) else {
+                throw DBXCResultParserError.invalidLocaleIdentifier(localeString)
             }
             localeValue = createdLocale
         } else {
@@ -135,7 +134,7 @@ extension NumberFormatter {
     }
 }
 
-enum LocaleError: Error {
+enum DBXCResultParserError: Error {
     case invalidLocaleIdentifier(String)
 
     var localizedDescription: String {
