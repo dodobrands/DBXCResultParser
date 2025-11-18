@@ -120,7 +120,7 @@ let package = Package(
                 .init(stringLiteral: testHelpersTargetName),
             ],
             resources: [
-                .copy("Resources/DBXCResultParser.xcresult")
+                .copy("Resources")
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v6),
