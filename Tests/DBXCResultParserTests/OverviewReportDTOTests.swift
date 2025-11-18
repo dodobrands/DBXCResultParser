@@ -6,21 +6,15 @@
 //
 
 import Foundation
-import XCTest
+import Testing
 
 @testable import DBXCResultParser
 
-class ActionsInvocationRecordDTOTests: XCTestCase {
+@Suite
+struct ActionsInvocationRecordDTOTests {
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-    }
-
-    override func tearDownWithError() throws {
-        try super.tearDownWithError()
-    }
-
-    func test() {
-        XCTAssertNoThrow(try ActionsInvocationRecordDTO(from: Constants.testsReportPath))
+    @Test
+    func test() throws {
+        _ = try ActionsInvocationRecordDTO(from: Constants.testsReportPath)
     }
 }

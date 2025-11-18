@@ -6,20 +6,15 @@
 //
 
 import Foundation
-import XCTest
+import Testing
 
 @testable import DBXCResultParser
 
-class DBShellTests: XCTestCase {
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-    }
-
-    override func tearDownWithError() throws {
-        try super.tearDownWithError()
-    }
-
+@Suite
+struct DBShellTests {
+    @Test
     func test() throws {
-        try XCTAssertEqual(DBShell.execute("which swift"), "/usr/bin/swift")
+        let result = try DBShell.execute("which swift")
+        #expect(result == "/usr/bin/swift")
     }
 }

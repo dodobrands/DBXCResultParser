@@ -6,28 +6,22 @@
 //
 
 import Foundation
-import XCTest
+import Testing
 
 @testable import DBXCResultParser
 
-class ActionTestPlanRunSummariesDTOTests: XCTestCase {
+@Suite
+struct ActionTestPlanRunSummariesDTOTests {
 
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-    }
-
-    override func tearDownWithError() throws {
-        try super.tearDownWithError()
-    }
-
+    @Test
     func test_parseWithExplicitRefId() throws {
         let overviewReport = try ActionsInvocationRecordDTO(from: Constants.testsReportPath)
-        XCTAssertNoThrow(
-            try ActionTestPlanRunSummariesDTO(
-                from: Constants.testsReportPath, refId: overviewReport.testsRefId))
+        _ = try ActionTestPlanRunSummariesDTO(
+            from: Constants.testsReportPath, refId: overviewReport.testsRefId)
     }
 
+    @Test
     func test_parseWithImplicitRefId() throws {
-        XCTAssertNoThrow(try ActionTestPlanRunSummariesDTO(from: Constants.testsReportPath))
+        _ = try ActionTestPlanRunSummariesDTO(from: Constants.testsReportPath)
     }
 }

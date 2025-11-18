@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import XCTest
+import Testing
 
 @testable import DBXCResultParser
 
@@ -24,7 +24,19 @@ struct Constants {
     }
 
     static private func path(filename: String, type: String) throws -> URL {
-        let path = try XCTUnwrap(Bundle.module.path(forResource: filename, ofType: type))
-        return try XCTUnwrap(URL(string: path))
+        guard let path = Bundle.module.path(forResource: filename, ofType: type) else {
+            throw TestError("Could not find resource: \(filename).\(type)")
+        }
+        guard let url = URL(string: path) else {
+            throw TestError("Could not create URL from path: \(path)")
+        }
+        return url
+    }
+}
+
+private struct TestError: Error {
+    let message: String
+    init(_ message: String) {
+        self.message = message
     }
 }

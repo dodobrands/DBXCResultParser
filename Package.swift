@@ -1,4 +1,4 @@
-// swift-tools-version:5.8
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -18,7 +18,6 @@ let testHelpersTargetName = testHelpersLibraryName
 let parserTestsTargetName = parserTargetName + "Tests"
 let formatterTestsTargetName = formatterTargetName + "Tests"
 
-
 let package = Package(
     name: packageName,
     platforms: [
@@ -26,20 +25,20 @@ let package = Package(
     ],
     products: [
         .library(
-            name: parserLibraryName, 
+            name: parserLibraryName,
             targets: [
                 parserTargetName
             ]
         ),
         .library(
-            name: formatterLibraryName, 
+            name: formatterLibraryName,
             targets: [
                 parserTargetName,
-                formatterTargetName
+                formatterTargetName,
             ]
         ),
         .library(
-            name: testHelpersLibraryName, 
+            name: testHelpersLibraryName,
             targets: [
                 testHelpersLibraryName
             ]
@@ -49,13 +48,13 @@ let package = Package(
             targets: [
                 executableFormatterTargetName
             ]
-        )
+        ),
     ],
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-argument-parser.git",
             .upToNextMajor(from: "1.0.0")
-        ),
+        )
     ],
     targets: [
         .target(
@@ -81,11 +80,11 @@ let package = Package(
                 .product(
                     name: "ArgumentParser",
                     package: "swift-argument-parser"
-                )
+                ),
             ]
         ),
         .target(
-            name: testHelpersTargetName, 
+            name: testHelpersTargetName,
             dependencies: [
                 .init(stringLiteral: parserTargetName)
             ]
@@ -94,7 +93,7 @@ let package = Package(
             name: parserTestsTargetName,
             dependencies: [
                 .init(stringLiteral: parserTargetName),
-                .init(stringLiteral: testHelpersTargetName)
+                .init(stringLiteral: testHelpersTargetName),
             ],
             resources: [
                 .copy("Resources/DBXCResultParser.xcresult")
@@ -104,9 +103,8 @@ let package = Package(
             name: formatterTestsTargetName,
             dependencies: [
                 .init(stringLiteral: formatterTargetName),
-                .init(stringLiteral: testHelpersTargetName)
+                .init(stringLiteral: testHelpersTargetName),
             ]
-        )
+        ),
     ]
 )
-
