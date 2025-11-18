@@ -35,26 +35,13 @@ jobs:
         xcode-version: ${{ steps.xcode-version.outputs.version }}
 
     - name: Resolve Dependencies
-      run: >
-        xcodebuild -resolvePackageDependencies
-        -scheme ${{ env.SCHEME }}
-        -destination '${{ env.DESTINATION }}'
-        -quiet
+      run: swift package resolve
 
     - name: Build
-      run: >
-        xcodebuild build-for-testing
-        -scheme ${{ env.SCHEME }}
-        -destination '${{ env.DESTINATION }}'
-        -quiet
+      run: swift build
 
     - name: Test
-      run: >
-        xcodebuild test-without-building
-        -scheme ${{ env.SCHEME }}
-        -destination '${{ env.DESTINATION }}'
-        -resultBundlePath ${{ env.SCHEME }}
-        -quiet
+      run: swift test
 
     - name: Report
       uses: kishikawakatsumi/xcresulttool@v1
