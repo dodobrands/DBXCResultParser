@@ -74,7 +74,8 @@ let package = Package(
                 ),
             ],
             swiftSettings: [
-                .swiftLanguageMode(.v6)
+                .swiftLanguageMode(.v6),
+                .treatAllWarnings(as: .error),
             ]
         ),
         .target(
@@ -83,7 +84,8 @@ let package = Package(
                 .init(stringLiteral: parserTargetName)
             ],
             swiftSettings: [
-                .swiftLanguageMode(.v6)
+                .swiftLanguageMode(.v6),
+                .treatAllWarnings(as: .error),
             ]
         ),
         .executableTarget(
@@ -97,7 +99,8 @@ let package = Package(
                 ),
             ],
             swiftSettings: [
-                .swiftLanguageMode(.v6)
+                .swiftLanguageMode(.v6),
+                .treatAllWarnings(as: .error),
             ]
         ),
         .target(
@@ -106,7 +109,8 @@ let package = Package(
                 .init(stringLiteral: parserTargetName)
             ],
             swiftSettings: [
-                .swiftLanguageMode(.v6)
+                .swiftLanguageMode(.v6),
+                .treatAllWarnings(as: .error),
             ]
         ),
         .testTarget(
@@ -119,7 +123,8 @@ let package = Package(
                 .copy("Resources/DBXCResultParser.xcresult")
             ],
             swiftSettings: [
-                .swiftLanguageMode(.v6)
+                .swiftLanguageMode(.v6),
+                .treatAllWarnings(as: .error),
             ]
         ),
         .testTarget(
@@ -129,7 +134,8 @@ let package = Package(
                 .init(stringLiteral: testHelpersTargetName),
             ],
             swiftSettings: [
-                .swiftLanguageMode(.v6)
+                .swiftLanguageMode(.v6),
+                .treatAllWarnings(as: .error),
             ]
         ),
     ]
