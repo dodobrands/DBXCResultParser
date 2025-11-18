@@ -23,7 +23,7 @@ public class DBXCTextFormatterExecutable: ParsableCommand {
     /// The locale to use for formatting numbers and measurements
     @Option(
         help:
-            "Locale identifier to use for numbers and measurements formatting (e.g., 'en-US', 'ru-RU')"
+            "Locale identifier to use for numbers and measurements formatting (e.g., 'en-US', 'ru-RU'). If not provided, system locale is used."
     )
     public var locale: String?
 
