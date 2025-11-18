@@ -80,7 +80,7 @@ All GitHub operations (creating PRs, issues, etc.) should be performed using the
 
 ### Creating Pull Requests
 
-When creating a pull request, always use the pull request template located at `.github/pull_request_template.md`:
+When creating a pull request, **always use the pull request template** located at `.github/pull_request_template.md`:
 
 ```bash
 gh pr create --template .github/pull_request_template.md
@@ -92,6 +92,8 @@ Or if you want to fill it interactively:
 gh pr create --fill
 ```
 
+**Important**: You must strictly follow the template structure. Do not add any additional sections beyond what is defined in the template.
+
 The template includes sections for:
 - Summary
 - Key Changes
@@ -99,7 +101,7 @@ The template includes sections for:
 
 ### Creating Issues
 
-When creating issues, always use the issue template located at `.github/ISSUE_TEMPLATE.md`:
+When creating issues, **always use the issue template** located at `.github/ISSUE_TEMPLATE.md`:
 
 ```bash
 gh issue create --template .github/ISSUE_TEMPLATE.md
@@ -110,6 +112,8 @@ Or if you want to fill it interactively:
 ```bash
 gh issue create --fill
 ```
+
+**Important**: You must strictly follow the template structure. Do not add any additional sections beyond what is defined in the template.
 
 The template includes sections for:
 - Summary
