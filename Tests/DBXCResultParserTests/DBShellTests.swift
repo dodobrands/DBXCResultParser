@@ -13,8 +13,8 @@ import Testing
 @Suite
 struct DBShellTests {
     @Test
-    func test() throws {
-        let result = try DBShell.execute("which swift")
+    func test() async throws {
+        let result = try await DBShell.execute("which", arguments: ["swift"])
         #expect(result == "/usr/bin/swift")
     }
 }

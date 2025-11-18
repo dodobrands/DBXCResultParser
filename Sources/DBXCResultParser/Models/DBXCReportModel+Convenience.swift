@@ -21,17 +21,17 @@ extension DBXCReportModel {
     public init(
         xcresultPath: URL,
         excludingCoverageNames: [String] = []
-    ) throws {
+    ) async throws {
 
-        let actionsInvocationRecordDTO = try ActionsInvocationRecordDTO(from: xcresultPath)
+        let actionsInvocationRecordDTO = try await ActionsInvocationRecordDTO(from: xcresultPath)
 
-        let actionTestPlanRunSummariesDTO = try ActionTestPlanRunSummariesDTO(
+        let actionTestPlanRunSummariesDTO = try await ActionTestPlanRunSummariesDTO(
             from: xcresultPath,
-            refId: actionsInvocationRecordDTO.testsRefId
+            refId: try actionsInvocationRecordDTO.testsRefId
         )
 
         // Attempt to parse the code coverage data from the xcresult file, excluding specified targets.
-        let coverageDTOs = try? [CoverageDTO](from: xcresultPath)
+        let coverageDTOs = try? await [CoverageDTO](from: xcresultPath)
             .filter { !excludingCoverageNames.contains($0.name) }
 
         if let warningCount = actionsInvocationRecordDTO.metrics.warningCount?._value {
@@ -74,7 +74,7 @@ extension DBXCReportModel {
                                                     name: testname,
                                                     tests: []
                                                 )
-                                            let test = try DBXCReportModel.Module.File
+                                            let test = try await DBXCReportModel.Module.File
                                                 .RepeatableTest.Test(
                                                     value6, xcresultPath: xcresultPath)
                                             repeatableTest.tests.append(test)

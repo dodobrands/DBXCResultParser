@@ -28,10 +28,10 @@ public class DBXCTextFormatterExecutable: ParsableCommand {
     public var include: String = DBXCReportModel.Module.File.RepeatableTest.Test.Status.allCases.map
     { $0.rawValue }.joined(separator: ",")
 
-    public func run() throws {
+    public func run() async throws {
         let xcresultPath = URL(fileURLWithPath: xcresultPath)
 
-        let report = try DBXCReportModel(xcresultPath: xcresultPath)
+        let report = try await DBXCReportModel(xcresultPath: xcresultPath)
 
         let include = include.split(separator: ",")
             .compactMap {

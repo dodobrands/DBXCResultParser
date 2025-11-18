@@ -9,8 +9,8 @@ import Testing
 struct DBXCReportModelTests {
 
     @Test
-    func test() throws {
-        let report = try DBXCReportModel(xcresultPath: Constants.testsReportPath)
+    func test() async throws {
+        let report = try await DBXCReportModel(xcresultPath: Constants.testsReportPath)
         #expect(report.modules.count == 2)
 
         let module = try #require(

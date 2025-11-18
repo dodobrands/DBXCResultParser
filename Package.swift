@@ -21,7 +21,7 @@ let formatterTestsTargetName = formatterTargetName + "Tests"
 let package = Package(
     name: packageName,
     platforms: [
-        .macOS(.v10_15)
+        .macOS(.v13)
     ],
     products: [
         .library(
@@ -54,7 +54,11 @@ let package = Package(
         .package(
             url: "https://github.com/apple/swift-argument-parser.git",
             .upToNextMajor(from: "1.0.0")
-        )
+        ),
+        .package(
+            url: "https://github.com/swiftlang/swift-subprocess.git",
+            .upToNextMinor(from: "0.2.1")
+        ),
     ],
     targets: [
         .target(
@@ -63,7 +67,11 @@ let package = Package(
                 .product(
                     name: "ArgumentParser",
                     package: "swift-argument-parser"
-                )
+                ),
+                .product(
+                    name: "Subprocess",
+                    package: "swift-subprocess"
+                ),
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v6)
