@@ -22,13 +22,12 @@ extension DBXCReportModel {
         xcresultPath: URL,
         excludingCoverageNames: [String] = []
     ) async throws {
-        // Use new format API (without --legacy flag)
         try await self.init(
             fromNewFormat: xcresultPath, excludingCoverageNames: excludingCoverageNames)
     }
 
-    /// Initializes a new instance using the new test-results API format (without --legacy flag)
-    /// This is an alternative initializer that uses the new xcresulttool API
+    /// Initializes a new instance using the test-results API format
+    /// This initializer uses the xcresulttool API
     public init(
         fromNewFormat xcresultPath: URL,
         excludingCoverageNames: [String] = []
