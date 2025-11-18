@@ -235,39 +235,6 @@ extension Set where Element == DBXCReportModel.Module.File.RepeatableTest {
 }
 
 extension DBXCReportModel.Module.File.RepeatableTest.Test {
-    init(
-        _ test: ActionTestPlanRunSummariesDTO.Summaries.Value.TestableSummaries.Value.Tests.Value
-            .Subtests.Value.Subtests.Value.Subtests.Value,
-        xcresultPath: URL
-    ) async throws {
-        switch test.testStatus._value {
-        case "Success":
-            status = .success
-        case "Failure":
-            status = .failure
-        case "Skipped":
-            status = .skipped
-        case "Expected Failure":
-            status = .expectedFailure
-        default:
-            status = .unknown
-        }
-
-        guard let duration = Double(test.duration._value) else {
-            throw Error.invalidDuration(duration: test.duration._value)
-        }
-
-        self.duration = .init(value: duration * 1000, unit: Self.defaultDurationUnit)
-
-        let summaryRefId = test.summaryRef?.id._value
-        if let summaryRefId = summaryRefId {
-            let summaryDto = try await ActionTestSummaryDTO(from: xcresultPath, refId: summaryRefId)
-            message = summaryDto.message
-        } else {
-            message = nil
-        }
-    }
-
     /// Initializes from new format TestResultsDTO.TestNode (Repetition node)
     init(from repetitionNode: TestResultsDTO.TestNode) throws {
         guard repetitionNode.nodeType == .repetition else {
