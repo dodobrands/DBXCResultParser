@@ -81,8 +81,6 @@ extension DBXCReportModel {
                         // Check if children are repetitions or direct messages (for skipped/expectedFailure)
                         let repetitions =
                             testCase.children?.filter { $0.nodeType == .repetition } ?? []
-                        let directMessages =
-                            testCase.children?.filter { $0.nodeType == .failureMessage } ?? []
 
                         if !repetitions.isEmpty {
                             // Has repetitions (multiple runs)
@@ -112,21 +110,17 @@ extension DBXCReportModel {
                                 unit: DBXCReportModel.Module.File.RepeatableTest.Test
                                     .defaultDurationUnit
                             )
-                            // For skipped/expectedFailure, message might be in direct children
-                            // For failed tests without repetitions, check testCase's failureMessage
+                            // Extract message based on test status
                             let message: String?
-                            if !directMessages.isEmpty {
-                                // Extract message from direct children (for skipped/expectedFailure)
-                                let rawMessage = directMessages.first?.name ?? ""
-                                // Extract message after separator if present
-                                if let skippedRange = rawMessage.range(of: "skipped -") {
-                                    message = String(rawMessage[skippedRange.upperBound...])
-                                        .trimmingCharacters(in: .whitespaces)
-                                } else {
-                                    message = rawMessage
-                                }
-                            } else {
-                                message = testCase.failureMessage ?? testCase.skipMessage
+                            switch status {
+                            case .skipped:
+                                message = testCase.skipMessage
+                            case .failure:
+                                message = testCase.failureMessage
+                            case .expectedFailure:
+                                message = testCase.failureMessage
+                            default:
+                                message = testCase.children?.compactMap { $0.name }.first
                             }
                             let test = DBXCReportModel.Module.File.RepeatableTest.Test(
                                 status: status,
