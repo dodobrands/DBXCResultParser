@@ -10,6 +10,7 @@ The `DBXCResultParser` package provides a Swift module for parsing `.xcresult` f
 - Parses `.xcresult` files to create a typed model of the test results and code coverage.
 - Filters out coverage data related to test helpers and test cases.
 - Provides a detailed breakdown of modules, files, and repeatable tests.
+- Extracts build warnings from `.xcresult` files (Swift Compiler Warnings only).
 - Calculates total and average test durations, as well as combined test statuses.
 - Supports identifying slow tests based on average duration.
 - Includes utility functions for filtering tests based on status.
@@ -47,6 +48,15 @@ func parseReport() async {
         // Access different parts of the report:
         let modules = reportModel.modules
         let coverage = reportModel.coverage // Coverage value from 0.0 to 1.0
+        let warnings = reportModel.warnings // Array of build warnings
+        
+        // Access warnings:
+        for warning in warnings {
+            print("Warning: \(warning.message)")
+            if let sourceURL = warning.sourceURL {
+                print("  Location: \(sourceURL)")
+            }
+        }
         
         // Iterate over modules, files, and tests:
         for module in modules {
