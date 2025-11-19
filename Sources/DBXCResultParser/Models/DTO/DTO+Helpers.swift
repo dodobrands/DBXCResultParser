@@ -68,15 +68,36 @@ extension Array where Element == CoverageDTO {
                         )
                     )
                 }
-                // Parse as array of coverage objects
-                let coverageData = try JSONDecoder().decode(Array<CoverageDTO>.self, from: data)
+                // Parse as TotalCoverageDTO (object with lineCoverage at root level)
+                let totalCoverage = try JSONDecoder().decode(TotalCoverageDTO.self, from: data)
                 // Filter to only targets (exclude test bundles)
-                self = coverageData.filter { !$0.name.hasSuffix("Tests") }
+                self = totalCoverage.targets.filter { !$0.name.hasSuffix("Tests") }
             } catch {
                 // If both methods fail, return empty array (coverage not available)
                 // This allows the parser to continue without coverage data
                 self = []
             }
         }
+    }
+}
+
+extension TotalCoverageDTO {
+    init(from xcresultPath: URL) async throws {
+        let output = try await DBShell.execute(
+            "xcrun",
+            arguments: [
+                "xccov", "view", "--report", "--json",
+                xcresultPath.relativePath,
+            ]
+        )
+        guard let data = output.data(using: .utf8) else {
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: [],
+                    debugDescription: "Failed to convert output to Data"
+                )
+            )
+        }
+        self = try JSONDecoder().decode(TotalCoverageDTO.self, from: data)
     }
 }

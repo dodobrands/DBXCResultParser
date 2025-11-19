@@ -30,6 +30,9 @@ extension DBXCReportModel {
 
         let coverages = coverageDTOs?.map { Module.Coverage(from: $0) }
 
+        // Try to get total coverage from xcresult file
+        let totalCoverageDTO = try? await TotalCoverageDTO(from: xcresultPath)
+
         var modules = Set<Module>()
 
         // Process test nodes: Test Plan -> Unit test bundle -> Test Suite -> Test Case -> Repetition
@@ -222,19 +225,25 @@ extension DBXCReportModel {
             }
         }
 
-        // Calculate total coverage percentage
-        let moduleCoverages = modules.map { $0.coverage }.compactMap { $0 }
+        // Use total coverage from xcresult file if available, otherwise calculate from modules
         let totalCoverage: Double?
-        if moduleCoverages.count > 0 {
-            let totalLines = moduleCoverages.reduce(into: 0) { $0 += $1.totalLines }
-            let totalCoveredLines = moduleCoverages.reduce(into: 0) { $0 += $1.coveredLines }
-            if totalLines != 0 {
-                totalCoverage = Double(totalCoveredLines) / Double(totalLines)
-            } else {
-                totalCoverage = 0.0
-            }
+        if let totalCoverageDTO = totalCoverageDTO {
+            // Use the lineCoverage from xcresult file (already calculated)
+            totalCoverage = totalCoverageDTO.lineCoverage
         } else {
-            totalCoverage = nil
+            // Fallback: calculate from modules
+            let moduleCoverages = modules.map { $0.coverage }.compactMap { $0 }
+            if moduleCoverages.count > 0 {
+                let totalLines = moduleCoverages.reduce(into: 0) { $0 += $1.totalLines }
+                let totalCoveredLines = moduleCoverages.reduce(into: 0) { $0 += $1.coveredLines }
+                if totalLines != 0 {
+                    totalCoverage = Double(totalCoveredLines) / Double(totalLines)
+                } else {
+                    totalCoverage = 0.0
+                }
+            } else {
+                totalCoverage = nil
+            }
         }
 
         self.modules = modules
