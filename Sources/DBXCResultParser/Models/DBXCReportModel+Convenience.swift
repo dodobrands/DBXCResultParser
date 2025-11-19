@@ -28,13 +28,7 @@ extension DBXCReportModel {
 
         // Try to get build results (warnings, errors) from xcresult file
         // Note: build-results may not be available in test-only xcresult files
-        let buildResultsDTO: BuildResultsDTO?
-        do {
-            buildResultsDTO = try await BuildResultsDTO(from: xcresultPath)
-        } catch {
-            // Build results not available (e.g., test-only xcresult), continue without warnings
-            buildResultsDTO = nil
-        }
+        let buildResultsDTO = try? await BuildResultsDTO(from: xcresultPath)
         // Filter warnings to include only those with required fields (sourceURL and className)
         let warnings = buildResultsDTO?.warnings.compactMap { Warning(from: $0) } ?? []
 
