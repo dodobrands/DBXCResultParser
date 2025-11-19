@@ -134,18 +134,7 @@ extension BuildResultsDTO {
         var decoded = try JSONDecoder().decode(BuildResultsDTO.self, from: data)
         // Filter warnings to include only "Swift Compiler Warning" (exclude "Swift Compiler Error" duplicates)
         decoded = BuildResultsDTO(
-            actionTitle: decoded.actionTitle,
-            destination: decoded.destination,
-            startTime: decoded.startTime,
-            endTime: decoded.endTime,
-            status: decoded.status,
-            analyzerWarningCount: decoded.analyzerWarningCount,
-            errorCount: decoded.errorCount,
-            warningCount: decoded.warnings.filter { $0.issueType == "Swift Compiler Warning" }
-                .count,
-            analyzerWarnings: decoded.analyzerWarnings,
-            warnings: decoded.warnings.filter { $0.issueType == "Swift Compiler Warning" },
-            errors: decoded.errors
+            warnings: decoded.warnings.filter { $0.issueType == "Swift Compiler Warning" }
         )
         self = decoded
     }
