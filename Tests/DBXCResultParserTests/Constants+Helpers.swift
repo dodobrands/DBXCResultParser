@@ -93,6 +93,10 @@ struct ExpectedCoverageValues {
 }
 
 extension Constants {
+    /// Returns expected report values for a given xcresult file name
+    /// - Parameter fileName: Name of the xcresult file (read dynamically from file system)
+    /// - Returns: Expected report values
+    /// - Throws: TestError if the file name is unknown
     static func expectedReportValues(for fileName: String) throws -> ExpectedReportValues {
         switch fileName {
         case "DBXCResultParser.xcresult":
@@ -117,6 +121,10 @@ extension Constants {
         }
     }
 
+    /// Returns expected coverage values for a given xcresult file name
+    /// - Parameter fileName: Name of the xcresult file (read dynamically from file system)
+    /// - Returns: Expected coverage values
+    /// - Throws: TestError if the file name is unknown
     static func expectedCoverageValues(for fileName: String) throws -> ExpectedCoverageValues {
         switch fileName {
         case "DBXCResultParser.xcresult":
