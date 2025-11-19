@@ -17,7 +17,7 @@ DBXCTextFormatterSnapshotTests
 ❌ test_listFormat_successOnly(fileName:) ("DBXCResultParser-26.1.1.xcresult")
 
 FakeSUITests
-❌ failure() (GenerateXCResultTests.swift:56: Issue recorded: Failure message)
+❌ failure() (Failure message)
 
 FakeXCTests
 ❌ test_failure() (Failure message)

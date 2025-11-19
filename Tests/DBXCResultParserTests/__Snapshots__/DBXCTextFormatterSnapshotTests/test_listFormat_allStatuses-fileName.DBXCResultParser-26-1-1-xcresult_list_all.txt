@@ -30,8 +30,8 @@ DBXCTextFormatterTests
 FakeSUITests
 ⏭️ disabled() (Test 'disabled()' skipped: Disabled reason)
 🤡 expectedFailure()
-❌ failure() (GenerateXCResultTests.swift:56: Issue recorded: Failure message)
-⚠️ flacky() (GenerateXCResultTests.swift:75: Issue recorded: Flacky failure message)
+❌ failure() (Failure message)
+⚠️ flacky() (Flacky failure message)
 ❌ flackyParameterized(value:) (false)
 ✅ flackyParameterized(value:) (true)
 ✅ somethingWithWarning()

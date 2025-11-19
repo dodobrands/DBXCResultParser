@@ -35,11 +35,17 @@ extension TestResultsDTO.TestNode {
 
     /// Extracts failure message from children nodes
     /// Extracts message after "failed -" separator (e.g., "File.swift:51: failed - Failure message" -> "Failure message")
+    /// For Swift Testing format, extracts message after "Issue recorded: " (e.g., "File.swift:56: Issue recorded: Failure message" -> "Failure message")
     var failureMessage: String? {
         guard let children = children,
             let messageNode = children.first(where: { $0.nodeType == .failureMessage })
         else { return nil }
         let message = messageNode.name
+        // Try Swift Testing format first: "Issue recorded: "
+        if let range = message.range(of: "Issue recorded: ") {
+            return String(message[range.upperBound...]).trimmingCharacters(in: .whitespaces)
+        }
+        // Fallback to XCTest format: "failed -"
         if let range = message.range(of: "failed -") {
             return String(message[range.upperBound...]).trimmingCharacters(in: .whitespaces)
         }
