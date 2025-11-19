@@ -130,14 +130,14 @@ struct DBXCTextFormatterSnapshotTests {
         // Modules in report are test modules (e.g., "DBXCResultParserTests")
         // Coverage is attached to test modules based on source module names
         for (moduleName, expectedModuleCoverage) in expected.moduleCoverages {
-            guard let module = report.modules.first(where: { $0.name == moduleName }) else {
-                Issue.record("Module \(moduleName) not found")
-                continue
-            }
-            guard let moduleCoverage = module.coverage else {
-                Issue.record("Coverage data not available for module \(moduleName)")
-                continue
-            }
+            let module = try #require(
+                report.modules.first(where: { $0.name == moduleName }),
+                "Module \(moduleName) not found"
+            )
+            let moduleCoverage = try #require(
+                module.coverage,
+                "Coverage data not available for module \(moduleName)"
+            )
             #expect(moduleCoverage.coverage == expectedModuleCoverage)
         }
     }
