@@ -120,7 +120,16 @@ extension DBXCReportModel {
                             case .expectedFailure:
                                 message = testCase.failureMessage
                             default:
-                                message = testCase.children?.compactMap { $0.name }.first
+                                // Filter out Device, Arguments, and Runtime Warning nodes when extracting message
+                                message =
+                                    testCase.children?
+                                    .filter { node in
+                                        node.nodeType != .device
+                                            && node.nodeType != .arguments
+                                            && node.nodeType != .runtimeWarning
+                                    }
+                                    .compactMap { $0.name }
+                                    .first
                             }
                             let test = DBXCReportModel.Module.File.RepeatableTest.Test(
                                 status: status,
