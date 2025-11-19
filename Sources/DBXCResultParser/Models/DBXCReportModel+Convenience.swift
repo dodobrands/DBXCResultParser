@@ -1,10 +1,3 @@
-//
-//  DBXCReportModel+Convenience.swift
-//
-//
-//  Created by Aleksey Berezka on 15.12.2023.
-//
-
 import Foundation
 
 extension DBXCReportModel {
@@ -29,6 +22,15 @@ extension DBXCReportModel {
             .filter { !excludingCoverageNames.contains($0.name) }
 
         let coverages = coverageDTOs?.map { Module.Coverage(from: $0) }
+
+        // Try to get total coverage from xcresult file
+        let totalCoverageDTO = try? await TotalCoverageDTO(from: xcresultPath)
+
+        // Try to get build results (warnings, errors) from xcresult file
+        // Note: build-results may not be available in test-only xcresult files
+        let buildResultsDTO = try? await BuildResultsDTO(from: xcresultPath)
+        // Filter warnings to include only those with required fields (sourceURL and className)
+        let warnings = buildResultsDTO?.warnings.compactMap { Warning(from: $0) } ?? []
 
         var modules = Set<Module>()
 
@@ -90,44 +92,116 @@ extension DBXCReportModel {
                                 repeatableTest.tests.append(test)
                             }
                         } else {
-                            // No repetitions, treat test case as single test
-                            // Create a test from the test case itself
-                            guard let result = testCase.result else { continue }
-                            let status: DBXCReportModel.Module.File.RepeatableTest.Test.Status
-                            switch result {
-                            case .passed:
-                                status = .success
-                            case .failed:
-                                status = .failure
-                            case .skipped:
-                                status = .skipped
-                            case .expectedFailure:
-                                status = .expectedFailure
+                            // No repetitions, check if we have Arguments nodes
+                            // Extract all Arguments nodes
+                            let arguments =
+                                testCase.children?
+                                .filter { $0.nodeType == .arguments }
+                                .map { ($0.name, $0.result) } ?? []
+
+                            if !arguments.isEmpty {
+                                // Create separate test for each argument with its own status
+                                let baseDurationSeconds = testCase.durationInSeconds ?? 0.0
+                                for (argumentName, argumentResult) in arguments {
+                                    let status:
+                                        DBXCReportModel.Module.File.RepeatableTest.Test.Status
+                                    if let result = argumentResult {
+                                        switch result {
+                                        case .passed:
+                                            status = .success
+                                        case .failed:
+                                            status = .failure
+                                        case .skipped:
+                                            status = .skipped
+                                        case .expectedFailure:
+                                            status = .expectedFailure
+                                        }
+                                    } else {
+                                        // Fallback to test case result if argument doesn't have result
+                                        guard let testCaseResult = testCase.result else { continue }
+                                        switch testCaseResult {
+                                        case .passed:
+                                            status = .success
+                                        case .failed:
+                                            status = .failure
+                                        case .skipped:
+                                            status = .skipped
+                                        case .expectedFailure:
+                                            status = .expectedFailure
+                                        }
+                                    }
+
+                                    // Extract message based on test status
+                                    let message: String?
+                                    switch status {
+                                    case .skipped:
+                                        message = testCase.skipMessage ?? argumentName
+                                    case .failure:
+                                        message = testCase.failureMessage ?? argumentName
+                                    case .expectedFailure:
+                                        message = testCase.failureMessage ?? argumentName
+                                    default:
+                                        message = argumentName
+                                    }
+
+                                    let duration = Measurement<UnitDuration>(
+                                        value: baseDurationSeconds * 1000,
+                                        unit: DBXCReportModel.Module.File.RepeatableTest.Test
+                                            .defaultDurationUnit
+                                    )
+
+                                    let test = DBXCReportModel.Module.File.RepeatableTest.Test(
+                                        status: status,
+                                        duration: duration,
+                                        message: message
+                                    )
+                                    repeatableTest.tests.append(test)
+                                }
+                            } else {
+                                // No arguments, treat test case as single test
+                                guard let result = testCase.result else { continue }
+                                let status: DBXCReportModel.Module.File.RepeatableTest.Test.Status
+                                switch result {
+                                case .passed:
+                                    status = .success
+                                case .failed:
+                                    status = .failure
+                                case .skipped:
+                                    status = .skipped
+                                case .expectedFailure:
+                                    status = .expectedFailure
+                                }
+                                let durationSeconds = testCase.durationInSeconds ?? 0.0
+                                let duration = Measurement<UnitDuration>(
+                                    value: durationSeconds * 1000,
+                                    unit: DBXCReportModel.Module.File.RepeatableTest.Test
+                                        .defaultDurationUnit
+                                )
+                                // Extract message based on test status
+                                let message: String?
+                                switch status {
+                                case .skipped:
+                                    message = testCase.skipMessage
+                                case .failure:
+                                    message = testCase.failureMessage
+                                case .expectedFailure:
+                                    message = testCase.failureMessage
+                                default:
+                                    // Fallback to first non-metadata child name
+                                    message =
+                                        testCase.children?
+                                        .first(where: {
+                                            $0.nodeType != .runtimeWarning
+                                        })?
+                                        .name
+                                }
+                                let test = DBXCReportModel.Module.File.RepeatableTest.Test(
+                                    status: status,
+                                    duration: duration,
+                                    message: message
+                                )
+                                repeatableTest.tests.append(test)
                             }
-                            let durationSeconds = testCase.durationInSeconds ?? 0.0
-                            let duration = Measurement<UnitDuration>(
-                                value: durationSeconds * 1000,
-                                unit: DBXCReportModel.Module.File.RepeatableTest.Test
-                                    .defaultDurationUnit
-                            )
-                            // Extract message based on test status
-                            let message: String?
-                            switch status {
-                            case .skipped:
-                                message = testCase.skipMessage
-                            case .failure:
-                                message = testCase.failureMessage
-                            case .expectedFailure:
-                                message = testCase.failureMessage
-                            default:
-                                message = testCase.children?.compactMap { $0.name }.first
-                            }
-                            let test = DBXCReportModel.Module.File.RepeatableTest.Test(
-                                status: status,
-                                duration: duration,
-                                message: message
-                            )
-                            repeatableTest.tests.append(test)
                         }
 
                         file.repeatableTests.update(with: repeatableTest)
@@ -140,6 +214,32 @@ extension DBXCReportModel {
             }
         }
 
+        // Use total coverage from xcresult file if available, otherwise calculate from modules
+        let totalCoverage =
+            totalCoverageDTO?.lineCoverage
+            ?? {
+                let moduleCoverages = modules.compactMap { $0.coverage }
+                guard !moduleCoverages.isEmpty else { return nil }
+                let totalLines = moduleCoverages.reduce(0) { $0 + $1.totalLines }
+                let totalCoveredLines = moduleCoverages.reduce(0) { $0 + $1.coveredLines }
+                return totalLines != 0 ? Double(totalCoveredLines) / Double(totalLines) : 0.0
+            }()
+
         self.modules = modules
+        self.coverage = totalCoverage
+        self.warnings = warnings
+    }
+}
+
+extension DBXCReportModel.Warning {
+    /// Creates a Warning from BuildResultsDTO.Issue, skipping if required fields are missing
+    init?(from issue: BuildResultsDTO.Issue) {
+        guard let sourceURL = issue.sourceURL, let className = issue.className else {
+            // Skip warnings without required location information
+            return nil
+        }
+        self.message = issue.message
+        self.sourceURL = sourceURL
+        self.className = className
     }
 }

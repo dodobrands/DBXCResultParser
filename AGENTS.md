@@ -70,6 +70,18 @@ The package exports:
 
 Test resources are stored in `Tests/DBXCResultParserTests/Resources/DBXCResultParser.xcresult` - this is a sample `.xcresult` file used for testing.
 
+## Code Style Guidelines
+
+### File Headers
+
+**Never create file headers with author names or creation dates.** Files should start directly with imports or code. Do not add comments like:
+- `// Created by ...`
+- `// Created on ...`
+- `//  FileName.swift`
+- Any other header comments with author/date information
+
+This keeps the codebase clean and avoids unnecessary maintenance overhead.
+
 ## GitHub Workflow
 
 ### Using GitHub CLI (`gh`)

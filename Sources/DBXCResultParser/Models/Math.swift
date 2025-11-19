@@ -1,10 +1,3 @@
-//
-//  Math.swift
-//
-//
-//  Created by Алексей Берёзка on 05.01.2022.
-//
-
 import Foundation
 
 extension Sequence where Element: AdditiveArithmetic {

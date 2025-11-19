@@ -1,10 +1,3 @@
-//
-//  DBXCTextFormatter.swift
-//
-//
-//  Created by Алексей Берёзка on 31.12.2021.
-//
-
 import DBXCResultParser
 import Foundation
 
@@ -87,12 +80,27 @@ extension DBXCReportModel.Module.File {
             return nil
         }
 
-        var rows =
-            tests
-            .sorted { $0.name < $1.name }
-            .map { test in
-                test.report(formatter: formatter)
+        var rows: [String] = []
+        for repeatableTest in tests.sorted(by: { $0.name < $1.name }) {
+            // If there are multiple tests with different messages (likely from arguments),
+            // output each separately with its own status
+            // Check if tests have different messages, which indicates they're from arguments
+            let hasDifferentMessages =
+                repeatableTest.tests.count > 1
+                && Set(repeatableTest.tests.compactMap { $0.message }).count
+                    == repeatableTest.tests.count
+
+            if hasDifferentMessages {
+                // Output each test separately (arguments case)
+                for test in repeatableTest.tests {
+                    rows.append(
+                        test.report(repeatableTestName: repeatableTest.name, formatter: formatter))
+                }
+            } else {
+                // Single test or multiple tests with same message (repetitions/mixed), use original format
+                rows.append(repeatableTest.report(formatter: formatter))
             }
+        }
 
         rows.insert(name, at: 0)
 
@@ -105,6 +113,18 @@ extension DBXCReportModel.Module.File.RepeatableTest {
         [
             combinedStatus.icon,
             name,
+            message?.wrappedInBrackets,
+        ]
+        .compactMap { $0 }
+        .joined(separator: " ")
+    }
+}
+
+extension DBXCReportModel.Module.File.RepeatableTest.Test {
+    fileprivate func report(repeatableTestName: String, formatter: MeasurementFormatter) -> String {
+        [
+            status.icon,
+            repeatableTestName,
             message?.wrappedInBrackets,
         ]
         .compactMap { $0 }

@@ -1,33 +1,16 @@
 import Foundation
 
 struct TestResultsDTO: Decodable {
-    let devices: [Device]
     let testNodes: [TestNode]
-}
-
-extension TestResultsDTO {
-    struct Device: Decodable {
-        let architecture: String
-        let deviceId: String
-        let deviceName: String
-        let modelName: String
-        let osBuildNumber: String
-        let osVersion: String
-        let platform: String
-    }
 }
 
 extension TestResultsDTO {
     struct TestNode: Decodable {
         let children: [TestNode]?
-        let duration: String?
         let durationInSeconds: Double?
         let name: String
-        let nodeIdentifier: String?
-        let nodeIdentifierURL: String?
         let nodeType: NodeType
         let result: Result?
-        let details: String?
     }
 }
 
@@ -39,6 +22,8 @@ extension TestResultsDTO.TestNode {
         case repetition = "Repetition"
         case failureMessage = "Failure Message"
         case testPlan = "Test Plan"
+        case arguments = "Arguments"
+        case runtimeWarning = "Runtime Warning"
     }
 
     enum Result: String, Decodable {
@@ -50,11 +35,17 @@ extension TestResultsDTO.TestNode {
 
     /// Extracts failure message from children nodes
     /// Extracts message after "failed -" separator (e.g., "File.swift:51: failed - Failure message" -> "Failure message")
+    /// For Swift Testing format, extracts message after "Issue recorded: " (e.g., "File.swift:56: Issue recorded: Failure message" -> "Failure message")
     var failureMessage: String? {
         guard let children = children,
             let messageNode = children.first(where: { $0.nodeType == .failureMessage })
         else { return nil }
         let message = messageNode.name
+        // Try Swift Testing format first: "Issue recorded: "
+        if let range = message.range(of: "Issue recorded: ") {
+            return String(message[range.upperBound...]).trimmingCharacters(in: .whitespaces)
+        }
+        // Fallback to XCTest format: "failed -"
         if let range = message.range(of: "failed -") {
             return String(message[range.upperBound...]).trimmingCharacters(in: .whitespaces)
         }

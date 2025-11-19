@@ -1,14 +1,15 @@
-//
-//  DBXCReportModel.swift
-//
-//
-//  Created by Алексей Берёзка on 31.12.2021.
-//
-
 import Foundation
 
 public struct DBXCReportModel {
     public let modules: Set<Module>
+    public let coverage: Double?
+    public let warnings: [Warning]
+
+    public struct Warning {
+        public let message: String
+        public let sourceURL: String
+        public let className: String
+    }
 }
 
 extension DBXCReportModel {
@@ -139,19 +140,6 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test {
         // there were multiple retries with different results
         case mixed
         case unknown
-    }
-}
-
-extension DBXCReportModel {
-    public var totalCoverage: Double? {
-        let coverages = modules.map { $0.coverage }.compactMap { $0 }
-        guard coverages.count > 0 else { return nil }
-
-        let totalLines = coverages.reduce(into: 0) { $0 += $1.totalLines }
-        let totalCoveredLines = coverages.reduce(into: 0) { $0 += $1.coveredLines }
-
-        guard totalLines != 0 else { return 0.0 }
-        return Double(totalCoveredLines) / Double(totalLines)
     }
 }
 

@@ -1,10 +1,3 @@
-//
-//  Constants.swift
-//
-//
-//  Created by Алексей Берёзка on 30.12.2021.
-//
-
 import Foundation
 import Testing
 
@@ -76,44 +69,49 @@ struct TestError: Error {
     }
 }
 
-// Expected values per xcresult file
+// Expected coverage values per xcresult file
 struct ExpectedReportValues {
-    let modulesCount: Int
-    let coverageLines: Int
-    let filesCount: Int
-    let repeatableTestsCount: Int
-    let flackyTestsCount: Int
+    let coveredLines: Int
+    let coveragePercentage: Double
+    let moduleCoverages: [String: Double]  // Module name -> coverage value
 }
 
-struct ExpectedCoverageValues {
-    let targetsCount: Int
-    let coveredLines: Int
-    let executableLines: Int
-    let lineCoverage: Double
+// Expected warnings per xcresult file
+struct ExpectedWarningsValues {
+    let warningCount: Int
+    let warnings: [ExpectedWarning]
+
+    struct ExpectedWarning {
+        let message: String
+        let sourceURL: String
+        let className: String
+    }
 }
 
 extension Constants {
-    /// Returns expected report values for a given xcresult file name
+    /// Returns expected coverage values for a given xcresult file name
     /// - Parameter fileName: Name of the xcresult file (read dynamically from file system)
-    /// - Returns: Expected report values
+    /// - Returns: Expected coverage values
     /// - Throws: TestError if the file name is unknown
     static func expectedReportValues(for fileName: String) throws -> ExpectedReportValues {
         switch fileName {
         case "DBXCResultParser-15.0.xcresult":
             return ExpectedReportValues(
-                modulesCount: 2,
-                coverageLines: 481,
-                filesCount: 5,
-                repeatableTestsCount: 6,
-                flackyTestsCount: 2
+                coveredLines: 1054,
+                coveragePercentage: 0.92039586919104988,
+                moduleCoverages: [
+                    "DBXCResultParserTests": 0.89906542056074767,
+                    "DBXCResultParser-TextFormatterTests": 0.91242038216560506,
+                ]
             )
         case "DBXCResultParser-26.1.1.xcresult":
             return ExpectedReportValues(
-                modulesCount: 2,
-                coverageLines: 395,
-                filesCount: 4,
-                repeatableTestsCount: 5,
-                flackyTestsCount: 2
+                coveredLines: 1069,
+                coveragePercentage: 0.7650485436893204,
+                moduleCoverages: [
+                    "DBXCResultParserTests": 0.6991279069767442,
+                    "DBXCResultParser-TextFormatterTests": 0.7250308261405672,
+                ]
             )
         default:
             throw TestError(
@@ -121,29 +119,30 @@ extension Constants {
         }
     }
 
-    /// Returns expected coverage values for a given xcresult file name
+    /// Returns expected warnings count for a given xcresult file name
     /// - Parameter fileName: Name of the xcresult file (read dynamically from file system)
-    /// - Returns: Expected coverage values
+    /// - Returns: Expected warnings count
     /// - Throws: TestError if the file name is unknown
-    static func expectedCoverageValues(for fileName: String) throws -> ExpectedCoverageValues {
+    static func expectedWarningsValues(for fileName: String) throws -> ExpectedWarningsValues {
         switch fileName {
         case "DBXCResultParser-15.0.xcresult":
-            return ExpectedCoverageValues(
-                targetsCount: 5,
-                coveredLines: 481,
-                executableLines: 535,
-                lineCoverage: 0.8990654205607477
-            )
+            return ExpectedWarningsValues(warningCount: 0, warnings: [])
         case "DBXCResultParser-26.1.1.xcresult":
-            return ExpectedCoverageValues(
-                targetsCount: 5,
-                coveredLines: 395,
-                executableLines: 464,
-                lineCoverage: 0.8512931034482759
+            return ExpectedWarningsValues(
+                warningCount: 1,
+                warnings: [
+                    ExpectedWarningsValues.ExpectedWarning(
+                        message: "Some warning to appear in xcresult",
+                        sourceURL:
+                            "file:///Users/alldmeat/Developer/DBXCResultParser/Tests/DBXCResultParserTests/GenerateXCResultTests.swift",
+                        className: "DVTTextDocumentLocation"
+                    )
+                ]
             )
         default:
             throw TestError(
-                "Unknown xcresult file: \(fileName). Please add expected values for this file.")
+                "Unknown xcresult file: \(fileName). Please add expected warnings values for this file."
+            )
         }
     }
 }

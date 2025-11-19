@@ -1,20 +1,35 @@
-//
-//  DBXCReportModel+TestHelpers.swift
-//
-//
-//  Created by Aleksey Berezka on 18.12.2023.
-//
-
 import Foundation
 
 @testable import DBXCResultParser
 
 extension DBXCReportModel {
     public static func testMake(
-        modules: Set<Module> = []
+        modules: Set<Module> = [],
+        coverage: Double? = nil,
+        warnings: [Warning] = []
     ) -> Self {
-        .init(
-            modules: modules
+        // Calculate coverage from modules if not provided
+        let calculatedCoverage: Double?
+        if let coverage = coverage {
+            calculatedCoverage = coverage
+        } else {
+            let moduleCoverages = modules.map { $0.coverage }.compactMap { $0 }
+            if moduleCoverages.count > 0 {
+                let totalLines = moduleCoverages.reduce(into: 0) { $0 += $1.totalLines }
+                let totalCoveredLines = moduleCoverages.reduce(into: 0) { $0 += $1.coveredLines }
+                if totalLines != 0 {
+                    calculatedCoverage = Double(totalCoveredLines) / Double(totalLines)
+                } else {
+                    calculatedCoverage = 0.0
+                }
+            } else {
+                calculatedCoverage = nil
+            }
+        }
+        return .init(
+            modules: modules,
+            coverage: calculatedCoverage,
+            warnings: warnings
         )
     }
 }
