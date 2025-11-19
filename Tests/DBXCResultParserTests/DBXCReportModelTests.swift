@@ -51,13 +51,13 @@ struct FakeSUITests {
         Issue.record("Failure message")
     }
 
-    @Test(.disabled("Skip message"))
-    func test_skip() {
+    @Test(.disabled("Disabled reason"))
+    func disabled() {
         #expect(true)
     }
 
     @Test
-    func test_expectedFailure() {
+    func expectedFailure() {
         withKnownIssue {
             #expect(Bool(false), "Failure is expected")
         }
@@ -65,48 +65,15 @@ struct FakeSUITests {
 
     static nonisolated(unsafe) var shouldFail = true
     @Test
-    func test_flacky() {
+    func flacky() {
         if Self.shouldFail {
             Issue.record("Flacky failure message")
         }
         Self.shouldFail = false
     }
 
-    // Parameterized tests with arguments
-    @Test(arguments: [true, false])
+    @Test(argumentsParameterized: [true, false])
     func test_withBooleanArgument(value: Bool) {
-        #expect(value == true || value == false)
-    }
-
-    @Test(arguments: [1, 2, 3, 4, 5])
-    func test_withIntegerArgument(number: Int) {
-        #expect(number > 0)
-        #expect(number <= 5)
-    }
-
-    @Test(arguments: ["apple", "banana", "cherry"])
-    func test_withStringArgument(fruit: String) {
-        #expect(!fruit.isEmpty)
-    }
-
-    @Test(arguments: [(false, true), (true, false), (true, true)])
-    func test_withTupleArgument(pair: (Bool, Bool)) {
-        let (first, second) = pair
-        #expect(first == true || second == true)
-    }
-
-    @Test(arguments: [
-        TestStatus.success, TestStatus.failure, TestStatus.skipped, TestStatus.expectedFailure,
-    ])
-    func test_withEnumArgument(status: TestStatus) {
-        #expect(status != .unknown)
-    }
-
-    enum TestStatus: String {
-        case success
-        case failure
-        case skipped
-        case expectedFailure
-        case unknown
+        #expect(value == true)
     }
 }
