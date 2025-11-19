@@ -111,24 +111,16 @@ struct DBXCTextFormatterSnapshotTests {
     @Test(arguments: Constants.testsReportFileNames)
     func test_coverageValues(fileName: String) async throws {
         let reportPath = try Constants.url(for: fileName)
-        let report = try await DBXCReportModel(xcresultPath: reportPath)
         let expected = try Constants.expectedReportValues(for: fileName)
 
-        // Calculate total covered lines from all modules
-        let totalCoveredLines = report.modules
-            .compactMap { $0.coverage }
-            .reduce(0) { $0 + $1.coveredLines }
+        // Get total coverage directly from xcresult file
+        let totalCoverageDTO = try await TotalCoverageDTO(from: reportPath)
 
-        #expect(totalCoveredLines == expected.coveredLines)
+        // Check covered lines exactly as in xcresult file
+        #expect(totalCoverageDTO.coveredLines == expected.coveredLines)
 
-        // Calculate coverage percentage
-        guard let coverage = report.coverage else {
-            Issue.record("Coverage data not available")
-            return
-        }
-        let coveragePercentage = coverage * 100.0
-
-        // Compare with tolerance of 0.5% for floating point precision
-        #expect(abs(coveragePercentage - expected.coveragePercentage) < 0.5)
+        // Check coverage percentage exactly as in xcresult file
+        let coveragePercentage = totalCoverageDTO.lineCoverage * 100.0
+        #expect(coveragePercentage == expected.coveragePercentage)
     }
 }

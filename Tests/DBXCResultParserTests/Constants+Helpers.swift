@@ -90,9 +90,15 @@ extension Constants {
     static func expectedReportValues(for fileName: String) throws -> ExpectedReportValues {
         switch fileName {
         case "DBXCResultParser-15.0.xcresult":
-            return ExpectedReportValues(coveredLines: 1054, coveragePercentage: 92.04)
+            return ExpectedReportValues(
+                coveredLines: 2139,
+                coveragePercentage: 92.03958691910499
+            )
         case "DBXCResultParser-26.1.1.xcresult":
-            return ExpectedReportValues(coveredLines: 913, coveragePercentage: 76.14)
+            return ExpectedReportValues(
+                coveredLines: 2001,
+                coveragePercentage: 76.14155251141553
+            )
         default:
             throw TestError(
                 "Unknown xcresult file: \(fileName). Please add expected values for this file.")
