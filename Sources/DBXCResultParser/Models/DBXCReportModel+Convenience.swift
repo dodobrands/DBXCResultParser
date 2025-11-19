@@ -215,25 +215,15 @@ extension DBXCReportModel {
         }
 
         // Use total coverage from xcresult file if available, otherwise calculate from modules
-        let totalCoverage: Double?
-        if let totalCoverageDTO = totalCoverageDTO {
-            // Use the lineCoverage from xcresult file (already calculated)
-            totalCoverage = totalCoverageDTO.lineCoverage
-        } else {
-            // Fallback: calculate from modules
-            let moduleCoverages = modules.map { $0.coverage }.compactMap { $0 }
-            if moduleCoverages.count > 0 {
-                let totalLines = moduleCoverages.reduce(into: 0) { $0 += $1.totalLines }
-                let totalCoveredLines = moduleCoverages.reduce(into: 0) { $0 += $1.coveredLines }
-                if totalLines != 0 {
-                    totalCoverage = Double(totalCoveredLines) / Double(totalLines)
-                } else {
-                    totalCoverage = 0.0
-                }
-            } else {
-                totalCoverage = nil
-            }
-        }
+        let totalCoverage =
+            totalCoverageDTO?.lineCoverage
+            ?? {
+                let moduleCoverages = modules.compactMap { $0.coverage }
+                guard !moduleCoverages.isEmpty else { return nil }
+                let totalLines = moduleCoverages.reduce(0) { $0 + $1.totalLines }
+                let totalCoveredLines = moduleCoverages.reduce(0) { $0 + $1.coveredLines }
+                return totalLines != 0 ? Double(totalCoveredLines) / Double(totalLines) : 0.0
+            }()
 
         self.modules = modules
         self.coverage = totalCoverage
