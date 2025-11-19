@@ -40,40 +40,33 @@ To parse an `.xcresult` file and access the report data, initialize a `DBXCRepor
 ```swift
 import DBXCResultParser
 
-func parseReport() async {
-    let xcresultPath = URL(fileURLWithPath: "/path/to/your.xcresult")
-    do {
-        let reportModel = try await DBXCReportModel(xcresultPath: xcresultPath)
-        
-        // Access different parts of the report:
-        let modules = reportModel.modules
-        let coverage = reportModel.coverage // Coverage value from 0.0 to 1.0
-        let warnings = reportModel.warnings // Array of build warnings
-        
-        // Access warnings:
-        for warning in warnings {
-            print("Warning: \(warning.message)")
-            if let sourceURL = warning.sourceURL {
-                print("  Location: \(sourceURL)")
+let xcresultPath = URL(fileURLWithPath: "/path/to/your.xcresult")
+let reportModel = try await DBXCReportModel(xcresultPath: xcresultPath)
+
+// Access different parts of the report:
+let modules = reportModel.modules
+let coverage = reportModel.coverage // Coverage value from 0.0 to 1.0
+let warnings = reportModel.warnings // Array of build warnings
+
+// Access warnings:
+for warning in warnings {
+    print("Warning: \(warning.message)")
+    if let sourceURL = warning.sourceURL {
+        print("  Location: \(sourceURL)")
+    }
+}
+
+// Iterate over modules, files, and tests:
+for module in modules {
+    print("Module: \(module.name)")
+    for file in module.files {
+        print("  File: \(file.name)")
+        for repeatableTest in file.repeatableTests {
+            print("    Repeatable Test: \(repeatableTest.name)")
+            for test in repeatableTest.tests {
+                print("      Test: \(test.status.icon) - Duration: \(test.duration)")
             }
         }
-        
-        // Iterate over modules, files, and tests:
-        for module in modules {
-            print("Module: \(module.name)")
-            for file in module.files {
-                print("  File: \(file.name)")
-                for repeatableTest in file.repeatableTests {
-                    print("    Repeatable Test: \(repeatableTest.name)")
-                    for test in repeatableTest.tests {
-                        print("      Test: \(test.status.icon) - Duration: \(test.duration)")
-                    }
-                }
-            }
-        }
-        
-    } catch {
-        print("An error occurred while parsing the .xcresult file: \(error)")
     }
 }
 ```
