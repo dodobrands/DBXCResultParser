@@ -138,17 +138,8 @@ extension Constants {
             return ExpectedWarningsValues(warningCount: 0, warnings: [])
         case "DBXCResultParser-26.1.1.xcresult":
             return ExpectedWarningsValues(
-                warningCount: 2,
+                warningCount: 1,
                 warnings: [
-                    ExpectedWarningsValues.ExpectedWarning(
-                        issueType: "Swift Compiler Error",
-                        message:
-                            "Some warning to appear in xcresult\n#warning(\"Some warning to appear in xcresult\")\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-                        targetName: nil,
-                        sourceURL:
-                            "file:///Users/alldmeat/Developer/DBXCResultParser/Tests/DBXCResultParserTests/GenerateXCResultTests.swift",
-                        className: "DVTTextDocumentLocation"
-                    ),
                     ExpectedWarningsValues.ExpectedWarning(
                         issueType: "Swift Compiler Warning",
                         message: "Some warning to appear in xcresult",
@@ -156,7 +147,7 @@ extension Constants {
                         sourceURL:
                             "file:///Users/alldmeat/Developer/DBXCResultParser/Tests/DBXCResultParserTests/GenerateXCResultTests.swift",
                         className: "DVTTextDocumentLocation"
-                    ),
+                    )
                 ]
             )
         default:
