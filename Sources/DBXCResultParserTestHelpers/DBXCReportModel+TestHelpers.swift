@@ -12,7 +12,8 @@ import Foundation
 extension DBXCReportModel {
     public static func testMake(
         modules: Set<Module> = [],
-        coverage: Double? = nil
+        coverage: Double? = nil,
+        warnings: [Warning] = []
     ) -> Self {
         // Calculate coverage from modules if not provided
         let calculatedCoverage: Double?
@@ -34,7 +35,8 @@ extension DBXCReportModel {
         }
         return .init(
             modules: modules,
-            coverage: calculatedCoverage
+            coverage: calculatedCoverage,
+            warnings: warnings
         )
     }
 }

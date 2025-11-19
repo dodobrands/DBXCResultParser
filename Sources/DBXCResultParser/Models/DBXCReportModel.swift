@@ -10,6 +10,15 @@ import Foundation
 public struct DBXCReportModel {
     public let modules: Set<Module>
     public let coverage: Double?
+    public let warnings: [Warning]
+
+    public struct Warning {
+        public let issueType: String
+        public let message: String
+        public let targetName: String?
+        public let sourceURL: String?
+        public let className: String?
+    }
 }
 
 extension DBXCReportModel {

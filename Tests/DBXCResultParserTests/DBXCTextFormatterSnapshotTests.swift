@@ -141,4 +141,14 @@ struct DBXCTextFormatterSnapshotTests {
             #expect(moduleCoverage.coverage == expectedModuleCoverage)
         }
     }
+
+    @Test(arguments: Constants.testsReportFileNames)
+    func test_warningsValues(fileName: String) async throws {
+        let reportPath = try Constants.url(for: fileName)
+        let report = try await DBXCReportModel(xcresultPath: reportPath)
+        let expected = try Constants.expectedWarningsValues(for: fileName)
+
+        // Check warnings count exactly as in xcresult file
+        #expect(report.warnings.count == expected.warningCount)
+    }
 }

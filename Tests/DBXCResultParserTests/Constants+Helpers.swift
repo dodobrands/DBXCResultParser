@@ -83,6 +83,11 @@ struct ExpectedReportValues {
     let moduleCoverages: [String: Double]  // Module name -> coverage value
 }
 
+// Expected warnings count per xcresult file
+struct ExpectedWarningsValues {
+    let warningCount: Int
+}
+
 extension Constants {
     /// Returns expected coverage values for a given xcresult file name
     /// - Parameter fileName: Name of the xcresult file (read dynamically from file system)
@@ -111,6 +116,23 @@ extension Constants {
         default:
             throw TestError(
                 "Unknown xcresult file: \(fileName). Please add expected values for this file.")
+        }
+    }
+
+    /// Returns expected warnings count for a given xcresult file name
+    /// - Parameter fileName: Name of the xcresult file (read dynamically from file system)
+    /// - Returns: Expected warnings count
+    /// - Throws: TestError if the file name is unknown
+    static func expectedWarningsValues(for fileName: String) throws -> ExpectedWarningsValues {
+        switch fileName {
+        case "DBXCResultParser-15.0.xcresult":
+            return ExpectedWarningsValues(warningCount: 0)
+        case "DBXCResultParser-26.1.1.xcresult":
+            return ExpectedWarningsValues(warningCount: 0)
+        default:
+            throw TestError(
+                "Unknown xcresult file: \(fileName). Please add expected warnings values for this file."
+            )
         }
     }
 }

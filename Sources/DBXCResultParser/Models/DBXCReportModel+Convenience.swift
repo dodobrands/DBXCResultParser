@@ -33,6 +33,17 @@ extension DBXCReportModel {
         // Try to get total coverage from xcresult file
         let totalCoverageDTO = try? await TotalCoverageDTO(from: xcresultPath)
 
+        // Try to get build results (warnings, errors) from xcresult file
+        // Note: build-results may not be available in test-only xcresult files
+        let buildResultsDTO: BuildResultsDTO?
+        do {
+            buildResultsDTO = try await BuildResultsDTO(from: xcresultPath)
+        } catch {
+            // Build results not available (e.g., test-only xcresult), continue without warnings
+            buildResultsDTO = nil
+        }
+        let warnings = buildResultsDTO?.warnings.map { Warning(from: $0) } ?? []
+
         var modules = Set<Module>()
 
         // Process test nodes: Test Plan -> Unit test bundle -> Test Suite -> Test Case -> Repetition
@@ -248,5 +259,16 @@ extension DBXCReportModel {
 
         self.modules = modules
         self.coverage = totalCoverage
+        self.warnings = warnings
+    }
+}
+
+extension DBXCReportModel.Warning {
+    init(from issue: BuildResultsDTO.Issue) {
+        self.issueType = issue.issueType
+        self.message = issue.message
+        self.targetName = issue.targetName
+        self.sourceURL = issue.sourceURL
+        self.className = issue.className
     }
 }
