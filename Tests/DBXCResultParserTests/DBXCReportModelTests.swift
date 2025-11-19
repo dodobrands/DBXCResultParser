@@ -11,10 +11,10 @@ struct DBXCReportModelActualTests {
         #expect(!reportPaths.isEmpty)
     }
 
-    @Test(arguments: Constants.testsReportPathsForParameterizedTests)
-    func test(reportPath: URL) async throws {
+    @Test(arguments: Constants.testsReportFileNamesForParameterizedTests)
+    func test(fileName: String) async throws {
+        let reportPath = try Constants.url(for: fileName)
         let report = try await DBXCReportModel(xcresultPath: reportPath)
-        let fileName = reportPath.lastPathComponent
         let expected = try Constants.expectedReportValues(for: fileName)
 
         // Basic validation for all files

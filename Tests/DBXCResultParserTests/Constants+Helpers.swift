@@ -53,10 +53,19 @@ struct Constants {
         }
     }
 
-    /// Returns array of xcresult paths for use in parameterized tests
+    /// Returns array of xcresult file names for use in parameterized tests
     /// Returns empty array if paths cannot be loaded (test will be skipped)
-    static var testsReportPathsForParameterizedTests: [URL] {
-        (try? testsReportPaths) ?? []
+    static var testsReportFileNamesForParameterizedTests: [String] {
+        ((try? testsReportPaths) ?? []).map { $0.lastPathComponent }
+    }
+
+    /// Returns URL for a given xcresult file name
+    static func url(for fileName: String) throws -> URL {
+        let paths = try testsReportPaths
+        guard let url = paths.first(where: { $0.lastPathComponent == fileName }) else {
+            throw TestError("Could not find xcresult file: \(fileName)")
+        }
+        return url
     }
 }
 
