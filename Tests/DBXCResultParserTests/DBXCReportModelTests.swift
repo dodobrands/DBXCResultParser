@@ -3,118 +3,81 @@ import Testing
 
 @testable import DBXCResultParser
 
-//extension Tag {
-//    @Tag static var xcresultGeneration: Self
-//}
-//
-//@Suite
-//struct DBXCReportModelTests {
-//
-//    // Set to true to enable xcresult generation tests.
-//    // These tests are used to generate .xcresult file with a new Xcode version.
-//    //
-//    // To run only these tests: in Xcode's test navigator, go to the Tags section and click Run next to the xcresultGeneration tag.
-//    //
-//    // Originally planned to create a script that would run tests with xcresultGeneration tag via swift test
-//    // and automatically generate .xcresult file with correct name (including Xcode version) in the right location,
-//    // but ran into limitation: swift test doesn't support filtering by tags (at least in Xcode 26).
-//    //
-//    // Therefore, tests are controlled by this constant instead of using the tag for filtering,
-//    // and finding the generated .xcresult file, moving it to the right location, and renaming are done manually.
-//    let generateXcresult = false
-//
-//    @Test(.tags(.xcresultGeneration))
-//    func test_success() throws {
-//        guard generateXcresult else {
-//            return  // Skip test if constant is not enabled
-//        }
-//        #expect(true)
-//    }
-//
-//    @Test(.tags(.xcresultGeneration))
-//    func test_failure() throws {
-//        guard generateXcresult else {
-//            return
-//        }
-//        Issue.record("Failure message")
-//    }
-//
-//    @Test(.tags(.xcresultGeneration), .disabled("Skip message"))
-//    func test_skip() throws {
-//        guard generateXcresult else {
-//            return
-//        }
-//
-//        return
-//    }
-//
-//    @Test(.tags(.xcresultGeneration))
-//    func test_expectedFailure() throws {
-//        guard generateXcresult else {
-//            return
-//        }
-//        withKnownIssue {
-//            #expect(1 == 2)
-//        }
-//    }
-//
-//    nonisolated(unsafe) static var shouldFail = true
-//    @Test(.tags(.xcresultGeneration))
-//    func test_flacky() throws {
-//        guard generateXcresult else {
-//            return
-//        }
-//        if Self.shouldFail {
-//            Issue.record("Flacky failure message")
-//        }
-//
-//        Self.shouldFail = false
-//    }
-//}
-
 struct DBXCReportModelActualTests {
 
     @Test
+    func test_xcresultFilesCount() throws {
+        let reportPaths = try Constants.testsReportPaths
+        #expect(!reportPaths.isEmpty)
+    }
+
+    @Test
     func test() async throws {
-        let report = try await DBXCReportModel(xcresultPath: Constants.testsReportPath)
-        #expect(report.modules.count == 2)
+        let reportPaths = try Constants.testsReportPaths
+        #expect(!reportPaths.isEmpty)
 
-        let module = try #require(
-            report.modules.first(where: { $0.name == "DBXCResultParserTests" }))
-        #expect(module.coverage?.coveredLines == 481)
+        // Parse all available xcresult files
+        for reportPath in reportPaths {
+            let report = try await DBXCReportModel(xcresultPath: reportPath)
+            let fileName = reportPath.lastPathComponent
+            let expected = try Constants.expectedReportValues(for: fileName)
 
-        let files = module.files.sorted { $0.name < $1.name }
-        #expect(files.count == 5)
+            // Basic validation for all files
+            #expect(!report.modules.isEmpty)
 
-        let file = try #require(files.first(where: { $0.name == "DBXCReportModelTests" }))
-        #expect(file.repeatableTests.count == 6)
+            // Detailed validation for all files
+            #expect(report.modules.count == expected.modulesCount)
 
-        let successTest = try #require(
-            file.repeatableTests.first(where: { $0.name == "test_success()" }))
-        #expect(successTest.tests.first?.message == nil)
+            let module = try #require(
+                report.modules.first(where: { $0.name == "DBXCResultParserTests" }))
+            #expect(module.coverage?.coveredLines == expected.coverageLines)
 
-        let failedTest = try #require(
-            file.repeatableTests.first(where: { $0.name == "test_failure()" }))
-        #expect(failedTest.tests.first?.message == "Failure message")
+            let files = module.files.sorted { $0.name < $1.name }
+            #expect(files.count == expected.filesCount)
 
-        let skippedTest = try #require(
-            file.repeatableTests.first(where: { $0.name == "test_skip()" }))
-        #expect(skippedTest.tests.first?.message == "Skip message")
+            let file = try #require(files.first(where: { $0.name == "DBXCReportModelTests" }))
+            #expect(file.repeatableTests.count == expected.repeatableTestsCount)
 
-        let expectedFailedTest = try #require(
-            file.repeatableTests.first(where: { $0.name == "test_expectedFailure()" }))
-        // expectedFailure tests show "Failure is expected" instead of detailed message
-        #expect(
-            expectedFailedTest.tests.first?.message == "Failure is expected")
+            let successTest = try #require(
+                file.repeatableTests.first(where: { $0.name == "test_success()" }))
+            #expect(successTest.tests.first?.message == nil)
 
-        let flackyTest = try #require(
-            file.repeatableTests.first(where: { $0.name == "test_flacky()" }))
-        #expect(flackyTest.tests.count == 2)
-        #expect(flackyTest.tests.first?.status == .failure)
-        #expect(flackyTest.tests.last?.status == .success)
-        #expect(flackyTest.combinedStatus == .mixed)
+            let failedTest = try #require(
+                file.repeatableTests.first(where: { $0.name == "test_failure()" }))
+            #expect(failedTest.tests.first?.message == "Failure message")
+
+            let skippedTest = try #require(
+                file.repeatableTests.first(where: { $0.name == "test_skip()" }))
+            #expect(skippedTest.tests.first?.message == "Skip message")
+
+            let expectedFailedTest = try #require(
+                file.repeatableTests.first(where: { $0.name == "test_expectedFailure()" }))
+            // expectedFailure tests show "Failure is expected" instead of detailed message
+            #expect(
+                expectedFailedTest.tests.first?.message == "Failure is expected")
+
+            let flackyTest = try #require(
+                file.repeatableTests.first(where: { $0.name == "test_flacky()" }))
+            #expect(flackyTest.tests.count == expected.flackyTestsCount)
+            #expect(flackyTest.tests.first?.status == .failure)
+            if expected.flackyTestsCount > 1 {
+                #expect(flackyTest.tests.last?.status == .success)
+                #expect(flackyTest.combinedStatus == .mixed)
+            } else {
+                #expect(flackyTest.combinedStatus == .failure)
+            }
+        }
     }
 }
+
+// XCODE_VERSION=$(xcodebuild -version | head -1 | awk '{print $2}') && xcodebuild test -scheme DBXCResultParser-Package -destination 'platform=macOS' -enableCodeCoverage YES -retry-tests-on-failure -test-iterations 3 -collect-test-diagnostics never -enablePerformanceTestsDiagnostics NO -resultBundlePath "Tests/DBXCResultParserTests/Resources/DBXCResultParser-${XCODE_VERSION}.xcresult"
+//
+// Flow:
+// 1) uncomment the tests below
+// 2) run tests via command - a new file will be created for the new Xcode version
+// 3) run tests via Xcode - it will show errors because the new file is now included in tests
+// 4) update existing tests to include data for new xcresult files so tests become green
+//
 //
 //import XCTest
 //class DBXCReportModelTests: XCTestCase {
