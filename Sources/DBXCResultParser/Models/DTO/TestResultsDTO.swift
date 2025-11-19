@@ -39,6 +39,9 @@ extension TestResultsDTO.TestNode {
         case repetition = "Repetition"
         case failureMessage = "Failure Message"
         case testPlan = "Test Plan"
+        case device = "Device"
+        case arguments = "Arguments"
+        case runtimeWarning = "Runtime Warning"
     }
 
     enum Result: String, Decodable {
