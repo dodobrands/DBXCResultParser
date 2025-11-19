@@ -120,15 +120,25 @@ extension DBXCReportModel {
                             case .expectedFailure:
                                 message = testCase.failureMessage
                             default:
-                                // Filter out Device and Runtime Warning nodes when extracting message
-                                // Arguments are kept as they may contain useful test information
+                                // Extract Arguments from Device nodes, but don't show Device name
+                                // Filter out Runtime Warning nodes
                                 message =
                                     testCase.children?
-                                    .filter { node in
-                                        node.nodeType != .device
-                                            && node.nodeType != .runtimeWarning
+                                    .flatMap { node -> [String] in
+                                        if node.nodeType == .device {
+                                            // Extract Arguments from Device children
+                                            return node.children?
+                                                .filter { $0.nodeType == .arguments }
+                                                .compactMap { $0.name } ?? []
+                                        } else if node.nodeType == .arguments {
+                                            // Direct Arguments node
+                                            return [node.name]
+                                        } else if node.nodeType != .runtimeWarning {
+                                            // Other non-metadata nodes
+                                            return [node.name]
+                                        }
+                                        return []
                                     }
-                                    .compactMap { $0.name }
                                     .first
                             }
                             let test = DBXCReportModel.Module.File.RepeatableTest.Test(
