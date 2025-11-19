@@ -6,8 +6,12 @@ import Testing
 // Flow:
 // 1) uncomment the tests below
 // 2) run tests via command - a new file will be created for the new Xcode version
-// 3) run tests via Xcode - it will show errors because the new file is now included in tests
-// 4) update existing tests to include data for new xcresult files so tests become green
+// 3) delete all snapshots
+// 4) run tests via Xcode - it will show errors because:
+//      - the new xcresult file is now included in tests
+//      - new snapshots are generated
+// 5) update existing tests to include data for new xcresult files so tests become green
+// 6) validate new snapshots are ok
 //
 //
 //import XCTest
@@ -38,42 +42,42 @@ import Testing
 //        Self.shouldFail = false
 //    }
 //}
-
-@Suite
-struct FakeSUITests {
-    @Test
-    func success() {
-        #expect(true)
-    }
-
-    @Test
-    func failure() {
-        Issue.record("Failure message")
-    }
-
-    @Test(.disabled("Disabled reason"))
-    func disabled() {
-        #expect(true)
-    }
-
-    @Test
-    func expectedFailure() {
-        withKnownIssue {
-            #expect(Bool(false), "Failure is expected")
-        }
-    }
-
-    static nonisolated(unsafe) var shouldFail = true
-    @Test
-    func flacky() {
-        if Self.shouldFail {
-            Issue.record("Flacky failure message")
-        }
-        Self.shouldFail = false
-    }
-
-    @Test(argumentsParameterized: [true, false])
-    func test_withBooleanArgument(value: Bool) {
-        #expect(value == true)
-    }
-}
+//
+//@Suite
+//struct FakeSUITests {
+//    @Test
+//    func success() {
+//        #expect(true)
+//    }
+//
+//    @Test
+//    func failure() {
+//        Issue.record("Failure message")
+//    }
+//
+//    @Test(.disabled("Disabled reason"))
+//    func disabled() {
+//        #expect(true)
+//    }
+//
+//    @Test
+//    func expectedFailure() {
+//        withKnownIssue {
+//            #expect(Bool(false), "Failure is expected")
+//        }
+//    }
+//
+//    static nonisolated(unsafe) var shouldFail = true
+//    @Test
+//    func flacky() {
+//        if Self.shouldFail {
+//            Issue.record("Flacky failure message")
+//        }
+//        Self.shouldFail = false
+//    }
+//
+//    @Test(arguments: [true, false])
+//    func testParameterized(value: Bool) {
+//        #expect(value == true)
+//    }
+//}
