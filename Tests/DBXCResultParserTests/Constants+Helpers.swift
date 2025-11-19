@@ -106,11 +106,11 @@ extension Constants {
             )
         case "DBXCResultParser-26.1.1.xcresult":
             return ExpectedReportValues(
-                coveredLines: 913,
-                coveragePercentage: 0.76141552511415522,
+                coveredLines: 1069,
+                coveragePercentage: 0.7650485436893204,
                 moduleCoverages: [
-                    "DBXCResultParserTests": 0.70826010544815465,
-                    "DBXCResultParser-TextFormatterTests": 0.73699421965317924,
+                    "DBXCResultParserTests": 0.6991279069767442,
+                    "DBXCResultParser-TextFormatterTests": 0.7250308261405672,
                 ]
             )
         default:
@@ -128,7 +128,7 @@ extension Constants {
         case "DBXCResultParser-15.0.xcresult":
             return ExpectedWarningsValues(warningCount: 0)
         case "DBXCResultParser-26.1.1.xcresult":
-            return ExpectedWarningsValues(warningCount: 0)
+            return ExpectedWarningsValues(warningCount: 2)
         default:
             throw TestError(
                 "Unknown xcresult file: \(fileName). Please add expected warnings values for this file."
