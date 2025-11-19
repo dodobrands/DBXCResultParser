@@ -1,10 +1,3 @@
-//
-//  DBShell.swift
-//
-//
-//  Created by Алексей Берёзка on 28.12.2021.
-//
-
 import Foundation
 import Subprocess
 

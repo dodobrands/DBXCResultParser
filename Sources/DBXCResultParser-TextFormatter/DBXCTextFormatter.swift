@@ -1,10 +1,3 @@
-//
-//  DBXCTextFormatter.swift
-//
-//
-//  Created by Алексей Берёзка on 31.12.2021.
-//
-
 import DBXCResultParser
 import Foundation
 

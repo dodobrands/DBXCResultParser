@@ -1,10 +1,3 @@
-//
-//  DBXCReportModel+TestHelpers.swift
-//
-//
-//  Created by Aleksey Berezka on 18.12.2023.
-//
-
 import Foundation
 
 @testable import DBXCResultParser

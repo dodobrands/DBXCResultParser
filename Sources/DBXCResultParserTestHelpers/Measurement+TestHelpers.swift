@@ -1,10 +1,3 @@
-//
-//  Measurement+TestHelpers.swift
-//
-//
-//  Created by Aleksey Berezka on 18.12.2023.
-//
-
 import Foundation
 
 extension Measurement where UnitType: UnitDuration {

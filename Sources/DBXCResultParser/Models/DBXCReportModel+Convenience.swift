@@ -1,10 +1,3 @@
-//
-//  DBXCReportModel+Convenience.swift
-//
-//
-//  Created by Aleksey Berezka on 15.12.2023.
-//
-
 import Foundation
 
 extension DBXCReportModel {
