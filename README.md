@@ -96,8 +96,29 @@ print("Formatted Output:\n\(formattedOutput)")
 
 The `format` method can also take an array of `DBXCReportModel.Module.File.RepeatableTest.Test.Status` to filter which test results are included in the output. By default, it includes all test statuses.
 
+**Filtering by status:**
+
 ```swift
-let formattedOutput = formatter.format(reportModel, include: [.failure])
+// Only show failures
+let failuresOnly = formatter.format(reportModel, include: [.failure])
+
+// Show both failures and skipped tests
+let failuresAndSkipped = formatter.format(reportModel, include: [.failure, .skipped])
+
+// Show only successful tests
+let successesOnly = formatter.format(reportModel, include: [.success])
+```
+
+**Using count format:**
+
+```swift
+// Get summary count instead of detailed list
+let summary = formatter.format(reportModel, format: .count)
+// Output: "12 tests (1m 23s)"
+
+// Count only failures
+let failureCount = formatter.format(reportModel, include: [.failure], format: .count)
+// Output: "3 tests (45s)"
 ```
 
 ### Output Formats
@@ -105,14 +126,41 @@ let formattedOutput = formatter.format(reportModel, include: [.failure])
 #### List Format
 Outputs a detailed list of test results, including the name of each file and the status of each test.
 
+**Basic Test Statuses:**
+- `✅` - Success
+- `❌` - Failure
+- `⏭️` - Skipped
+- `🤡` - Expected Failure
+- `⚠️` - Mixed (flaky test with different results across retries)
+- `🤷` - Unknown
+
+**Example output:**
+
 ```
 FileA.swift
-✅ TestA1
-❌ TestA2 (Failure reason)
+✅ test_success()
+❌ test_failure() (Failure message)
+⏭️ test_skip() (Skip message)
+🤡 test_expectedFailure() (Failure is expected)
+⚠️ test_flacky() (Flacky failure message)
 
 FileB.swift
-✅ TestB1
-⚠️ TestB2
+✅ test_success()
+```
+
+**Parameterized Tests (Swift Testing):**
+Each argument from parameterized tests is displayed as a separate test line with its own status:
+
+```
+FakeSUITests
+✅ success()
+❌ failure() (GenerateXCResultTests.swift:56: Issue recorded: Failure message)
+⏭️ disabled() (Test 'disabled()' skipped: Disabled reason)
+🤡 expectedFailure()
+⚠️ flacky() (GenerateXCResultTests.swift:75: Issue recorded: Flacky failure message)
+✅ flackyParameterized(value:) (true)
+❌ flackyParameterized(value:) (false)
+✅ somethingWithWarning()
 ```
 
 #### Count Format
@@ -120,6 +168,12 @@ Outputs a summary count of test results, including the total number of tests and
 
 ```
 12 tests (1m 23s)
+```
+
+When filtering by status (e.g., only failures), duration is omitted if only skipped tests are included:
+
+```
+5 tests
 ```
 
 ### Customizing Number and Measurement Formatting
@@ -140,11 +194,33 @@ The package includes a command-line tool that can be executed to generate test r
 swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult
 ```
 
+**Examples:**
+
+```bash
+# Default: list format with all test statuses
+swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult
+
+# Count format (summary)
+swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult --format count
+
+# Show only failures
+swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult --include failure
+
+# Show failures and skipped tests
+swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult --include failure,skipped
+
+# Use specific locale for formatting
+swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult --locale ru-RU
+
+# Combine options: count format with only failures, using French locale
+swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult --format count --include failure --locale fr-FR
+```
+
 The available options are:
-- `--xcresult-path`: Specifies the path to the `.xcresult` file.
-- `--format`: Determines the output format (`list` or `count`).
-- `--locale`: Sets the locale for number and measurement formatting (e.g., "en-GB").
-- `--include`: Filters the test results to include only certain statuses (e.g., `failure,skipped`).
+- `--xcresult-path`: Specifies the path to the `.xcresult` file (required).
+- `--format`: Determines the output format (`list` or `count`). Default: `list`.
+- `--locale`: Sets the locale for number and measurement formatting (e.g., "en-GB", "ru-RU", "fr-FR"). Default: system locale.
+- `--include`: Filters the test results to include only certain statuses. Comma-separated list of: `success`, `failure`, `skipped`, `expectedFailure`, `mixed`, `unknown`. Default: all statuses.
 
 ## License
 
