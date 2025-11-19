@@ -122,7 +122,8 @@ extension DBXCReportModel {
                             default:
                                 // Extract Arguments from Device nodes, but don't show Device name
                                 // Filter out Runtime Warning nodes
-                                message =
+                                // Collect all Arguments values and join them
+                                let arguments =
                                     testCase.children?
                                     .flatMap { node -> [String] in
                                         if node.nodeType == .device {
@@ -138,8 +139,20 @@ extension DBXCReportModel {
                                             return [node.name]
                                         }
                                         return []
-                                    }
-                                    .first
+                                    } ?? []
+
+                                // Join all arguments with comma if multiple, otherwise use first non-argument value
+                                if !arguments.isEmpty {
+                                    message = arguments.joined(separator: ", ")
+                                } else {
+                                    // Fallback to first non-metadata child name
+                                    message =
+                                        testCase.children?
+                                        .first(where: {
+                                            $0.nodeType != .device && $0.nodeType != .runtimeWarning
+                                        })?
+                                        .name
+                                }
                             }
                             let test = DBXCReportModel.Module.File.RepeatableTest.Test(
                                 status: status,
