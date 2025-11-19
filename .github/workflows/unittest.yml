@@ -37,7 +37,7 @@ jobs:
       run: swift package resolve
 
     - name: Build
-      run: swift build
+      run: swift build --build-tests
 
     - name: Test
       run: swift test
