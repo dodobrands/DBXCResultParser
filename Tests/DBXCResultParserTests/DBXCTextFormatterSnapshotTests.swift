@@ -127,7 +127,6 @@ struct DBXCTextFormatterSnapshotTests {
             Issue.record("Coverage data not available")
             return
         }
-        let coveragePercentage = coverage * 100.0
-        #expect(coveragePercentage == expected.coveragePercentage)
+        #expect(coverage == expected.coveragePercentage)
     }
 }

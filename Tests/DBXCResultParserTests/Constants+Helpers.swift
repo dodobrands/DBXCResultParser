@@ -92,12 +92,12 @@ extension Constants {
         case "DBXCResultParser-15.0.xcresult":
             return ExpectedReportValues(
                 coveredLines: 1054,
-                coveragePercentage: 92.03958691910499
+                coveragePercentage: 0.92039586919104988
             )
         case "DBXCResultParser-26.1.1.xcresult":
             return ExpectedReportValues(
                 coveredLines: 913,
-                coveragePercentage: 76.14155251141553
+                coveragePercentage: 0.76141552511415522
             )
         default:
             throw TestError(
