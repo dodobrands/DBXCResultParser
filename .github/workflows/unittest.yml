@@ -41,3 +41,6 @@ jobs:
 
     - name: Test
       run: swift test
+
+    - name: Parse xcresult
+      run: swift run DBXCResultParser-TextFormatterExec --xcresult-path Tests/DBXCResultParserTests/Resources/DBXCResultParser.xcresult
