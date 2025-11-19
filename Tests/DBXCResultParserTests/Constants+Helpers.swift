@@ -53,6 +53,12 @@ struct Constants {
         }
     }
 
+    /// Returns array of xcresult paths for use in parameterized tests
+    /// Returns empty array if paths cannot be loaded (test will be skipped)
+    static var testsReportPathsForParameterizedTests: [URL] {
+        (try? testsReportPaths) ?? []
+    }
+
     @available(*, deprecated, message: "Use testsReportPaths instead")
     static var testsReportPath: URL {
         get throws {
