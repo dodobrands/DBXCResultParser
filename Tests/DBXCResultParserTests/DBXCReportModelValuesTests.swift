@@ -64,16 +64,12 @@ struct DBXCReportModelValuesTests {
                 #expect(actualWarning.message == expectedWarning.message)
 
                 // Check sourceURL - it may contain timestamp, so compare only the file path part
-                if let expectedSourceURL = expectedWarning.sourceURL {
-                    let actualSourceURL = actualWarning.sourceURL ?? ""
-                    // Extract file path without query parameters (timestamp)
-                    let expectedPath = URL(string: expectedSourceURL)?.path ?? expectedSourceURL
-                    let actualPath = URL(string: actualSourceURL)?.path ?? actualSourceURL
-                    #expect(actualPath == expectedPath)
-                } else {
-                    // If expected is nil, actual should also be nil (or we can be lenient)
-                    // For now, we'll check that actual is not nil if expected is not nil
-                }
+                // Extract file path without query parameters (timestamp)
+                let expectedPath =
+                    URL(string: expectedWarning.sourceURL)?.path ?? expectedWarning.sourceURL
+                let actualPath =
+                    URL(string: actualWarning.sourceURL)?.path ?? actualWarning.sourceURL
+                #expect(actualPath == expectedPath)
 
                 #expect(actualWarning.className == expectedWarning.className)
             }

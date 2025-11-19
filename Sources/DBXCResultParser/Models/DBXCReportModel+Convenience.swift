@@ -42,7 +42,8 @@ extension DBXCReportModel {
             // Build results not available (e.g., test-only xcresult), continue without warnings
             buildResultsDTO = nil
         }
-        let warnings = buildResultsDTO?.warnings.map { Warning(from: $0) } ?? []
+        // Filter warnings to include only those with required fields (sourceURL and className)
+        let warnings = buildResultsDTO?.warnings.compactMap { Warning(from: $0) } ?? []
 
         var modules = Set<Module>()
 
@@ -264,9 +265,14 @@ extension DBXCReportModel {
 }
 
 extension DBXCReportModel.Warning {
-    init(from issue: BuildResultsDTO.Issue) {
+    /// Creates a Warning from BuildResultsDTO.Issue, skipping if required fields are missing
+    init?(from issue: BuildResultsDTO.Issue) {
+        guard let sourceURL = issue.sourceURL, let className = issue.className else {
+            // Skip warnings without required location information
+            return nil
+        }
         self.message = issue.message
-        self.sourceURL = issue.sourceURL
-        self.className = issue.className
+        self.sourceURL = sourceURL
+        self.className = className
     }
 }

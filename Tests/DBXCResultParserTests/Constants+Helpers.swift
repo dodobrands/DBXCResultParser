@@ -90,8 +90,8 @@ struct ExpectedWarningsValues {
 
     struct ExpectedWarning {
         let message: String
-        let sourceURL: String?
-        let className: String?
+        let sourceURL: String
+        let className: String
     }
 }
 

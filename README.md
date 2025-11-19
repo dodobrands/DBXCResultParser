@@ -51,9 +51,8 @@ let warnings = reportModel.warnings // Array of build warnings
 // Access warnings:
 for warning in warnings {
     print("Warning: \(warning.message)")
-    if let sourceURL = warning.sourceURL {
-        print("  Location: \(sourceURL)")
-    }
+    print("  Location: \(warning.sourceURL)")
+    print("  Class: \(warning.className)")
 }
 
 // Iterate over modules, files, and tests:

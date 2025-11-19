@@ -14,8 +14,8 @@ public struct DBXCReportModel {
 
     public struct Warning {
         public let message: String
-        public let sourceURL: String?
-        public let className: String?
+        public let sourceURL: String
+        public let className: String
     }
 }
 
