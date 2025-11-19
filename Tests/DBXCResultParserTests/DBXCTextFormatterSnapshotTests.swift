@@ -123,10 +123,7 @@ struct DBXCTextFormatterSnapshotTests {
         #expect(totalCoveredLines == expected.coveredLines)
 
         // Check coverage percentage exactly as in xcresult file
-        guard let coverage = report.coverage else {
-            Issue.record("Coverage data not available")
-            return
-        }
+        let coverage = try #require(report.coverage, "Coverage data not available")
         #expect(coverage == expected.coveragePercentage)
 
         // Check coverage for each module
