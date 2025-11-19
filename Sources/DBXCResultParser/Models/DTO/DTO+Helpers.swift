@@ -6,7 +6,7 @@ extension TestResultsDTO {
             "xcrun",
             arguments: [
                 "xcresulttool", "get", "test-results", "tests",
-                "--path", xcresultPath.relativePath,
+                "--path", xcresultPath.path,
                 "--compact",
             ]
         )
@@ -30,7 +30,7 @@ extension Array where Element == CoverageDTO {
                 "xcrun",
                 arguments: [
                     "xccov", "view", "--report", "--only-targets", "--json",
-                    xcresultPath.relativePath,
+                    xcresultPath.path,
                 ]
             )
             guard let data = output.data(using: .utf8) else {
@@ -50,7 +50,7 @@ extension Array where Element == CoverageDTO {
                     "xcrun",
                     arguments: [
                         "xccov", "view", "--report", "--json",
-                        xcresultPath.relativePath,
+                        xcresultPath.path,
                     ]
                 )
                 guard let data = output.data(using: .utf8) else {
@@ -80,7 +80,7 @@ extension TotalCoverageDTO {
             "xcrun",
             arguments: [
                 "xccov", "view", "--report", "--json",
-                xcresultPath.relativePath,
+                xcresultPath.path,
             ]
         )
         guard let data = output.data(using: .utf8) else {
@@ -101,7 +101,7 @@ extension BuildResultsDTO {
             "xcrun",
             arguments: [
                 "xcresulttool", "get", "build-results",
-                "--path", xcresultPath.relativePath,
+                "--path", xcresultPath.path,
                 "--compact",
             ]
         )
