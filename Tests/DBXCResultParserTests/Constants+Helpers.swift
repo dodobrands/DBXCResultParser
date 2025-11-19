@@ -99,7 +99,7 @@ extension Constants {
     /// - Throws: TestError if the file name is unknown
     static func expectedReportValues(for fileName: String) throws -> ExpectedReportValues {
         switch fileName {
-        case "DBXCResultParser.xcresult":
+        case "DBXCResultParser-15.0.xcresult":
             return ExpectedReportValues(
                 modulesCount: 2,
                 coverageLines: 481,
@@ -127,7 +127,7 @@ extension Constants {
     /// - Throws: TestError if the file name is unknown
     static func expectedCoverageValues(for fileName: String) throws -> ExpectedCoverageValues {
         switch fileName {
-        case "DBXCResultParser.xcresult":
+        case "DBXCResultParser-15.0.xcresult":
             return ExpectedCoverageValues(
                 targetsCount: 5,
                 coveredLines: 481,
