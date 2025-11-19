@@ -36,8 +36,11 @@ jobs:
     - name: Resolve Dependencies
       run: swift package resolve
 
-    - name: Build and Test
+    - name: Build
       run: swift build --build-tests
+
+    - name: Test
+      run: swift test
 
     # Verify CLI tool functionality by parsing test xcresult file
     - name: Parse xcresult
