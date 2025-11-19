@@ -27,7 +27,7 @@ struct Constants {
         }
     }
 
-    static var testsReportPaths: [URL] {
+    private static var testsReportPaths: [URL] {
         get throws {
             let resourcesURL = try resourcesPath
             let fileManager = FileManager.default
@@ -53,24 +53,17 @@ struct Constants {
         }
     }
 
-    @available(*, deprecated, message: "Use testsReportPaths instead")
-    static var testsReportPath: URL {
-        get throws {
-            // Return the first available xcresult file for backward compatibility
-            let paths = try testsReportPaths
-            guard let firstPath = paths.first else {
-                throw TestError("No xcresult files found in resources")
-            }
-            return firstPath
-        }
+    /// Returns array of xcresult file names for use in parameterized tests
+    /// Returns empty array if paths cannot be loaded (test will be skipped)
+    static var testsReportFileNames: [String] {
+        ((try? testsReportPaths) ?? []).map { $0.lastPathComponent }
     }
 
-    static private func path(filename: String, type: String) throws -> URL {
-        guard let path = Bundle.module.path(forResource: filename, ofType: type) else {
-            throw TestError("Could not find resource: \(filename).\(type)")
-        }
-        guard let url = URL(string: path) else {
-            throw TestError("Could not create URL from path: \(path)")
+    /// Returns URL for a given xcresult file name
+    static func url(for fileName: String) throws -> URL {
+        let paths = try testsReportPaths
+        guard let url = paths.first(where: { $0.lastPathComponent == fileName }) else {
+            throw TestError("Could not find xcresult file: \(fileName)")
         }
         return url
     }
@@ -100,9 +93,13 @@ struct ExpectedCoverageValues {
 }
 
 extension Constants {
+    /// Returns expected report values for a given xcresult file name
+    /// - Parameter fileName: Name of the xcresult file (read dynamically from file system)
+    /// - Returns: Expected report values
+    /// - Throws: TestError if the file name is unknown
     static func expectedReportValues(for fileName: String) throws -> ExpectedReportValues {
         switch fileName {
-        case "DBXCResultParser.xcresult":
+        case "DBXCResultParser-15.0.xcresult":
             return ExpectedReportValues(
                 modulesCount: 2,
                 coverageLines: 481,
@@ -124,9 +121,13 @@ extension Constants {
         }
     }
 
+    /// Returns expected coverage values for a given xcresult file name
+    /// - Parameter fileName: Name of the xcresult file (read dynamically from file system)
+    /// - Returns: Expected coverage values
+    /// - Throws: TestError if the file name is unknown
     static func expectedCoverageValues(for fileName: String) throws -> ExpectedCoverageValues {
         switch fileName {
-        case "DBXCResultParser.xcresult":
+        case "DBXCResultParser-15.0.xcresult":
             return ExpectedCoverageValues(
                 targetsCount: 5,
                 coveredLines: 481,
