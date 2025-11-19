@@ -11,7 +11,7 @@ import DBXCResultParser_TextFormatter
 import Foundation
 
 @main
-public class DBXCTextFormatterExecutable: ParsableCommand {
+public class DBXCTextFormatterExecutable: AsyncParsableCommand {
     public required init() {}
 
     @Option(help: "Path to .xcresult")
