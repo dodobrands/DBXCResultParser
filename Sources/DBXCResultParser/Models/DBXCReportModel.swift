@@ -144,15 +144,6 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test {
 }
 
 extension DBXCReportModel {
-    /// Total coverage percentage (0.0 to 1.0)
-    /// Use `coverage` property directly instead
-    @available(*, deprecated, message: "Use coverage property instead")
-    public var totalCoverage: Double? {
-        return coverage
-    }
-}
-
-extension DBXCReportModel {
     enum Error: Swift.Error {
         case missingFilename(testName: String)
     }
