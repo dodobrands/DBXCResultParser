@@ -39,24 +39,6 @@ jobs:
     - name: Build
       run: swift build --build-tests
 
-    - name: Check xcresult files structure
-      run: |
-        echo "Checking database.sqlite3 files inside xcresult bundles..."
-        for xcresult in Tests/DBXCResultParserTests/Resources/*.xcresult; do
-          if [ -d "$xcresult" ]; then
-            echo "Checking $xcresult"
-            if [ -f "$xcresult/database.sqlite3" ]; then
-              echo "✓ database.sqlite3 exists in $(basename $xcresult)"
-              ls -lh "$xcresult/database.sqlite3"
-            else
-              echo "✗ database.sqlite3 NOT found in $(basename $xcresult)"
-            fi
-            echo "Contents of $(basename $xcresult):"
-            ls -la "$xcresult" | head -10
-            echo ""
-          fi
-        done
-
     - name: Test
       run: swift test
 
