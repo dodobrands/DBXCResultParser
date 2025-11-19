@@ -41,3 +41,7 @@ jobs:
 
     - name: Test
       run: swift test
+
+    # Verify CLI tool functionality by parsing test xcresult file
+    - name: Parse xcresult
+      run: swift run DBXCResultParser-TextFormatterExec --xcresult-path Tests/DBXCResultParserTests/Resources/DBXCResultParser.xcresult
