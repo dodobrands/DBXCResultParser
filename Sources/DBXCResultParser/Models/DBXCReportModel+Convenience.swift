@@ -98,27 +98,17 @@ extension DBXCReportModel {
                                 repeatableTest.tests.append(test)
                             }
                         } else {
-                            // No repetitions, check if we have Arguments nodes in Device children
-                            // Extract all Arguments from Device nodes
-                            let argumentsFromDevices =
+                            // No repetitions, check if we have Arguments nodes
+                            // Extract all Arguments nodes
+                            let arguments =
                                 testCase.children?
-                                .flatMap { node -> [(String, TestResultsDTO.TestNode.Result?)] in
-                                    if node.nodeType == .device {
-                                        // Extract Arguments with their results from Device children
-                                        return node.children?
-                                            .filter { $0.nodeType == .arguments }
-                                            .map { ($0.name, $0.result) } ?? []
-                                    } else if node.nodeType == .arguments {
-                                        // Direct Arguments node
-                                        return [(node.name, node.result)]
-                                    }
-                                    return []
-                                } ?? []
+                                .filter { $0.nodeType == .arguments }
+                                .map { ($0.name, $0.result) } ?? []
 
-                            if !argumentsFromDevices.isEmpty {
+                            if !arguments.isEmpty {
                                 // Create separate test for each argument with its own status
                                 let baseDurationSeconds = testCase.durationInSeconds ?? 0.0
-                                for (argumentName, argumentResult) in argumentsFromDevices {
+                                for (argumentName, argumentResult) in arguments {
                                     let status:
                                         DBXCReportModel.Module.File.RepeatableTest.Test.Status
                                     if let result = argumentResult {
@@ -207,7 +197,7 @@ extension DBXCReportModel {
                                     message =
                                         testCase.children?
                                         .first(where: {
-                                            $0.nodeType != .device && $0.nodeType != .runtimeWarning
+                                            $0.nodeType != .runtimeWarning
                                         })?
                                         .name
                                 }
