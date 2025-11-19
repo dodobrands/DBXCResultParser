@@ -120,12 +120,12 @@ extension DBXCReportModel {
                             case .expectedFailure:
                                 message = testCase.failureMessage
                             default:
-                                // Filter out Device, Arguments, and Runtime Warning nodes when extracting message
+                                // Filter out Device and Runtime Warning nodes when extracting message
+                                // Arguments are kept as they may contain useful test information
                                 message =
                                     testCase.children?
                                     .filter { node in
                                         node.nodeType != .device
-                                            && node.nodeType != .arguments
                                             && node.nodeType != .runtimeWarning
                                     }
                                     .compactMap { $0.name }
