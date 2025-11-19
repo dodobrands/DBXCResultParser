@@ -80,6 +80,7 @@ struct TestError: Error {
 struct ExpectedReportValues {
     let coveredLines: Int
     let coveragePercentage: Double
+    let moduleCoverages: [String: Double]  // Module name -> coverage value
 }
 
 extension Constants {
@@ -92,12 +93,20 @@ extension Constants {
         case "DBXCResultParser-15.0.xcresult":
             return ExpectedReportValues(
                 coveredLines: 1054,
-                coveragePercentage: 0.92039586919104988
+                coveragePercentage: 0.92039586919104988,
+                moduleCoverages: [
+                    "DBXCResultParserTests": 0.89906542056074767,
+                    "DBXCResultParser-TextFormatterTests": 0.91242038216560506,
+                ]
             )
         case "DBXCResultParser-26.1.1.xcresult":
             return ExpectedReportValues(
                 coveredLines: 913,
-                coveragePercentage: 0.76141552511415522
+                coveragePercentage: 0.76141552511415522,
+                moduleCoverages: [
+                    "DBXCResultParserTests": 0.70826010544815465,
+                    "DBXCResultParser-TextFormatterTests": 0.73699421965317924,
+                ]
             )
         default:
             throw TestError(
