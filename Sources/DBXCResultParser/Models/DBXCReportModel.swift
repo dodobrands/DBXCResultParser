@@ -9,6 +9,7 @@ import Foundation
 
 public struct DBXCReportModel {
     public let modules: Set<Module>
+    public let coverage: Double?
 }
 
 extension DBXCReportModel {
@@ -143,15 +144,11 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test {
 }
 
 extension DBXCReportModel {
+    /// Total coverage percentage (0.0 to 1.0)
+    /// Use `coverage` property directly instead
+    @available(*, deprecated, message: "Use coverage property instead")
     public var totalCoverage: Double? {
-        let coverages = modules.map { $0.coverage }.compactMap { $0 }
-        guard coverages.count > 0 else { return nil }
-
-        let totalLines = coverages.reduce(into: 0) { $0 += $1.totalLines }
-        let totalCoveredLines = coverages.reduce(into: 0) { $0 += $1.coveredLines }
-
-        guard totalLines != 0 else { return 0.0 }
-        return Double(totalCoveredLines) / Double(totalLines)
+        return coverage
     }
 }
 

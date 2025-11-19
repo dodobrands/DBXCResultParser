@@ -222,6 +222,22 @@ extension DBXCReportModel {
             }
         }
 
+        // Calculate total coverage percentage
+        let moduleCoverages = modules.map { $0.coverage }.compactMap { $0 }
+        let totalCoverage: Double?
+        if moduleCoverages.count > 0 {
+            let totalLines = moduleCoverages.reduce(into: 0) { $0 += $1.totalLines }
+            let totalCoveredLines = moduleCoverages.reduce(into: 0) { $0 += $1.coveredLines }
+            if totalLines != 0 {
+                totalCoverage = Double(totalCoveredLines) / Double(totalLines)
+            } else {
+                totalCoverage = 0.0
+            }
+        } else {
+            totalCoverage = nil
+        }
+
         self.modules = modules
+        self.coverage = totalCoverage
     }
 }
