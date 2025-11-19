@@ -3,7 +3,6 @@
 import Foundation
 
 struct CoverageDTO: Decodable {
-    var buildProductPath: String
     var coveredLines: Int
     var executableLines: Int
     var lineCoverage: Double

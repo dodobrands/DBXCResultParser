@@ -13,7 +13,6 @@ struct BuildResultsDTO: Decodable {
     struct Issue: Decodable {
         let issueType: String
         let message: String
-        let targetName: String?
         let sourceURL: String?
         let className: String?
     }

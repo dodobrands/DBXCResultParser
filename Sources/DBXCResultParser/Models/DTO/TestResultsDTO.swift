@@ -1,33 +1,16 @@
 import Foundation
 
 struct TestResultsDTO: Decodable {
-    let devices: [Device]
     let testNodes: [TestNode]
-}
-
-extension TestResultsDTO {
-    struct Device: Decodable {
-        let architecture: String
-        let deviceId: String
-        let deviceName: String
-        let modelName: String
-        let osBuildNumber: String
-        let osVersion: String
-        let platform: String
-    }
 }
 
 extension TestResultsDTO {
     struct TestNode: Decodable {
         let children: [TestNode]?
-        let duration: String?
         let durationInSeconds: Double?
         let name: String
-        let nodeIdentifier: String?
-        let nodeIdentifierURL: String?
         let nodeType: NodeType
         let result: Result?
-        let details: String?
     }
 }
 
