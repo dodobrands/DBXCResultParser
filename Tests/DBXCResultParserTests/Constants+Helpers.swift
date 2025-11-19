@@ -58,28 +58,6 @@ struct Constants {
     static var testsReportPathsForParameterizedTests: [URL] {
         (try? testsReportPaths) ?? []
     }
-
-    @available(*, deprecated, message: "Use testsReportPaths instead")
-    static var testsReportPath: URL {
-        get throws {
-            // Return the first available xcresult file for backward compatibility
-            let paths = try testsReportPaths
-            guard let firstPath = paths.first else {
-                throw TestError("No xcresult files found in resources")
-            }
-            return firstPath
-        }
-    }
-
-    static private func path(filename: String, type: String) throws -> URL {
-        guard let path = Bundle.module.path(forResource: filename, ofType: type) else {
-            throw TestError("Could not find resource: \(filename).\(type)")
-        }
-        guard let url = URL(string: path) else {
-            throw TestError("Could not create URL from path: \(path)")
-        }
-        return url
-    }
 }
 
 struct TestError: Error {
