@@ -107,4 +107,18 @@ struct DBXCTextFormatterSnapshotTests {
             named: "\(fileName)_count_failure"
         )
     }
+
+    @Test(arguments: Constants.testsReportFileNames)
+    func test_coverageValues(fileName: String) async throws {
+        let reportPath = try Constants.url(for: fileName)
+        let report = try await DBXCReportModel(xcresultPath: reportPath)
+        let expected = try Constants.expectedReportValues(for: fileName)
+
+        // Calculate total covered lines from all modules
+        let totalCoveredLines = report.modules
+            .compactMap { $0.coverage }
+            .reduce(0) { $0 + $1.coveredLines }
+
+        #expect(totalCoveredLines == expected.coveredLines)
+    }
 }

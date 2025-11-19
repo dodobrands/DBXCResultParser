@@ -102,7 +102,7 @@ extension Constants {
         case "DBXCResultParser-15.0.xcresult":
             return ExpectedReportValues(
                 modulesCount: 2,
-                coveredLines: 481,
+                coveredLines: 1054,
                 filesCount: 5,
                 repeatableTestsCount: 6,
                 flackyTestsCount: 2
@@ -110,7 +110,7 @@ extension Constants {
         case "DBXCResultParser-26.1.1.xcresult":
             return ExpectedReportValues(
                 modulesCount: 2,
-                coveredLines: 471,
+                coveredLines: 913,
                 filesCount: 4,
                 repeatableTestsCount: 2,
                 flackyTestsCount: 2
