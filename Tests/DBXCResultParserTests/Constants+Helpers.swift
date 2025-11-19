@@ -76,45 +76,22 @@ struct TestError: Error {
     }
 }
 
-// Expected values per xcresult file
+// Expected coverage values per xcresult file
 struct ExpectedReportValues {
-    let modulesCount: Int
     let coveredLines: Int
-    let filesCount: Int
-    let repeatableTestsCount: Int
-    let flackyTestsCount: Int
-}
-
-struct ExpectedCoverageValues {
-    let targetsCount: Int
-    let coveredLines: Int
-    let executableLines: Int
-    let lineCoverage: Double
 }
 
 extension Constants {
-    /// Returns expected report values for a given xcresult file name
+    /// Returns expected coverage values for a given xcresult file name
     /// - Parameter fileName: Name of the xcresult file (read dynamically from file system)
-    /// - Returns: Expected report values
+    /// - Returns: Expected coverage values
     /// - Throws: TestError if the file name is unknown
     static func expectedReportValues(for fileName: String) throws -> ExpectedReportValues {
         switch fileName {
         case "DBXCResultParser-15.0.xcresult":
-            return ExpectedReportValues(
-                modulesCount: 2,
-                coveredLines: 1054,
-                filesCount: 5,
-                repeatableTestsCount: 6,
-                flackyTestsCount: 2
-            )
+            return ExpectedReportValues(coveredLines: 1054)
         case "DBXCResultParser-26.1.1.xcresult":
-            return ExpectedReportValues(
-                modulesCount: 2,
-                coveredLines: 913,
-                filesCount: 4,
-                repeatableTestsCount: 2,
-                flackyTestsCount: 2
-            )
+            return ExpectedReportValues(coveredLines: 913)
         default:
             throw TestError(
                 "Unknown xcresult file: \(fileName). Please add expected values for this file.")
