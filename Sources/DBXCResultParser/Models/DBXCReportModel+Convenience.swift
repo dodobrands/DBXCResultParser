@@ -90,61 +90,111 @@ extension DBXCReportModel {
                                 repeatableTest.tests.append(test)
                             }
                         } else {
-                            // No repetitions, treat test case as single test
-                            // Create a test from the test case itself
-                            guard let result = testCase.result else { continue }
-                            let status: DBXCReportModel.Module.File.RepeatableTest.Test.Status
-                            switch result {
-                            case .passed:
-                                status = .success
-                            case .failed:
-                                status = .failure
-                            case .skipped:
-                                status = .skipped
-                            case .expectedFailure:
-                                status = .expectedFailure
-                            }
-                            let durationSeconds = testCase.durationInSeconds ?? 0.0
-                            let duration = Measurement<UnitDuration>(
-                                value: durationSeconds * 1000,
-                                unit: DBXCReportModel.Module.File.RepeatableTest.Test
-                                    .defaultDurationUnit
-                            )
-                            // Extract message based on test status
-                            let message: String?
-                            switch status {
-                            case .skipped:
-                                message = testCase.skipMessage
-                            case .failure:
-                                message = testCase.failureMessage
-                            case .expectedFailure:
-                                message = testCase.failureMessage
-                            default:
-                                // Extract Arguments from Device nodes, but don't show Device name
-                                // Filter out Runtime Warning nodes
-                                // Collect all Arguments values and join them
-                                let arguments =
-                                    testCase.children?
-                                    .flatMap { node -> [String] in
-                                        if node.nodeType == .device {
-                                            // Extract Arguments from Device children
-                                            return node.children?
-                                                .filter { $0.nodeType == .arguments }
-                                                .compactMap { $0.name } ?? []
-                                        } else if node.nodeType == .arguments {
-                                            // Direct Arguments node
-                                            return [node.name]
-                                        } else if node.nodeType != .runtimeWarning {
-                                            // Other non-metadata nodes
-                                            return [node.name]
-                                        }
-                                        return []
-                                    } ?? []
+                            // No repetitions, check if we have Arguments nodes in Device children
+                            // Extract all Arguments from Device nodes
+                            let argumentsFromDevices =
+                                testCase.children?
+                                .flatMap { node -> [(String, TestResultsDTO.TestNode.Result?)] in
+                                    if node.nodeType == .device {
+                                        // Extract Arguments with their results from Device children
+                                        return node.children?
+                                            .filter { $0.nodeType == .arguments }
+                                            .map { ($0.name, $0.result) } ?? []
+                                    } else if node.nodeType == .arguments {
+                                        // Direct Arguments node
+                                        return [(node.name, node.result)]
+                                    }
+                                    return []
+                                } ?? []
 
-                                // Join all arguments with comma if multiple, otherwise use first non-argument value
-                                if !arguments.isEmpty {
-                                    message = arguments.joined(separator: ", ")
-                                } else {
+                            if !argumentsFromDevices.isEmpty {
+                                // Create separate test for each argument with its own status
+                                let baseDurationSeconds = testCase.durationInSeconds ?? 0.0
+                                for (argumentName, argumentResult) in argumentsFromDevices {
+                                    let status:
+                                        DBXCReportModel.Module.File.RepeatableTest.Test.Status
+                                    if let result = argumentResult {
+                                        switch result {
+                                        case .passed:
+                                            status = .success
+                                        case .failed:
+                                            status = .failure
+                                        case .skipped:
+                                            status = .skipped
+                                        case .expectedFailure:
+                                            status = .expectedFailure
+                                        }
+                                    } else {
+                                        // Fallback to test case result if argument doesn't have result
+                                        guard let testCaseResult = testCase.result else { continue }
+                                        switch testCaseResult {
+                                        case .passed:
+                                            status = .success
+                                        case .failed:
+                                            status = .failure
+                                        case .skipped:
+                                            status = .skipped
+                                        case .expectedFailure:
+                                            status = .expectedFailure
+                                        }
+                                    }
+
+                                    // Extract message based on test status
+                                    let message: String?
+                                    switch status {
+                                    case .skipped:
+                                        message = testCase.skipMessage ?? argumentName
+                                    case .failure:
+                                        message = testCase.failureMessage ?? argumentName
+                                    case .expectedFailure:
+                                        message = testCase.failureMessage ?? argumentName
+                                    default:
+                                        message = argumentName
+                                    }
+
+                                    let duration = Measurement<UnitDuration>(
+                                        value: baseDurationSeconds * 1000,
+                                        unit: DBXCReportModel.Module.File.RepeatableTest.Test
+                                            .defaultDurationUnit
+                                    )
+
+                                    let test = DBXCReportModel.Module.File.RepeatableTest.Test(
+                                        status: status,
+                                        duration: duration,
+                                        message: message
+                                    )
+                                    repeatableTest.tests.append(test)
+                                }
+                            } else {
+                                // No arguments, treat test case as single test
+                                guard let result = testCase.result else { continue }
+                                let status: DBXCReportModel.Module.File.RepeatableTest.Test.Status
+                                switch result {
+                                case .passed:
+                                    status = .success
+                                case .failed:
+                                    status = .failure
+                                case .skipped:
+                                    status = .skipped
+                                case .expectedFailure:
+                                    status = .expectedFailure
+                                }
+                                let durationSeconds = testCase.durationInSeconds ?? 0.0
+                                let duration = Measurement<UnitDuration>(
+                                    value: durationSeconds * 1000,
+                                    unit: DBXCReportModel.Module.File.RepeatableTest.Test
+                                        .defaultDurationUnit
+                                )
+                                // Extract message based on test status
+                                let message: String?
+                                switch status {
+                                case .skipped:
+                                    message = testCase.skipMessage
+                                case .failure:
+                                    message = testCase.failureMessage
+                                case .expectedFailure:
+                                    message = testCase.failureMessage
+                                default:
                                     // Fallback to first non-metadata child name
                                     message =
                                         testCase.children?
@@ -153,13 +203,13 @@ extension DBXCReportModel {
                                         })?
                                         .name
                                 }
+                                let test = DBXCReportModel.Module.File.RepeatableTest.Test(
+                                    status: status,
+                                    duration: duration,
+                                    message: message
+                                )
+                                repeatableTest.tests.append(test)
                             }
-                            let test = DBXCReportModel.Module.File.RepeatableTest.Test(
-                                status: status,
-                                duration: duration,
-                                message: message
-                            )
-                            repeatableTest.tests.append(test)
                         }
 
                         file.repeatableTests.update(with: repeatableTest)
