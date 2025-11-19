@@ -9,13 +9,13 @@ import Testing
 @Suite
 struct CoverageDTOTests {
 
-    @Test(arguments: Constants.testsReportFileNamesForParameterizedTests)
+    @Test(arguments: Constants.testsReportFileNames)
     func test_coverageDtoParse(fileName: String) async throws {
         let reportPath = try Constants.url(for: fileName)
         _ = try await [CoverageDTO](from: reportPath)
     }
 
-    @Test(arguments: Constants.testsReportFileNamesForParameterizedTests)
+    @Test(arguments: Constants.testsReportFileNames)
     func test_coverageDtoData(fileName: String) async throws {
         let reportPath = try Constants.url(for: fileName)
         let result = try await [CoverageDTO](from: reportPath)

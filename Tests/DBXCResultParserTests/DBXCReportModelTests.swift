@@ -6,12 +6,12 @@ import Testing
 struct DBXCReportModelActualTests {
 
     @Test
-    func test_xcresultFilesCount() throws {
-        let reportPaths = try Constants.testsReportPaths
+    func test_xcresultFilesCount() {
+        let reportPaths = Constants.testsReportFileNames
         #expect(!reportPaths.isEmpty)
     }
 
-    @Test(arguments: Constants.testsReportFileNamesForParameterizedTests)
+    @Test(arguments: Constants.testsReportFileNames)
     func test(fileName: String) async throws {
         let reportPath = try Constants.url(for: fileName)
         let report = try await DBXCReportModel(xcresultPath: reportPath)

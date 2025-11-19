@@ -27,7 +27,7 @@ struct Constants {
         }
     }
 
-    static var testsReportPaths: [URL] {
+    private static var testsReportPaths: [URL] {
         get throws {
             let resourcesURL = try resourcesPath
             let fileManager = FileManager.default
@@ -55,7 +55,7 @@ struct Constants {
 
     /// Returns array of xcresult file names for use in parameterized tests
     /// Returns empty array if paths cannot be loaded (test will be skipped)
-    static var testsReportFileNamesForParameterizedTests: [String] {
+    static var testsReportFileNames: [String] {
         ((try? testsReportPaths) ?? []).map { $0.lastPathComponent }
     }
 
