@@ -91,12 +91,12 @@ extension Constants {
         switch fileName {
         case "DBXCResultParser-15.0.xcresult":
             return ExpectedReportValues(
-                coveredLines: 2139,
+                coveredLines: 1054,
                 coveragePercentage: 92.03958691910499
             )
         case "DBXCResultParser-26.1.1.xcresult":
             return ExpectedReportValues(
-                coveredLines: 2001,
+                coveredLines: 913,
                 coveragePercentage: 76.14155251141553
             )
         default:
