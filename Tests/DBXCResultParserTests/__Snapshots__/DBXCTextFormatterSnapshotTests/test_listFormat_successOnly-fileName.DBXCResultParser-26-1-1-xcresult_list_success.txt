@@ -1,0 +1,17 @@
+DBShellTests
+✅ test()
+
+DBXCReportModelTests
+✅ test_xcresultFilesCount()
+
+DBXCTextFormatterTests
+✅ test_testResult_any_count()
+✅ test_testResult_any_list()
+✅ test_testResult_failure_count()
+✅ test_testResult_success_list()
+
+FakeSUITests
+✅ success()
+
+FakeXCTests
+✅ test_success()

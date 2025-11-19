@@ -59,6 +59,10 @@ let package = Package(
             url: "https://github.com/swiftlang/swift-subprocess.git",
             .upToNextMinor(from: "0.2.1")
         ),
+        .package(
+            url: "https://github.com/pointfreeco/swift-snapshot-testing.git",
+            .upToNextMajor(from: "1.16.0")
+        ),
     ],
     targets: [
         .target(
@@ -117,7 +121,12 @@ let package = Package(
             name: parserTestsTargetName,
             dependencies: [
                 .init(stringLiteral: parserTargetName),
+                .init(stringLiteral: formatterTargetName),
                 .init(stringLiteral: testHelpersTargetName),
+                .product(
+                    name: "SnapshotTesting",
+                    package: "swift-snapshot-testing"
+                ),
             ],
             resources: [
                 .copy("Resources")
