@@ -54,5 +54,31 @@ struct DBXCReportModelValuesTests {
 
         // Check warnings count exactly as in xcresult file
         #expect(report.warnings.count == expected.warningCount)
+
+        // Check warnings details if expected warnings are provided
+        if !expected.warnings.isEmpty {
+            #expect(report.warnings.count == expected.warnings.count)
+
+            for (index, expectedWarning) in expected.warnings.enumerated() {
+                let actualWarning = report.warnings[index]
+                #expect(actualWarning.issueType == expectedWarning.issueType)
+                #expect(actualWarning.message == expectedWarning.message)
+                #expect(actualWarning.targetName == expectedWarning.targetName)
+
+                // Check sourceURL - it may contain timestamp, so compare only the file path part
+                if let expectedSourceURL = expectedWarning.sourceURL {
+                    let actualSourceURL = actualWarning.sourceURL ?? ""
+                    // Extract file path without query parameters (timestamp)
+                    let expectedPath = URL(string: expectedSourceURL)?.path ?? expectedSourceURL
+                    let actualPath = URL(string: actualSourceURL)?.path ?? actualSourceURL
+                    #expect(actualPath == expectedPath)
+                } else {
+                    // If expected is nil, actual should also be nil (or we can be lenient)
+                    // For now, we'll check that actual is not nil if expected is not nil
+                }
+
+                #expect(actualWarning.className == expectedWarning.className)
+            }
+        }
     }
 }

@@ -83,9 +83,18 @@ struct ExpectedReportValues {
     let moduleCoverages: [String: Double]  // Module name -> coverage value
 }
 
-// Expected warnings count per xcresult file
+// Expected warnings per xcresult file
 struct ExpectedWarningsValues {
     let warningCount: Int
+    let warnings: [ExpectedWarning]
+
+    struct ExpectedWarning {
+        let issueType: String
+        let message: String
+        let targetName: String?
+        let sourceURL: String?
+        let className: String?
+    }
 }
 
 extension Constants {
@@ -126,9 +135,30 @@ extension Constants {
     static func expectedWarningsValues(for fileName: String) throws -> ExpectedWarningsValues {
         switch fileName {
         case "DBXCResultParser-15.0.xcresult":
-            return ExpectedWarningsValues(warningCount: 0)
+            return ExpectedWarningsValues(warningCount: 0, warnings: [])
         case "DBXCResultParser-26.1.1.xcresult":
-            return ExpectedWarningsValues(warningCount: 2)
+            return ExpectedWarningsValues(
+                warningCount: 2,
+                warnings: [
+                    ExpectedWarningsValues.ExpectedWarning(
+                        issueType: "Swift Compiler Error",
+                        message:
+                            "Some warning to appear in xcresult\n#warning(\"Some warning to appear in xcresult\")\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                        targetName: nil,
+                        sourceURL:
+                            "file:///Users/alldmeat/Developer/DBXCResultParser/Tests/DBXCResultParserTests/GenerateXCResultTests.swift",
+                        className: "DVTTextDocumentLocation"
+                    ),
+                    ExpectedWarningsValues.ExpectedWarning(
+                        issueType: "Swift Compiler Warning",
+                        message: "Some warning to appear in xcresult",
+                        targetName: nil,
+                        sourceURL:
+                            "file:///Users/alldmeat/Developer/DBXCResultParser/Tests/DBXCResultParserTests/GenerateXCResultTests.swift",
+                        className: "DVTTextDocumentLocation"
+                    ),
+                ]
+            )
         default:
             throw TestError(
                 "Unknown xcresult file: \(fileName). Please add expected warnings values for this file."
