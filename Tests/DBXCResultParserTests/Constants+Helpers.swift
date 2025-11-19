@@ -89,9 +89,7 @@ struct ExpectedWarningsValues {
     let warnings: [ExpectedWarning]
 
     struct ExpectedWarning {
-        let issueType: String
         let message: String
-        let targetName: String?
         let sourceURL: String?
         let className: String?
     }
@@ -141,9 +139,7 @@ extension Constants {
                 warningCount: 1,
                 warnings: [
                     ExpectedWarningsValues.ExpectedWarning(
-                        issueType: "Swift Compiler Warning",
                         message: "Some warning to appear in xcresult",
-                        targetName: nil,
                         sourceURL:
                             "file:///Users/alldmeat/Developer/DBXCResultParser/Tests/DBXCResultParserTests/GenerateXCResultTests.swift",
                         className: "DVTTextDocumentLocation"

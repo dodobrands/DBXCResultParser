@@ -1,0 +1,3 @@
+DBXCReportModelTests
+❌ test() (DBXCReportModelTests.swift:40: XCTAssertEqual failed: ("1") is not equal to ("2"))
+❌ test_failure() (Failure message)

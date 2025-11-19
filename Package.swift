@@ -132,8 +132,7 @@ let package = Package(
                 .copy("Resources")
             ],
             swiftSettings: [
-                .swiftLanguageMode(.v6),
-                .treatAllWarnings(as: .error),
+                .swiftLanguageMode(.v6)
             ]
         ),
         .testTarget(

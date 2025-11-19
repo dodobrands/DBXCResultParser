@@ -265,9 +265,7 @@ extension DBXCReportModel {
 
 extension DBXCReportModel.Warning {
     init(from issue: BuildResultsDTO.Issue) {
-        self.issueType = issue.issueType
         self.message = issue.message
-        self.targetName = issue.targetName
         self.sourceURL = issue.sourceURL
         self.className = issue.className
     }

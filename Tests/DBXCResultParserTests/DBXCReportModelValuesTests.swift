@@ -61,9 +61,7 @@ struct DBXCReportModelValuesTests {
 
             for (index, expectedWarning) in expected.warnings.enumerated() {
                 let actualWarning = report.warnings[index]
-                #expect(actualWarning.issueType == expectedWarning.issueType)
                 #expect(actualWarning.message == expectedWarning.message)
-                #expect(actualWarning.targetName == expectedWarning.targetName)
 
                 // Check sourceURL - it may contain timestamp, so compare only the file path part
                 if let expectedSourceURL = expectedWarning.sourceURL {

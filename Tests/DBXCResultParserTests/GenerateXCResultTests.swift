@@ -7,11 +7,12 @@ import Testing
 // 1) uncomment the tests below
 // 2) run tests via command - a new file will be created for the new Xcode version
 // 3) delete all snapshots
-// 4) run tests via Xcode - it will show errors because:
+// 4) comment the tests below
+// 5) run tests via Xcode - it will show errors because:
 //      - the new xcresult file is now included in tests
 //      - new snapshots are generated
-// 5) update existing tests to include data for new xcresult files so tests become green
-// 6) validate new snapshots are ok
+// 6) update existing tests to include data for new xcresult files so tests become green
+// 7) validate new snapshots are ok
 //
 //
 //import XCTest
@@ -77,7 +78,13 @@ import Testing
 //    }
 //
 //    @Test(arguments: [true, false])
-//    func testParameterized(value: Bool) {
+//    func flackyParameterized(value: Bool) {
 //        #expect(value == true)
+//    }
+//
+//    @Test
+//    func somethingWithWarning() {
+//#warning("Some warning to appear in xcresult")
+//        #expect(true)
 //    }
 //}

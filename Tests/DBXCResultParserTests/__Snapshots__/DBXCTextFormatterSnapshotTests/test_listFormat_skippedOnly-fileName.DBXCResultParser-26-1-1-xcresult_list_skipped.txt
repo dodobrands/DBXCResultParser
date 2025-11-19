@@ -1,0 +1,5 @@
+FakeSUITests
+⏭️ disabled() (Test 'disabled()' skipped: Disabled reason)
+
+FakeXCTests
+⏭️ test_skip() (Skip message)
