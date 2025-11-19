@@ -120,5 +120,15 @@ struct DBXCTextFormatterSnapshotTests {
             .reduce(0) { $0 + $1.coveredLines }
 
         #expect(totalCoveredLines == expected.coveredLines)
+
+        // Calculate coverage percentage
+        guard let totalCoverage = report.totalCoverage else {
+            Issue.record("Coverage data not available")
+            return
+        }
+        let coveragePercentage = totalCoverage * 100.0
+
+        // Compare with tolerance of 0.5% for floating point precision
+        #expect(abs(coveragePercentage - expected.coveragePercentage) < 0.5)
     }
 }

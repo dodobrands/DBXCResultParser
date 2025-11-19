@@ -79,6 +79,7 @@ struct TestError: Error {
 // Expected coverage values per xcresult file
 struct ExpectedReportValues {
     let coveredLines: Int
+    let coveragePercentage: Double
 }
 
 extension Constants {
@@ -89,9 +90,9 @@ extension Constants {
     static func expectedReportValues(for fileName: String) throws -> ExpectedReportValues {
         switch fileName {
         case "DBXCResultParser-15.0.xcresult":
-            return ExpectedReportValues(coveredLines: 1054)
+            return ExpectedReportValues(coveredLines: 1054, coveragePercentage: 90.63)
         case "DBXCResultParser-26.1.1.xcresult":
-            return ExpectedReportValues(coveredLines: 913)
+            return ExpectedReportValues(coveredLines: 913, coveragePercentage: 72.73)
         default:
             throw TestError(
                 "Unknown xcresult file: \(fileName). Please add expected values for this file.")
