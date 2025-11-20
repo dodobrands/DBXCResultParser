@@ -76,6 +76,11 @@ struct SonarFormatterSnapshotTests {
                 withIntermediateDirectories: true
             )
 
+            // Remove existing file if present (can happen with parallel test execution)
+            if fileManager.fileExists(atPath: destinationPath.path) {
+                try fileManager.removeItem(at: destinationPath)
+            }
+
             // Copy the file
             try fileManager.copyItem(at: element, to: destinationPath)
         }
