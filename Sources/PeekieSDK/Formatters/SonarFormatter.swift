@@ -11,14 +11,14 @@ public class SonarFormatter {
         let fsIndex = try FSIndex(path: testsPath)
 
         // Group files by actual file path (multiple test suites can be in one file)
-        var filesByPath: [String: [testExecutions.file.testCase]] = [:]
+        var filesByPath: [String: [TestExecutions.File.TestCase]] = [:]
 
         for file in report.modules.flatMap({ $0.files }).sorted(by: { $0.name < $1.name }) {
             let path =
-                try fsIndex.classes[file.name] ?! testExecutions.file.Error.missingFile(file.name)
+                try fsIndex.classes[file.name] ?! TestExecutions.File.Error.missingFile(file.name)
 
             // Extract test cases from this file
-            let testCases = try testExecutions.file.testCases(from: file)
+            let testCases = try TestExecutions.File.testCases(from: file)
 
             // Merge test cases by file path
             if filesByPath[path] != nil {
@@ -30,9 +30,9 @@ public class SonarFormatter {
 
         // Create file entries from grouped test cases
         let sonarFiles = filesByPath.map { path, testCases in
-            testExecutions.file(path: path, testCase: testCases)
+            TestExecutions.File(path: path, testCase: testCases)
         }.sorted { $0.path < $1.path }
-        let dto = testExecutions(file: sonarFiles)
+        let dto = TestExecutions(file: sonarFiles)
 
         let encoder = XMLEncoder()
         encoder.outputFormatting = .prettyPrinted
@@ -41,54 +41,75 @@ public class SonarFormatter {
     }
 }
 
-private struct testExecutions: Encodable, DynamicNodeEncoding {
+private struct TestExecutions: Encodable, DynamicNodeEncoding {
     let version = 1
-    let file: [file]
+    let file: [File]
+
+    enum CodingKeys: String, CodingKey {
+        case version
+        case file
+    }
 
     static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
         switch key {
-        case Self.CodingKeys.version:
+        case CodingKeys.version:
             return .attribute
         default:
             return .element
         }
     }
 
-    struct file: Encodable, DynamicNodeEncoding {
+    struct File: Encodable, DynamicNodeEncoding {
         let path: String
-        let testCase: [testCase]
+        let testCase: [TestCase]
+
+        enum CodingKeys: String, CodingKey {
+            case path
+            case testCase
+        }
 
         static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
             switch key {
-            case Self.CodingKeys.path:
+            case CodingKeys.path:
                 return .attribute
             default:
                 return .element
             }
         }
 
-        struct testCase: Encodable, DynamicNodeEncoding {
+        struct TestCase: Encodable, DynamicNodeEncoding {
             let name: String
             let duration: Int
-            let skipped: skipped?
-            let failure: failure?
+            let skipped: Skipped?
+            let failure: Failure?
+
+            enum CodingKeys: String, CodingKey {
+                case name
+                case duration
+                case skipped
+                case failure
+            }
 
             static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
                 switch key {
-                case Self.CodingKeys.name,
-                    Self.CodingKeys.duration:
+                case CodingKeys.name,
+                    CodingKeys.duration:
                     return .attribute
                 default:
                     return .element
                 }
             }
 
-            struct skipped: Encodable, DynamicNodeEncoding {
+            struct Skipped: Encodable, DynamicNodeEncoding {
                 let message: String
+
+                enum CodingKeys: String, CodingKey {
+                    case message
+                }
 
                 static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
                     switch key {
-                    case Self.CodingKeys.message:
+                    case CodingKeys.message:
                         return .attribute
                     default:
                         return .element
@@ -96,12 +117,16 @@ private struct testExecutions: Encodable, DynamicNodeEncoding {
                 }
             }
 
-            struct failure: Encodable, DynamicNodeEncoding {
+            struct Failure: Encodable, DynamicNodeEncoding {
                 let message: String
+
+                enum CodingKeys: String, CodingKey {
+                    case message
+                }
 
                 static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
                     switch key {
-                    case Self.CodingKeys.message:
+                    case CodingKeys.message:
                         return .attribute
                     default:
                         return .element
@@ -112,7 +137,7 @@ private struct testExecutions: Encodable, DynamicNodeEncoding {
     }
 }
 
-extension testExecutions.file.testCase {
+extension TestExecutions.File.TestCase {
     init(_ test: Report.Module.File.RepeatableTest) {
         self.init(
             name: test.name,
@@ -144,11 +169,11 @@ extension testExecutions.file.testCase {
     }
 }
 
-extension testExecutions.file {
-    fileprivate static func testCases(from file: Report.Module.File) throws -> [testExecutions.file
-        .testCase]
+extension TestExecutions.File {
+    fileprivate static func testCases(from file: Report.Module.File) throws -> [TestExecutions.File
+        .TestCase]
     {
-        var testCases: [testExecutions.file.testCase] = []
+        var testCases: [TestExecutions.File.TestCase] = []
 
         for repeatableTest in file.repeatableTests.sorted(by: { $0.name < $1.name }) {
             // Check if tests have different messages, which indicates they're parameterized
@@ -161,13 +186,13 @@ extension testExecutions.file {
                 // Output each test separately (parameterized case)
                 for test in repeatableTest.tests {
                     testCases.append(
-                        testExecutions.file.testCase.init(
+                        TestExecutions.File.TestCase.init(
                             test, repeatableTestName: repeatableTest.name)
                     )
                 }
             } else {
                 // Single test or multiple tests with same message (repetitions/mixed), use original format
-                testCases.append(testExecutions.file.testCase.init(repeatableTest))
+                testCases.append(TestExecutions.File.TestCase.init(repeatableTest))
             }
         }
 
