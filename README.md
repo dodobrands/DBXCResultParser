@@ -236,7 +236,8 @@ import PeekieSDK
 // Assuming you have already created a `Report` instance as `reportModel`
 let reportModel: Report = ...
 
-// Path to the directory containing your test source files
+// Path to the directory containing your test source files (not the .xcresult file)
+// This directory should contain your test .swift source files
 let testsPath = URL(fileURLWithPath: "/path/to/your/tests")
 
 // Create a Sonar formatter
@@ -327,15 +328,16 @@ swift run peekie sonar --xcresult-path path/to/tests.xcresult --tests-path path/
 
 ```bash
 # Generate SonarQube XML report
+# Note: --tests-path must point to a directory containing test source files, not the .xcresult file
 swift run peekie sonar --xcresult-path path/to/tests.xcresult --tests-path path/to/tests
 
 # Save output to file
-swift run peekie sonar --xcresult-path path/to/tests.xcresult --tests-path path/to/tests > sonar-report.xml
+swift run peekie sonar --xcresult-path path/to/tests.xcresult --tests-path Tests/PeekieTests > sonar-report.xml
 ```
 
 **Available options for `sonar` subcommand:**
 - `--xcresult-path`: Specifies the path to the `.xcresult` file (required).
-- `--tests-path`: Specifies the path to the directory containing test source files (required). This is used to map test suite names to file paths.
+- `--tests-path`: Specifies the path to the directory containing test source files (required). This must be a directory path (not a `.xcresult` file) containing your test source code (`.swift` files). This is used to map test suite names to file paths.
 
 ## License
 
