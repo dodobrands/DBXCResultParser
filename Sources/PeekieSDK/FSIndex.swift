@@ -26,9 +26,9 @@ extension FSIndex {
             return true
         }
 
-        // Regular expression to find class names
+        // Regular expression to find class and struct names
         let regex = try NSRegularExpression(
-            pattern: "class\\s+([A-Za-z_][A-Za-z_0-9]*)", options: [])
+            pattern: "(?:class|struct)\\s+([A-Za-z_][A-Za-z_0-9]*)", options: [])
 
         // Iterate over each file found by the enumerator
         while let element = enumerator?.nextObject() as? URL {
