@@ -10,12 +10,6 @@ struct SonarFormatterSnapshotTests {
 
     @Test(arguments: Constants.testsReportFileNames)
     func test_sonarFormat_allStatuses(fileName: String) async throws {
-        // Skip Peekie-15.0.xcresult: all test names had different names in that version
-        if fileName == "Peekie-15.0.xcresult" {
-            #expect(Bool(true))
-            return
-        }
-
         let originalPath = try Constants.url(for: fileName)
         let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
         defer {
@@ -51,56 +45,27 @@ struct SonarFormatterSnapshotTests {
         }
         try FileManager.default.createDirectory(at: testDir, withIntermediateDirectories: true)
 
-        // Copy all actual test files from Tests/PeekieTests to the temporary directory
-        let testsSourceDir = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()  // Remove SonarFormatterSnapshotTests.swift
+        // Generate mock Swift test files based on test suite names from the report
         let fileManager = FileManager.default
+        let testSuites = Set(report.modules.flatMap { $0.files.map { $0.name } })
 
-        // Find all .swift files in the tests directory
-        let enumerator = fileManager.enumerator(
-            at: testsSourceDir,
-            includingPropertiesForKeys: [.isRegularFileKey],
-            options: [.skipsHiddenFiles]
-        )
+        for testSuiteName in testSuites {
+            // Create a simple Swift file with the test suite class/struct
+            let fileName = "\(testSuiteName).swift"
+            let filePath = testDir.appendingPathComponent(fileName)
 
-        while let element = enumerator?.nextObject() as? URL {
-            guard try element.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile == true,
-                element.pathExtension == "swift"
-            else {
-                continue
-            }
+            // Generate minimal Swift test file content
+            let fileContent = """
+                import Foundation
+                import Testing
 
-            // Skip snapshot test files and the test file itself
-            let fileName = element.lastPathComponent
-            if fileName.contains("SnapshotTests") || fileName == "SonarFormatterSnapshotTests.swift"
-            {
-                continue
-            }
+                @Suite
+                struct \(testSuiteName) {
+                    // Mock test suite for snapshot testing
+                }
+                """
 
-            // Calculate relative path from tests source directory
-            guard let relativePath = element.relativePath(from: testsSourceDir) else {
-                continue
-            }
-            let destinationPath = testDir.appendingPathComponent(relativePath)
-
-            // Create destination directory if needed
-            try fileManager.createDirectory(
-                at: destinationPath.deletingLastPathComponent(),
-                withIntermediateDirectories: true
-            )
-
-            // Skip if source file doesn't exist
-            guard fileManager.fileExists(atPath: element.path) else {
-                continue
-            }
-
-            // Remove existing file if present (can happen with parallel test execution)
-            if fileManager.fileExists(atPath: destinationPath.path) {
-                try? fileManager.removeItem(at: destinationPath)
-            }
-
-            // Copy the file (ignore errors for missing files)
-            try? fileManager.copyItem(at: element, to: destinationPath)
+            try fileContent.write(to: filePath, atomically: true, encoding: .utf8)
         }
 
         // Return standardized URL to avoid /private/var vs /var issues
