@@ -39,7 +39,7 @@ The project also uses Periphery for detecting unused code:
 mise install
 
 # Scan for unused code
-periphery scan --skip-build
+periphery scan
 ```
 
 ### Running the Command-Line Tool
