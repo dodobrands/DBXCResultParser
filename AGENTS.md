@@ -90,8 +90,7 @@ This keeps the codebase clean and avoids unnecessary maintenance overhead.
 **Always create a new branch for your changes:**
 ```bash
 git checkout main
-git fetch origin
-git reset --hard origin/main
+git pull
 git checkout -b your-branch-name
 ```
 
