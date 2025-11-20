@@ -110,9 +110,14 @@ let package = Package(
             dependencies: [
                 .init(stringLiteral: parserTargetName),
                 .init(stringLiteral: testHelpersTargetName),
+                .init(stringLiteral: executableTargetName),
                 .product(
                     name: "SnapshotTesting",
                     package: "swift-snapshot-testing"
+                ),
+                .product(
+                    name: "XMLCoder",
+                    package: "XMLCoder"
                 ),
             ],
             path: "Tests/PeekieTests",
