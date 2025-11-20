@@ -106,6 +106,9 @@ let package = Package(
                     package: "swift-snapshot-testing"
                 ),
             ],
+            exclude: [
+                "__Snapshots__"
+            ],
             resources: [
                 .copy("Resources")
             ],
