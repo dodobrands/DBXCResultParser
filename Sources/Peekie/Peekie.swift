@@ -1,6 +1,5 @@
 import ArgumentParser
 import Foundation
-import PeekieSDK
 
 @main
 public struct Peekie: AsyncParsableCommand {

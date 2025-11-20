@@ -212,27 +212,4 @@ extension TestExecutions.File {
 
         return testCases
     }
-
-    enum Error: Swift.Error {
-        case missingFile(String)
-    }
-}
-
-extension Sequence {
-    func concurrentMap<T: Sendable>(_ transform: @escaping @Sendable (Self.Element) throws -> T)
-        rethrows -> [T]
-    {
-        nonisolated(unsafe) let elements = Array(self)
-        nonisolated(unsafe) var results = [T?](repeating: nil, count: elements.count)
-        let lock = NSLock()
-
-        DispatchQueue.concurrentPerform(iterations: elements.count) { index in
-            let transformed = try? transform(elements[index])
-            lock.lock()
-            results[index] = transformed
-            lock.unlock()
-        }
-
-        return results.compactMap { $0 }
-    }
 }

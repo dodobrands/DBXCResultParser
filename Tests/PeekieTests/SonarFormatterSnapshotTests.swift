@@ -26,7 +26,7 @@ struct SonarFormatterSnapshotTests {
         let formatted = try formatter.format(report: report, testsPath: testsPath)
 
         // Normalize paths in snapshot to avoid CI/local differences
-        let normalized = normalizePaths(in: formatted, testsPath: testsPath)
+        let normalized = normalizePaths(in: formatted)
 
         assertSnapshot(
             of: normalized,
@@ -74,7 +74,7 @@ struct SonarFormatterSnapshotTests {
         return URL(fileURLWithPath: testDir.path).standardized
     }
 
-    private func normalizePaths(in xml: String, testsPath: URL) -> String {
+    private func normalizePaths(in xml: String) -> String {
         // Find the marker "PeekieSonarTests-" in paths and replace everything before it with {TEMP_DIR}/
         let marker = "PeekieSonarTests-"
 

@@ -1,12 +1,6 @@
 import Foundation
 
 extension URL {
-    var isRegularFile: Bool {
-        get throws {
-            try resourceValues(forKeys: [.isRegularFileKey]).isRegularFile ?! Error.noResourceValues
-        }
-    }
-
     public enum Error: Swift.Error {
         case noResourceValues
     }
