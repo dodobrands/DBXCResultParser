@@ -14,8 +14,9 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
 - [Installation](#installation)
 - [Usage](#usage)
   - [Parsing xcresult Files](#parsing-xcresult-files)
-  - [Formatting Test Reports](#formatting-test-reports)
-  - [SonarQube Integration](#sonarqube-integration)
+  - [Formatters](#formatters)
+    - [TextFormatter](#textformatter)
+    - [SonarFormatter](#sonarformatter)
   - [Command-Line Tool](#command-line-tool)
 - [License](#license)
 
@@ -91,7 +92,14 @@ for module in modules {
 }
 ```
 
-### Formatting Test Reports
+### Formatters
+
+The `PeekieSDK` package provides multiple formatters to convert parsed `.xcresult` data into different output formats. Each formatter is designed for specific use cases:
+
+- **TextFormatter**: Generates human-readable text output for terminal display and logs
+- **SonarFormatter**: Generates SonarQube Generic Test Execution XML format for CI/CD integration
+
+### TextFormatter
 
 The `TextFormatter` class provides a way to format the data from a `Report` into a human-readable string. It supports two output formats: a detailed list of test results and a summary count of test results.
 
@@ -209,13 +217,18 @@ let output = formatter.format(reportModel, locale: Locale(identifier: "fr_FR"))
 print(output) // Will output numbers and durations formatted in French
 ```
 
-### SonarQube Integration
+### SonarFormatter
 
 The `SonarFormatter` class generates test execution reports in SonarQube Generic Test Execution XML format. This format is compatible with SonarQube's test execution import feature, allowing you to visualize test results directly in SonarQube.
 
+**Use cases:**
+- CI/CD pipeline integration with SonarQube
+- Automated test reporting in SonarQube dashboards
+- Test execution tracking and analysis
+
 #### Usage
 
-To generate a SonarQube-compatible XML report:
+To generate a SonarQube-compatible XML report programmatically:
 
 ```swift
 import PeekieSDK
