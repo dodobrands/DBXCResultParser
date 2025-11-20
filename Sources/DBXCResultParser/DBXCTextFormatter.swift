@@ -39,12 +39,8 @@ public class DBXCTextFormatter {
 
         switch format {
         case .list:
-            let singleTestsMeasurementFormatter = MeasurementFormatter.singleTestDurationFormatter
-            singleTestsMeasurementFormatter.locale = locale
             let filesReports = files.compactMap { file in
-                file.report(
-                    testResults: include,
-                    formatter: singleTestsMeasurementFormatter)
+                file.report(testResults: include)
             }
             return filesReports.joined(separator: "\n\n")
         case .count:
@@ -70,8 +66,7 @@ public class DBXCTextFormatter {
 
 extension DBXCReportModel.Module.File {
     func report(
-        testResults: [DBXCReportModel.Module.File.RepeatableTest.Test.Status],
-        formatter: MeasurementFormatter
+        testResults: [DBXCReportModel.Module.File.RepeatableTest.Test.Status]
     ) -> String? {
         let tests = repeatableTests.filtered(testResults: testResults).sorted { $0.name < $1.name }
 
@@ -93,11 +88,11 @@ extension DBXCReportModel.Module.File {
                 // Output each test separately (arguments case)
                 for test in repeatableTest.tests {
                     rows.append(
-                        test.report(repeatableTestName: repeatableTest.name, formatter: formatter))
+                        test.report(repeatableTestName: repeatableTest.name))
                 }
             } else {
                 // Single test or multiple tests with same message (repetitions/mixed), use original format
-                rows.append(repeatableTest.report(formatter: formatter))
+                rows.append(repeatableTest.report())
             }
         }
 
@@ -108,7 +103,7 @@ extension DBXCReportModel.Module.File {
 }
 
 extension DBXCReportModel.Module.File.RepeatableTest {
-    fileprivate func report(formatter: MeasurementFormatter) -> String {
+    fileprivate func report() -> String {
         [
             combinedStatus.icon,
             name,
@@ -120,7 +115,7 @@ extension DBXCReportModel.Module.File.RepeatableTest {
 }
 
 extension DBXCReportModel.Module.File.RepeatableTest.Test {
-    fileprivate func report(repeatableTestName: String, formatter: MeasurementFormatter) -> String {
+    fileprivate func report(repeatableTestName: String) -> String {
         [
             status.icon,
             repeatableTestName,
@@ -138,13 +133,6 @@ extension String {
 }
 
 extension MeasurementFormatter {
-    static var singleTestDurationFormatter: MeasurementFormatter {
-        let formatter = MeasurementFormatter()
-        formatter.unitOptions = [.providedUnit]
-        formatter.numberFormatter.maximumFractionDigits = 0
-        return formatter
-    }
-
     static var totalTestsDurationFormatter: MeasurementFormatter {
         let formatter = MeasurementFormatter()
         formatter.unitOptions = [.naturalScale]

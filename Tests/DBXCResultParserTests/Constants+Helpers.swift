@@ -1,13 +1,11 @@
 import Foundation
 import Testing
 
-@testable import DBXCResultParser
-
 struct Constants {
     private static var resourcesPath: URL {
         get throws {
             guard let resourceURL = Bundle.module.resourceURL else {
-                throw TestError("Could not find bundle resource URL")
+                throw TestError.couldNotFindBundleResourceURL
             }
             // When using .copy("Resources"), the Resources folder contents are copied to resourceURL
             // Check if Resources subdirectory exists, otherwise use resourceURL directly
@@ -26,7 +24,7 @@ struct Constants {
             let fileManager = FileManager.default
 
             guard fileManager.fileExists(atPath: resourcesURL.path) else {
-                throw TestError("Resources directory does not exist at: \(resourcesURL.path)")
+                throw TestError.resourcesDirectoryDoesNotExist(path: resourcesURL.path)
             }
 
             guard
@@ -36,7 +34,7 @@ struct Constants {
                     options: [.skipsHiddenFiles]
                 )
             else {
-                throw TestError("Could not read contents of resources directory")
+                throw TestError.couldNotReadResourcesDirectory
             }
 
             return contents.filter { url in
@@ -56,17 +54,19 @@ struct Constants {
     static func url(for fileName: String) throws -> URL {
         let paths = try testsReportPaths
         guard let url = paths.first(where: { $0.lastPathComponent == fileName }) else {
-            throw TestError("Could not find xcresult file: \(fileName)")
+            throw TestError.couldNotFindXcresultFile(fileName: fileName)
         }
         return url
     }
 }
 
-struct TestError: Error {
-    let message: String
-    init(_ message: String) {
-        self.message = message
-    }
+enum TestError: Error {
+    case couldNotFindBundleResourceURL
+    case resourcesDirectoryDoesNotExist(path: String)
+    case couldNotReadResourcesDirectory
+    case couldNotFindXcresultFile(fileName: String)
+    case unknownXcresultFileForExpectedValues(fileName: String)
+    case unknownXcresultFileForExpectedWarnings(fileName: String)
 }
 
 // Expected coverage values per xcresult file
@@ -114,8 +114,7 @@ extension Constants {
                 ]
             )
         default:
-            throw TestError(
-                "Unknown xcresult file: \(fileName). Please add expected values for this file.")
+            throw TestError.unknownXcresultFileForExpectedValues(fileName: fileName)
         }
     }
 
@@ -140,9 +139,7 @@ extension Constants {
                 ]
             )
         default:
-            throw TestError(
-                "Unknown xcresult file: \(fileName). Please add expected warnings values for this file."
-            )
+            throw TestError.unknownXcresultFileForExpectedWarnings(fileName: fileName)
         }
     }
 }
