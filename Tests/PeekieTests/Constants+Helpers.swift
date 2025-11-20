@@ -178,7 +178,7 @@ extension Constants {
                     ExpectedWarningsValues.ExpectedWarning(
                         message: "Some warning to appear in xcresult",
                         sourceURL:
-                            "file:///Users/alldmeat/Developer/DBXCResultParser/Tests/PeekieTests/GenerateXCResultTests.swift",
+                            "file:///Users/alldmeat/Developer/DBXCResultParser/Tests/DBXCResultParserTests/GenerateXCResultTests.swift",
                         className: "DVTTextDocumentLocation"
                     )
                 ]
