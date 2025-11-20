@@ -47,6 +47,10 @@ private struct TestExecutionsRoot: Encodable, DynamicNodeEncoding {
     enum CodingKeys: String, CodingKey {
         case testExecutions = "testExecutions"
     }
+
+    static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
+        return .element
+    }
 }
 
 private struct TestExecutions: Encodable, DynamicNodeEncoding {
