@@ -1,6 +1,6 @@
 import Foundation
 
-public struct FSIndex: Sendable {
+public struct FSIndex {
     public let classes: [String: String]
 
     public init(path: URL) throws {
