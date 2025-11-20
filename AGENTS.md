@@ -94,6 +94,14 @@ All GitHub operations (creating PRs, issues, etc.) should be performed using the
 
 ### Creating Pull Requests
 
+**Always create PRs from a fresh, up-to-date main branch.** Before creating a new branch, ensure your main branch is synchronized with the remote:
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b your-branch-name
+```
+
 When creating a pull request, **always use the pull request template** located at `.github/pull_request_template.md`:
 
 ```bash
