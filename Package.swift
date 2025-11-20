@@ -107,6 +107,7 @@ let package = Package(
                     package: "swift-snapshot-testing"
                 ),
             ],
+            path: "Tests/PeekieTests",
             exclude: [
                 "__Snapshots__"
             ],
