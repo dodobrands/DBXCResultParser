@@ -1,11 +1,10 @@
 import Foundation
-import PeekieSDK
 import XMLCoder
 
-class SonarFormatter {
-    init() {}
+public class SonarFormatter {
+    public init() {}
 
-    func format(
+    public func format(
         report: Report,
         testsPath: URL
     ) throws -> String {

@@ -2,7 +2,6 @@ import Foundation
 import SnapshotTesting
 import Testing
 
-@testable import Peekie
 @testable import PeekieSDK
 
 @Suite

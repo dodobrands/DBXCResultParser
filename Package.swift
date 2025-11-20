@@ -70,6 +70,10 @@ let package = Package(
                     name: "Subprocess",
                     package: "swift-subprocess"
                 ),
+                .product(
+                    name: "XMLCoder",
+                    package: "XMLCoder"
+                ),
             ],
             path: "Sources/PeekieSDK",
             swiftSettings: [
@@ -84,10 +88,6 @@ let package = Package(
                 .product(
                     name: "ArgumentParser",
                     package: "swift-argument-parser"
-                ),
-                .product(
-                    name: "XMLCoder",
-                    package: "XMLCoder"
                 ),
             ],
             swiftSettings: [
@@ -110,7 +110,6 @@ let package = Package(
             dependencies: [
                 .init(stringLiteral: parserTargetName),
                 .init(stringLiteral: testHelpersTargetName),
-                .init(stringLiteral: executableTargetName),
                 .product(
                     name: "SnapshotTesting",
                     package: "swift-snapshot-testing"
