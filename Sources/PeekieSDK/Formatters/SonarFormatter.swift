@@ -108,13 +108,51 @@ extension testExecutions.file.testCase {
                 ? .init(message: test.message ?? "Test message missing") : nil
         )
     }
+
+    init(_ test: Report.Module.File.RepeatableTest.Test, repeatableTestName: String) {
+        // For parameterized tests, include the message (which contains arguments) in the name
+        let name: String
+        if let message = test.message {
+            name = "\(repeatableTestName) (\(message))"
+        } else {
+            name = repeatableTestName
+        }
+
+        self.init(
+            name: name,
+            duration: Int(test.duration.converted(to: .milliseconds).value),
+            skipped: test.status == .skipped
+                ? .init(message: test.message ?? "Test message missing") : nil,
+            failure: test.status == .failure
+                ? .init(message: test.message ?? "Test message missing") : nil
+        )
+    }
 }
 
 extension testExecutions.file {
     init(_ file: Report.Module.File, index: FSIndex) throws {
-        let testCases = file.repeatableTests
-            .sorted { $0.name < $1.name }
-            .map { testExecutions.file.testCase.init($0) }
+        var testCases: [testExecutions.file.testCase] = []
+
+        for repeatableTest in file.repeatableTests.sorted(by: { $0.name < $1.name }) {
+            // Check if tests have different messages, which indicates they're parameterized
+            let hasDifferentMessages =
+                repeatableTest.tests.count > 1
+                && Set(repeatableTest.tests.compactMap { $0.message }).count
+                    == repeatableTest.tests.count
+
+            if hasDifferentMessages {
+                // Output each test separately (parameterized case)
+                for test in repeatableTest.tests {
+                    testCases.append(
+                        testExecutions.file.testCase.init(
+                            test, repeatableTestName: repeatableTest.name)
+                    )
+                }
+            } else {
+                // Single test or multiple tests with same message (repetitions/mixed), use original format
+                testCases.append(testExecutions.file.testCase.init(repeatableTest))
+            }
+        }
 
         let path = try index.classes[file.name] ?! Error.missingFile(file.name)
 
