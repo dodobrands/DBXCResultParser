@@ -20,6 +20,28 @@ swift test
 swift test --filter <TestClassName>.<testMethodName>
 ```
 
+### Linting
+
+The project uses `swift format` for code formatting checks. Before committing, ensure your code passes the linting checks:
+
+```bash
+# Check formatting (strict mode)
+swift format lint --recursive --strict Sources Tests
+```
+
+**Note**: The `swift format` tool is part of the Swift toolchain. If it's not available, you may need to install it or use the version provided by Xcode.
+
+The project also uses Periphery for detecting unused code:
+
+```bash
+# Install mise (if not already installed)
+# Then install periphery via mise
+mise install
+
+# Scan for unused code
+periphery scan --skip-build
+```
+
 ### Running the Command-Line Tool
 ```bash
 swift run peekie --xcresult-path path/to/tests.xcresult
