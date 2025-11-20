@@ -2,7 +2,7 @@ import Foundation
 
 extension TestResultsDTO {
     init(from xcresultPath: URL) async throws {
-        let output = try await DBShell.execute(
+        let output = try await Shell.execute(
             "xcrun",
             arguments: [
                 "xcresulttool", "get", "test-results", "tests",
@@ -24,7 +24,7 @@ extension TestResultsDTO {
 
 extension Array where Element == CoverageDTO {
     init(from xcresultPath: URL) async throws {
-        let output = try await DBShell.execute(
+        let output = try await Shell.execute(
             "xcrun",
             arguments: [
                 "xccov", "view", "--report", "--only-targets", "--json",
@@ -45,7 +45,7 @@ extension Array where Element == CoverageDTO {
 
 extension TotalCoverageDTO {
     init(from xcresultPath: URL) async throws {
-        let output = try await DBShell.execute(
+        let output = try await Shell.execute(
             "xcrun",
             arguments: [
                 "xccov", "view", "--report", "--json",
@@ -66,7 +66,7 @@ extension TotalCoverageDTO {
 
 extension BuildResultsDTO {
     init(from xcresultPath: URL) async throws {
-        let output = try await DBShell.execute(
+        let output = try await Shell.execute(
             "xcrun",
             arguments: [
                 "xcresulttool", "get", "build-results",

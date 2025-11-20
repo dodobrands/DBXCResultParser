@@ -41,7 +41,7 @@ Options:
 - Each test has a status (success, failure, expectedFailure, skipped, mixed, unknown) and duration
 - Provides coverage data and filtering capabilities
 
-**DBShell** (`Sources/peekiesdk/DBShell.swift`)
+**Shell** (`Sources/peekiesdk/shell.swift`)
 - Executes shell commands via `/bin/zsh`
 - Used internally to invoke `xcrun xcresulttool` and `xcrun xccov` for parsing `.xcresult` files
 
@@ -49,7 +49,7 @@ Options:
 - Data Transfer Objects that mirror the JSON structure from `xcresulttool`
 - `TestResultsDTO`: Test results data from `xcresulttool get test-results tests`
 - `CoverageDTO`: Code coverage data from `xccov`
-- DTOs are initialized by executing `xcresulttool` commands via `DBShell` and parsing JSON output
+- DTOs are initialized by executing `xcresulttool` commands via `Shell` and parsing JSON output
 
 **DBXCTextFormatter** (`Sources/peekiesdk/DBXCTextFormatter.swift`)
 - Formats `DBXCReportModel` into human-readable text

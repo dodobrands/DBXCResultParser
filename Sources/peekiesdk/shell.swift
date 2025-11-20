@@ -1,7 +1,7 @@
 import Foundation
 import Subprocess
 
-public class DBShell {
+public class Shell {
     @discardableResult
     public static func execute(_ executable: String, arguments: [String] = []) async throws
         -> String
