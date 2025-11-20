@@ -2,7 +2,7 @@ import Foundation
 import SnapshotTesting
 import Testing
 
-@testable import peekiesdk
+@testable import PeekieSDK
 
 @Suite
 struct TextFormatterSnapshotTests {

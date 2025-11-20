@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import peekiesdk
+@testable import PeekieSDK
 
 @Suite
 struct ReportValuesTests {

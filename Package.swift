@@ -3,13 +3,13 @@
 
 import PackageDescription
 
-let packageName = "peekiesdk"
+let packageName = "Peekie"
 
-let parserLibraryName = packageName
+let parserLibraryName = "PeekieSDK"
 let executableLibraryName = "peekie"
 let testHelpersLibraryName = "PeekieTestHelpers"
 
-let parserTargetName = parserLibraryName
+let parserTargetName = "PeekieSDK"
 let executableTargetName = "Peekie"
 let testHelpersTargetName = testHelpersLibraryName
 

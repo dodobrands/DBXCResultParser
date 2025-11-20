@@ -1,6 +1,6 @@
 import Foundation
 
-@testable import peekiesdk
+@testable import PeekieSDK
 
 extension Report {
     public static func testMake(

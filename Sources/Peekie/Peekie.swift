@@ -1,6 +1,6 @@
 import ArgumentParser
 import Foundation
-import peekiesdk
+import PeekieSDK
 
 @main
 public class Peekie: AsyncParsableCommand {
