@@ -49,8 +49,5 @@ jobs:
     - name: Install mise
       uses: jdx/mise-action@v2
 
-    - name: Install tools via mise
-      run: mise install
-
     - name: Scan for unused code with Periphery
       run: mise exec -- periphery scan
