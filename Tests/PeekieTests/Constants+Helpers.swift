@@ -151,11 +151,10 @@ extension Constants {
             )
         case "Peekie-26.1.1.xcresult":
             return ExpectedReportValues(
-                coveredLines: 1069,
-                coveragePercentage: 0.7650485436893204,
+                coveredLines: 567,
+                coveragePercentage: 0.8055555555555556,
                 moduleCoverages: [
-                    "DBXCResultParserTests": 0.6991279069767442,
-                    "DBXCResultParser-TextFormatterTests": 0.7250308261405672,
+                    "PeekieSDKTests": 0.7672530446549392
                 ]
             )
         default:
@@ -178,7 +177,7 @@ extension Constants {
                     ExpectedWarningsValues.ExpectedWarning(
                         message: "Some warning to appear in xcresult",
                         sourceURL:
-                            "file:///Users/alldmeat/Developer/DBXCResultParser/Tests/DBXCResultParserTests/GenerateXCResultTests.swift",
+                            "file:///Users/alldmeat/Developer/DBXCResultParser/Tests/PeekieTests/GenerateXCResultTests.swift",
                         className: "DVTTextDocumentLocation"
                     )
                 ]
