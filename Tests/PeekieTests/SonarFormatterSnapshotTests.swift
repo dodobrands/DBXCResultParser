@@ -28,7 +28,7 @@ struct SonarFormatterSnapshotTests {
         assertSnapshot(
             of: formatted,
             as: .lines,
-            named: "\(fileName)_sonar_all"
+            named: "\(fileName)_sonar"
         )
     }
 
