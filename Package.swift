@@ -10,7 +10,7 @@ let executableLibraryName = "peekie"
 let testHelpersLibraryName = "PeekieTestHelpers"
 
 let parserTargetName = parserLibraryName
-let executableTargetName = executableLibraryName
+let executableTargetName = "Peekie"
 let testHelpersTargetName = testHelpersLibraryName
 
 let parserTestsTargetName = parserTargetName + "Tests"
