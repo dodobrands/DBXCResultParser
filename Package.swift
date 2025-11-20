@@ -6,17 +6,14 @@ import PackageDescription
 let packageName = "DBXCResultParser"
 
 let parserLibraryName = packageName
-let formatterLibraryName = parserLibraryName + "-TextFormatter"
-let executableFormatterLibraryName = formatterLibraryName + "Exec"
+let executableLibraryName = parserLibraryName + "Exec"
 let testHelpersLibraryName = parserLibraryName + "TestHelpers"
 
 let parserTargetName = parserLibraryName
-let formatterTargetName = formatterLibraryName
-let executableFormatterTargetName = formatterTargetName + "Exec"
+let executableTargetName = executableLibraryName
 let testHelpersTargetName = testHelpersLibraryName
 
 let parserTestsTargetName = parserTargetName + "Tests"
-let formatterTestsTargetName = formatterTargetName + "Tests"
 
 let package = Package(
     name: packageName,
@@ -31,22 +28,15 @@ let package = Package(
             ]
         ),
         .library(
-            name: formatterLibraryName,
-            targets: [
-                parserTargetName,
-                formatterTargetName,
-            ]
-        ),
-        .library(
             name: testHelpersLibraryName,
             targets: [
-                testHelpersLibraryName
+                testHelpersTargetName
             ]
         ),
         .executable(
-            name: executableFormatterLibraryName,
+            name: executableLibraryName,
             targets: [
-                executableFormatterTargetName
+                executableTargetName
             ]
         ),
     ],
@@ -82,21 +72,10 @@ let package = Package(
                 .treatAllWarnings(as: .error),
             ]
         ),
-        .target(
-            name: formatterTargetName,
-            dependencies: [
-                .init(stringLiteral: parserTargetName)
-            ],
-            swiftSettings: [
-                .swiftLanguageMode(.v6),
-                .treatAllWarnings(as: .error),
-            ]
-        ),
         .executableTarget(
-            name: executableFormatterTargetName,
+            name: executableTargetName,
             dependencies: [
                 .init(stringLiteral: parserTargetName),
-                .init(stringLiteral: formatterTargetName),
                 .product(
                     name: "ArgumentParser",
                     package: "swift-argument-parser"
@@ -121,7 +100,6 @@ let package = Package(
             name: parserTestsTargetName,
             dependencies: [
                 .init(stringLiteral: parserTargetName),
-                .init(stringLiteral: formatterTargetName),
                 .init(stringLiteral: testHelpersTargetName),
                 .product(
                     name: "SnapshotTesting",
@@ -133,17 +111,6 @@ let package = Package(
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v6)
-            ]
-        ),
-        .testTarget(
-            name: formatterTestsTargetName,
-            dependencies: [
-                .init(stringLiteral: formatterTargetName),
-                .init(stringLiteral: testHelpersTargetName),
-            ],
-            swiftSettings: [
-                .swiftLanguageMode(.v6),
-                .treatAllWarnings(as: .error),
             ]
         ),
     ]

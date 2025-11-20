@@ -22,7 +22,7 @@ swift test --filter <TestClassName>.<testMethodName>
 
 ### Running the Command-Line Tool
 ```bash
-swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult
+swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult
 ```
 
 Options:
@@ -51,7 +51,7 @@ Options:
 - `CoverageDTO`: Code coverage data from `xccov`
 - DTOs are initialized by executing `xcresulttool` commands via `DBShell` and parsing JSON output
 
-**DBXCTextFormatter** (`Sources/DBXCResultParser-TextFormatter/DBXCTextFormatter.swift`)
+**DBXCTextFormatter** (`Sources/DBXCResultParser/DBXCTextFormatter.swift`)
 - Formats `DBXCReportModel` into human-readable text
 - Two output formats:
   - `list`: Detailed test results with file names and statuses
@@ -61,9 +61,8 @@ Options:
 ### Package Structure
 
 The package exports:
-- **DBXCResultParser**: Core parsing library
-- **DBXCResultParser-TextFormatter**: Text formatting utilities
-- **DBXCResultParser-TextFormatterExec**: Executable command-line tool
+- **DBXCResultParser**: Core parsing library (includes parsing and formatting)
+- **DBXCResultParserExec**: Executable command-line tool
 - **DBXCResultParserTestHelpers**: Test helper utilities
 
 ## Testing

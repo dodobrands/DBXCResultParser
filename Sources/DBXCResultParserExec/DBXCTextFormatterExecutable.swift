@@ -1,6 +1,5 @@
 import ArgumentParser
 import DBXCResultParser
-import DBXCResultParser_TextFormatter
 import Foundation
 
 @main
