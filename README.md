@@ -212,7 +212,7 @@ print(output) // Will output numbers and durations formatted in French
 The package includes a command-line tool that can be executed to generate test reports. Here is an example of how to run it:
 
 ```bash
-swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult
+swift run peekie --xcresult-path path/to/tests.xcresult
 ```
 
 **Examples:**

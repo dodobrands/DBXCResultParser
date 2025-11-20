@@ -22,7 +22,7 @@ swift test --filter <TestClassName>.<testMethodName>
 
 ### Running the Command-Line Tool
 ```bash
-swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult
+swift run peekie --xcresult-path path/to/tests.xcresult
 ```
 
 Options:
@@ -62,7 +62,7 @@ Options:
 
 The package exports:
 - **DBXCResultParser**: Core parsing library (includes parsing and formatting)
-- **DBXCResultParserExec**: Executable command-line tool
+- **peekie**: Executable command-line tool
 - **DBXCResultParserTestHelpers**: Test helper utilities
 
 ## Testing

@@ -6,7 +6,7 @@ import PackageDescription
 let packageName = "DBXCResultParser"
 
 let parserLibraryName = packageName
-let executableLibraryName = parserLibraryName + "Exec"
+let executableLibraryName = "peekie"
 let testHelpersLibraryName = parserLibraryName + "TestHelpers"
 
 let parserTargetName = parserLibraryName
