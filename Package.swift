@@ -108,6 +108,7 @@ let package = Package(
                     package: "swift-snapshot-testing"
                 ),
             ],
+            path: "Tests/DBXCResultParserTests",
             exclude: [
                 "__Snapshots__"
             ],
