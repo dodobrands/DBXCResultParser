@@ -84,6 +84,10 @@ This keeps the codebase clean and avoids unnecessary maintenance overhead.
 
 ## GitHub Workflow
 
+### Language Requirements
+
+**All issues and pull requests must be written in English.** This includes titles, descriptions, and comments. This ensures consistency and accessibility for all contributors.
+
 ### Using GitHub CLI (`gh`)
 
 All GitHub operations (creating PRs, issues, etc.) should be performed using the GitHub CLI (`gh`) tool. This ensures consistency and allows for better automation.
