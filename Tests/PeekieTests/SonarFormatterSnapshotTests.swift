@@ -35,11 +35,12 @@ struct SonarFormatterSnapshotTests {
     // MARK: - Helpers
 
     private func createTestDirectory(for report: Report) throws -> URL {
-        // Use a fixed location in temporary directory to avoid path resolution issues
+        // Use a unique location in temporary directory for each test run
+        // This prevents conflicts when tests run in parallel
         let tempDir = FileManager.default.temporaryDirectory
-        let testDir = tempDir.appendingPathComponent("PeekieSonarTests")
+        let testDir = tempDir.appendingPathComponent("PeekieSonarTests-\(UUID().uuidString)")
 
-        // Remove existing directory if present
+        // Remove existing directory if present (shouldn't happen with UUID, but just in case)
         if FileManager.default.fileExists(atPath: testDir.path) {
             try? FileManager.default.removeItem(at: testDir)
         }
