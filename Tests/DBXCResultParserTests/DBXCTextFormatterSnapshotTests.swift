@@ -2,7 +2,7 @@ import Foundation
 import SnapshotTesting
 import Testing
 
-@testable import DBXCResultParser
+@testable import peekiesdk
 
 @Suite
 struct DBXCTextFormatterSnapshotTests {

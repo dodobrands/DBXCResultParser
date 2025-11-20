@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let packageName = "DBXCResultParser"
+let packageName = "peekiesdk"
 
 let parserLibraryName = packageName
 let executableLibraryName = "peekie"

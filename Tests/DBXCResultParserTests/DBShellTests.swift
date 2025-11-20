@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import DBXCResultParser
+@testable import peekiesdk
 
 @Suite
 struct DBShellTests {

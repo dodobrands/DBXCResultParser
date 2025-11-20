@@ -1,6 +1,6 @@
 import Foundation
 
-@testable import DBXCResultParser
+@testable import peekiesdk
 
 extension DBXCReportModel {
     public static func testMake(

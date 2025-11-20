@@ -1,6 +1,6 @@
 import ArgumentParser
-import DBXCResultParser
 import Foundation
+import peekiesdk
 
 @main
 public class Peekie: AsyncParsableCommand {
@@ -36,12 +36,12 @@ public class Peekie: AsyncParsableCommand {
         let localeValue: Locale
         if let localeString = locale {
             guard !localeString.isEmpty else {
-                throw DBXCResultParserError.invalidLocaleIdentifier(localeString)
+                throw PeekieSDKError.invalidLocaleIdentifier(localeString)
             }
             let createdLocale = Locale(identifier: localeString)
             // Validate that the locale identifier is valid
             guard Locale.availableIdentifiers.contains(localeString) else {
-                throw DBXCResultParserError.invalidLocaleIdentifier(localeString)
+                throw PeekieSDKError.invalidLocaleIdentifier(localeString)
             }
             localeValue = createdLocale
         } else {
@@ -61,7 +61,7 @@ public class Peekie: AsyncParsableCommand {
     }
 }
 
-enum DBXCResultParserError: Error {
+enum PeekieSDKError: Error {
     case invalidLocaleIdentifier(String)
 }
 
