@@ -1,5 +1,5 @@
-import DBXCResultParserTestHelpers
 import Foundation
+import PeekieTestHelpers
 import Testing
 
 @testable import DBXCResultParser

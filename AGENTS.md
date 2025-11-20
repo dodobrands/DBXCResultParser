@@ -63,7 +63,7 @@ Options:
 The package exports:
 - **DBXCResultParser**: Core parsing library (includes parsing and formatting)
 - **peekie**: Executable command-line tool
-- **DBXCResultParserTestHelpers**: Test helper utilities
+- **PeekieTestHelpers**: Test helper utilities
 
 ## Testing
 
