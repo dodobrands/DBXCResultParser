@@ -14,8 +14,10 @@ public class SonarFormatter {
         var filesByPath: [String: [TestExecutions.File.TestCase]] = [:]
 
         for file in report.modules.flatMap({ $0.files }).sorted(by: { $0.name < $1.name }) {
-            let path =
-                try fsIndex.classes[file.name] ?! TestExecutions.File.Error.missingFile(file.name)
+            // Skip files that are not found in the index (e.g., DTO test files that don't exist)
+            guard let path = fsIndex.classes[file.name] else {
+                continue
+            }
 
             // Extract test cases from this file
             let testCases = try TestExecutions.File.testCases(from: file)
