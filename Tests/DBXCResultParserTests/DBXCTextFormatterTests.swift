@@ -1,5 +1,4 @@
 import DBXCResultParserTestHelpers
-import DBXCResultParser_TextFormatter
 import Foundation
 import Testing
 

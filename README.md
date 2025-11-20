@@ -212,29 +212,29 @@ print(output) // Will output numbers and durations formatted in French
 The package includes a command-line tool that can be executed to generate test reports. Here is an example of how to run it:
 
 ```bash
-swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult
+swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult
 ```
 
 **Examples:**
 
 ```bash
 # Default: list format with all test statuses
-swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult
+swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult
 
 # Count format (summary)
-swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult --format count
+swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult --format count
 
 # Show only failures
-swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult --include failure
+swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult --include failure
 
 # Show failures and skipped tests
-swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult --include failure,skipped
+swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult --include failure,skipped
 
 # Use specific locale for formatting
-swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult --locale ru-RU
+swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult --locale ru-RU
 
 # Combine options: count format with only failures, using French locale
-swift run DBXCResultParser-TextFormatterExec --xcresult-path path/to/tests.xcresult --format count --include failure --locale fr-FR
+swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult --format count --include failure --locale fr-FR
 ```
 
 **Available options:**
