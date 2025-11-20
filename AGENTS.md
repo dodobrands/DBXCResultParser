@@ -97,6 +97,7 @@ All GitHub operations (creating PRs, issues, etc.) should be performed using the
 
 ```bash
 git checkout main
+git fetch origin
 git pull origin main
 git checkout -b your-branch-name
 ```
