@@ -10,7 +10,7 @@ struct SonarFormatterSnapshotTests {
 
     @Test(arguments: Constants.testsReportFileNames)
     func test_sonarFormat_allStatuses(fileName: String) async throws {
-        // Skip Peekie-15.0.xcresult: all test names had different name in that version
+        // Skip Peekie-15.0.xcresult: all test names had different names in that version
         if fileName == "Peekie-15.0.xcresult" {
             #expect(Bool(true))
             return
