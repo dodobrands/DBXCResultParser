@@ -15,6 +15,7 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
 - [Usage](#usage)
   - [Parsing xcresult Files](#parsing-xcresult-files)
   - [Formatting Test Reports](#formatting-test-reports)
+  - [SonarQube Integration](#sonarqube-integration)
   - [Command-Line Tool](#command-line-tool)
 - [License](#license)
 
@@ -30,6 +31,7 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
 - Supports identifying slow tests based on average duration.
 - Includes utility functions for filtering tests based on status.
 - Can be executed as a command-line tool to generate test reports directly from the terminal.
+- **SonarQube integration**: Generates SonarQube Generic Test Execution XML format for CI/CD integration.
 
 ## Installation
 
@@ -207,41 +209,120 @@ let output = formatter.format(reportModel, locale: Locale(identifier: "fr_FR"))
 print(output) // Will output numbers and durations formatted in French
 ```
 
+### SonarQube Integration
+
+The `SonarFormatter` class generates test execution reports in SonarQube Generic Test Execution XML format. This format is compatible with SonarQube's test execution import feature, allowing you to visualize test results directly in SonarQube.
+
+#### Usage
+
+To generate a SonarQube-compatible XML report:
+
+```swift
+import PeekieSDK
+
+// Assuming you have already created a `Report` instance as `reportModel`
+let reportModel: Report = ...
+
+// Path to the directory containing your test source files
+let testsPath = URL(fileURLWithPath: "/path/to/your/tests")
+
+// Create a Sonar formatter
+let formatter = SonarFormatter()
+
+// Generate the XML report
+let xmlReport = try formatter.format(report: reportModel, testsPath: testsPath)
+
+// Print or save the XML report
+print(xmlReport)
+```
+
+#### Features
+
+- **Parameterized Tests Support**: Each parameterized test execution is represented as a separate `<testCase>` entry with parameters included in the test name (e.g., `testName (paramValue)`).
+- **File Grouping**: Test cases from multiple test suites (classes/structs) within the same file are automatically grouped into a single `<file>` section.
+- **Test Status Mapping**: Maps test statuses to SonarQube format:
+  - Success: `<testCase>` without failure/skipped elements
+  - Failure: `<testCase>` with `<failure>` element
+  - Skipped: `<testCase>` with `<skipped>` element
+- **Duration Reporting**: Test execution durations are reported in milliseconds.
+
+#### XML Output Format
+
+The formatter generates XML in the following structure:
+
+```xml
+<testExecutions version="1">
+    <file path="path/to/TestFile.swift">
+        <testCase name="test_success()" duration="1234" />
+        <testCase name="test_failure()" duration="567">
+            <failure message="Failure message" />
+        </testCase>
+        <testCase name="test_skip()" duration="0">
+            <skipped message="Skip message" />
+        </testCase>
+        <testCase name="test_parameterized(value:) (param1)" duration="890" />
+        <testCase name="test_parameterized(value:) (param2)" duration="901" />
+    </file>
+</testExecutions>
+```
+
 ### Command-Line Tool
 
-The package includes a command-line tool that can be executed to generate test reports. Here is an example of how to run it:
+The package includes a command-line tool that can be executed to generate test reports. The tool supports two subcommands: `text` for human-readable text output and `sonar` for SonarQube XML format.
+
+#### Text Format Subcommand
 
 ```bash
-swift run peekie --xcresult-path path/to/tests.xcresult
+swift run peekie text --xcresult-path path/to/tests.xcresult
 ```
 
 **Examples:**
 
 ```bash
 # Default: list format with all test statuses
-swift run peekie --xcresult-path path/to/tests.xcresult
+swift run peekie text --xcresult-path path/to/tests.xcresult
 
 # Count format (summary)
-swift run peekie --xcresult-path path/to/tests.xcresult --format count
+swift run peekie text --xcresult-path path/to/tests.xcresult --format count
 
 # Show only failures
-swift run peekie --xcresult-path path/to/tests.xcresult --include failure
+swift run peekie text --xcresult-path path/to/tests.xcresult --include failure
 
 # Show failures and skipped tests
-swift run peekie --xcresult-path path/to/tests.xcresult --include failure,skipped
+swift run peekie text --xcresult-path path/to/tests.xcresult --include failure,skipped
 
 # Use specific locale for formatting
-swift run peekie --xcresult-path path/to/tests.xcresult --locale ru-RU
+swift run peekie text --xcresult-path path/to/tests.xcresult --locale ru-RU
 
 # Combine options: count format with only failures, using French locale
-swift run peekie --xcresult-path path/to/tests.xcresult --format count --include failure --locale fr-FR
+swift run peekie text --xcresult-path path/to/tests.xcresult --format count --include failure --locale fr-FR
 ```
 
-**Available options:**
+**Available options for `text` subcommand:**
 - `--xcresult-path`: Specifies the path to the `.xcresult` file (required).
 - `--format`: Determines the output format (`list` or `count`). Default: `list`.
 - `--locale`: Sets the locale for number and measurement formatting (e.g., "en-GB", "ru-RU", "fr-FR"). Default: system locale.
 - `--include`: Filters the test results to include only certain statuses. Comma-separated list of: `success`, `failure`, `skipped`, `expectedFailure`, `mixed`, `unknown`. Default: all statuses.
+
+#### SonarQube Format Subcommand
+
+```bash
+swift run peekie sonar --xcresult-path path/to/tests.xcresult --tests-path path/to/tests
+```
+
+**Examples:**
+
+```bash
+# Generate SonarQube XML report
+swift run peekie sonar --xcresult-path path/to/tests.xcresult --tests-path path/to/tests
+
+# Save output to file
+swift run peekie sonar --xcresult-path path/to/tests.xcresult --tests-path path/to/tests > sonar-report.xml
+```
+
+**Available options for `sonar` subcommand:**
+- `--xcresult-path`: Specifies the path to the `.xcresult` file (required).
+- `--tests-path`: Specifies the path to the directory containing test source files (required). This is used to map test suite names to file paths.
 
 ## License
 
