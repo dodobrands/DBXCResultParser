@@ -16,27 +16,27 @@ FakeXCTests
 ✅ test_success()
 
 ReportValuesTests
-✅ test_coverageValues(fileName:) ("Peekie-15.0.xcresult")
-❌ test_coverageValues(fileName:) ("Peekie-26.1.1.xcresult")
-✅ test_warningsValues(fileName:) ("Peekie-15.0.xcresult")
-❌ test_warningsValues(fileName:) ("Peekie-26.1.1.xcresult")
+✅ test_coverageValues(fileName:) (Peekie-15.0.xcresult)
+❌ test_coverageValues(fileName:) (Peekie-26.1.1.xcresult)
+✅ test_warningsValues(fileName:) (Peekie-15.0.xcresult)
+❌ test_warningsValues(fileName:) (Peekie-26.1.1.xcresult)
 
 ShellTests
 ✅ test()
 
 TextFormatterSnapshotTests
-✅ test_countFormat_allStatuses(fileName:) ("Peekie-15.0.xcresult")
-❌ test_countFormat_allStatuses(fileName:) ("Peekie-26.1.1.xcresult")
-✅ test_countFormat_failureOnly(fileName:) ("Peekie-15.0.xcresult")
-❌ test_countFormat_failureOnly(fileName:) ("Peekie-26.1.1.xcresult")
-✅ test_listFormat_allStatuses(fileName:) ("Peekie-15.0.xcresult")
-❌ test_listFormat_allStatuses(fileName:) ("Peekie-26.1.1.xcresult")
-✅ test_listFormat_failureOnly(fileName:) ("Peekie-15.0.xcresult")
-❌ test_listFormat_failureOnly(fileName:) ("Peekie-26.1.1.xcresult")
-✅ test_listFormat_skippedOnly(fileName:) ("Peekie-15.0.xcresult")
-❌ test_listFormat_skippedOnly(fileName:) ("Peekie-26.1.1.xcresult")
-✅ test_listFormat_successOnly(fileName:) ("Peekie-15.0.xcresult")
-❌ test_listFormat_successOnly(fileName:) ("Peekie-26.1.1.xcresult")
+✅ test_countFormat_allStatuses(fileName:) (Peekie-15.0.xcresult)
+❌ test_countFormat_allStatuses(fileName:) (Peekie-26.1.1.xcresult)
+✅ test_countFormat_failureOnly(fileName:) (Peekie-15.0.xcresult)
+❌ test_countFormat_failureOnly(fileName:) (Peekie-26.1.1.xcresult)
+✅ test_listFormat_allStatuses(fileName:) (Peekie-15.0.xcresult)
+❌ test_listFormat_allStatuses(fileName:) (Peekie-26.1.1.xcresult)
+✅ test_listFormat_failureOnly(fileName:) (Peekie-15.0.xcresult)
+❌ test_listFormat_failureOnly(fileName:) (Peekie-26.1.1.xcresult)
+✅ test_listFormat_skippedOnly(fileName:) (Peekie-15.0.xcresult)
+❌ test_listFormat_skippedOnly(fileName:) (Peekie-26.1.1.xcresult)
+✅ test_listFormat_successOnly(fileName:) (Peekie-15.0.xcresult)
+❌ test_listFormat_successOnly(fileName:) (Peekie-26.1.1.xcresult)
 
 TextFormatterTests
 ✅ test_testResult_any_count()

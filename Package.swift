@@ -53,6 +53,10 @@ let package = Package(
             url: "https://github.com/pointfreeco/swift-snapshot-testing.git",
             .upToNextMajor(from: "1.16.0")
         ),
+        .package(
+            url: "https://github.com/CoreOffice/XMLCoder.git",
+            .upToNextMajor(from: "0.17.1")
+        ),
     ],
     targets: [
         .target(
@@ -65,6 +69,10 @@ let package = Package(
                 .product(
                     name: "Subprocess",
                     package: "swift-subprocess"
+                ),
+                .product(
+                    name: "XMLCoder",
+                    package: "XMLCoder"
                 ),
             ],
             path: "Sources/PeekieSDK",
@@ -105,6 +113,10 @@ let package = Package(
                 .product(
                     name: "SnapshotTesting",
                     package: "swift-snapshot-testing"
+                ),
+                .product(
+                    name: "XMLCoder",
+                    package: "XMLCoder"
                 ),
             ],
             path: "Tests/PeekieTests",

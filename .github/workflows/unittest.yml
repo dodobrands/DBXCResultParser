@@ -43,8 +43,11 @@ jobs:
       run: swift test --skip-build
 
     # Verify CLI tool functionality by parsing test xcresult file
-    - name: Parse xcresult
-      run: swift run peekie --xcresult-path Tests/PeekieTests/Resources/Peekie-26.1.1.xcresult
+    - name: Parse xcresult (text format)
+      run: swift run peekie text --xcresult-path Tests/PeekieTests/Resources/Peekie-26.1.1.xcresult
+
+    - name: Parse xcresult (sonar format)
+      run: swift run peekie sonar --xcresult-path Tests/PeekieTests/Resources/Peekie-26.1.1.xcresult --tests-path Tests/PeekieTests
 
     - name: Install mise
       uses: jdx/mise-action@v2

@@ -134,13 +134,16 @@ extension Report {
                                     let message: String?
                                     switch status {
                                     case .skipped:
-                                        message = testCase.skipMessage ?? argumentName
+                                        message =
+                                            testCase.skipMessage ?? argumentName.trimmingQuotes
                                     case .failure:
-                                        message = testCase.failureMessage ?? argumentName
+                                        message =
+                                            testCase.failureMessage ?? argumentName.trimmingQuotes
                                     case .expectedFailure:
-                                        message = testCase.failureMessage ?? argumentName
+                                        message =
+                                            testCase.failureMessage ?? argumentName.trimmingQuotes
                                     default:
-                                        message = argumentName
+                                        message = argumentName.trimmingQuotes
                                     }
 
                                     let duration = Measurement<UnitDuration>(
@@ -240,5 +243,21 @@ extension Report.Warning {
         self.message = issue.message
         self.sourceURL = sourceURL
         self.className = className
+    }
+}
+
+extension String {
+    /// Removes surrounding quotes if present (both single and double quotes)
+    var trimmingQuotes: String {
+        var result = self
+        // Remove double quotes
+        if result.hasPrefix("\"") && result.hasSuffix("\"") {
+            result = String(result.dropFirst().dropLast())
+        }
+        // Remove single quotes
+        if result.hasPrefix("'") && result.hasSuffix("'") {
+            result = String(result.dropFirst().dropLast())
+        }
+        return result
     }
 }
