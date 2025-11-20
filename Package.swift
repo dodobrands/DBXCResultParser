@@ -67,6 +67,7 @@ let package = Package(
                     package: "swift-subprocess"
                 ),
             ],
+            path: "Sources/PeekieSDK",
             swiftSettings: [
                 .swiftLanguageMode(.v6),
                 .treatAllWarnings(as: .error),
