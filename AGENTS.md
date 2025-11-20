@@ -35,7 +35,7 @@ Options:
 
 ### Core Components
 
-**DBXCReportModel** (`Sources/peekiesdk/Models/DBXCReportModel.swift`)
+**ReportModel** (`Sources/peekiesdk/Models/ReportModel.swift`)
 - Primary data model representing parsed `.xcresult` data
 - Hierarchical structure: `Module` → `File` → `RepeatableTest` → `Test`
 - Each test has a status (success, failure, expectedFailure, skipped, mixed, unknown) and duration
@@ -51,8 +51,8 @@ Options:
 - `CoverageDTO`: Code coverage data from `xccov`
 - DTOs are initialized by executing `xcresulttool` commands via `Shell` and parsing JSON output
 
-**DBXCTextFormatter** (`Sources/peekiesdk/DBXCTextFormatter.swift`)
-- Formats `DBXCReportModel` into human-readable text
+**TextFormatter** (`Sources/peekiesdk/TextFormatter.swift`)
+- Formats `ReportModel` into human-readable text
 - Two output formats:
   - `list`: Detailed test results with file names and statuses
   - `count`: Summary count with total duration

@@ -5,9 +5,9 @@ import Testing
 @testable import peekiesdk
 
 @Suite
-struct DBXCTextFormatterSnapshotTests {
+struct TextFormatterSnapshotTests {
     let locale = Locale(identifier: "en-US")
-    let formatter = DBXCTextFormatter()
+    let formatter = TextFormatter()
 
     @Test(arguments: Constants.testsReportFileNames)
     func test_listFormat_allStatuses(fileName: String) async throws {
@@ -16,7 +16,7 @@ struct DBXCTextFormatterSnapshotTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await DBXCReportModel(xcresultPath: reportPath)
+        let report = try await ReportModel(xcresultPath: reportPath)
         let formatted = formatter.format(report, format: .list, locale: locale)
 
         assertSnapshot(
@@ -33,7 +33,7 @@ struct DBXCTextFormatterSnapshotTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await DBXCReportModel(xcresultPath: reportPath)
+        let report = try await ReportModel(xcresultPath: reportPath)
         let formatted = formatter.format(
             report,
             include: [.success],
@@ -55,7 +55,7 @@ struct DBXCTextFormatterSnapshotTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await DBXCReportModel(xcresultPath: reportPath)
+        let report = try await ReportModel(xcresultPath: reportPath)
         let formatted = formatter.format(
             report,
             include: [.failure],
@@ -77,7 +77,7 @@ struct DBXCTextFormatterSnapshotTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await DBXCReportModel(xcresultPath: reportPath)
+        let report = try await ReportModel(xcresultPath: reportPath)
         let formatted = formatter.format(
             report,
             include: [.skipped],
@@ -99,7 +99,7 @@ struct DBXCTextFormatterSnapshotTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await DBXCReportModel(xcresultPath: reportPath)
+        let report = try await ReportModel(xcresultPath: reportPath)
         let formatted = formatter.format(report, format: .count, locale: locale)
 
         assertSnapshot(
@@ -116,7 +116,7 @@ struct DBXCTextFormatterSnapshotTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await DBXCReportModel(xcresultPath: reportPath)
+        let report = try await ReportModel(xcresultPath: reportPath)
         let formatted = formatter.format(
             report,
             include: [.failure],

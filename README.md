@@ -54,13 +54,13 @@ let package = Package(
 
 ### Parsing xcresult Files
 
-To parse an `.xcresult` file and access the report data, initialize a `DBXCReportModel` with the path to the `.xcresult` file:
+To parse an `.xcresult` file and access the report data, initialize a `ReportModel` with the path to the `.xcresult` file:
 
 ```swift
 import peekiesdk
 
 let xcresultPath = URL(fileURLWithPath: "/path/to/your.xcresult")
-let reportModel = try await DBXCReportModel(xcresultPath: xcresultPath)
+let reportModel = try await ReportModel(xcresultPath: xcresultPath)
 
 // Access different parts of the report:
 let modules = reportModel.modules
@@ -91,20 +91,20 @@ for module in modules {
 
 ### Formatting Test Reports
 
-The `DBXCTextFormatter` class provides a way to format the data from a `DBXCReportModel` into a human-readable string. It supports two output formats: a detailed list of test results and a summary count of test results.
+The `TextFormatter` class provides a way to format the data from a `ReportModel` into a human-readable string. It supports two output formats: a detailed list of test results and a summary count of test results.
 
 #### Usage
 
-To format your test report data, create an instance of `DBXCTextFormatter`:
+To format your test report data, create an instance of `TextFormatter`:
 
 ```swift
 import peekiesdk
 
-// Assuming you have already created a `DBXCReportModel` instance as `reportModel`
-let reportModel: DBXCReportModel = ...
+// Assuming you have already created a `ReportModel` instance as `reportModel`
+let reportModel: ReportModel = ...
 
 // Create a text formatter
-let formatter = DBXCTextFormatter()
+let formatter = TextFormatter()
 
 // Format the report data into a string
 let formattedOutput = formatter.format(reportModel)
@@ -113,7 +113,7 @@ let formattedOutput = formatter.format(reportModel)
 print("Formatted Output:\n\(formattedOutput)")
 ```
 
-The `format` method can also take an array of `DBXCReportModel.Module.File.RepeatableTest.Test.Status` to filter which test results are included in the output. By default, it includes all test statuses.
+The `format` method can also take an array of `ReportModel.Module.File.RepeatableTest.Test.Status` to filter which test results are included in the output. By default, it includes all test statuses.
 
 **Filtering by status:**
 
@@ -199,10 +199,10 @@ When filtering by status (e.g., only failures), duration is omitted if only skip
 
 #### Customizing Number and Measurement Formatting
 
-The `DBXCTextFormatter` allows you to specify a locale when formatting the report. This locale is used to format numbers and measurements according to the provided locale's conventions.
+The `TextFormatter` allows you to specify a locale when formatting the report. This locale is used to format numbers and measurements according to the provided locale's conventions.
 
 ```swift
-let formatter = DBXCTextFormatter()
+let formatter = TextFormatter()
 let output = formatter.format(reportModel, locale: Locale(identifier: "fr_FR"))
 print(output) // Will output numbers and durations formatted in French
 ```

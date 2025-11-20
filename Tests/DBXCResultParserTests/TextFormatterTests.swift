@@ -5,12 +5,12 @@ import Testing
 @testable import peekiesdk
 
 @Suite
-struct DBXCTextFormatterTests {
+struct TextFormatterTests {
     let locale = Locale(identifier: "en-US")
 
     @Test
     func test_testResult_any_list() {
-        let formatter = DBXCTextFormatter()
+        let formatter = TextFormatter()
         let result = formatter.format(.genericReport, format: .list, locale: locale)
 
         #expect(
@@ -36,7 +36,7 @@ struct DBXCTextFormatterTests {
 
     @Test
     func test_testResult_success_list() {
-        let formatter = DBXCTextFormatter()
+        let formatter = TextFormatter()
         let result = formatter.format(
             .genericReport, include: [.success], format: .list, locale: locale)
 
@@ -52,7 +52,7 @@ struct DBXCTextFormatterTests {
 
     @Test
     func test_testResult_any_count() {
-        let formatter = DBXCTextFormatter()
+        let formatter = TextFormatter()
         let result = formatter.format(.genericReport, format: .count, locale: locale)
 
         #expect(result == "9 (0 sec)")
@@ -60,7 +60,7 @@ struct DBXCTextFormatterTests {
 
     @Test
     func test_testResult_failure_count() {
-        let formatter = DBXCTextFormatter()
+        let formatter = TextFormatter()
         let result = formatter.format(
             .genericReport, include: [.failure], format: .count, locale: locale)
 
@@ -68,10 +68,10 @@ struct DBXCTextFormatterTests {
     }
 }
 
-extension DBXCReportModel {
-    static var genericReport: DBXCReportModel {
+extension ReportModel {
+    static var genericReport: ReportModel {
         // Module with all possible tests
-        let profileModule = DBXCReportModel.Module.testMake(
+        let profileModule = ReportModel.Module.testMake(
             name: "Profile",
             files: [
                 .testMake(
@@ -91,7 +91,7 @@ extension DBXCReportModel {
         )
 
         // Module with repeated tests
-        let networkModule = DBXCReportModel.Module.testMake(
+        let networkModule = ReportModel.Module.testMake(
             name: "Network",
             files: [
                 .testMake(
@@ -111,7 +111,7 @@ extension DBXCReportModel {
         )
 
         // Module with skipped tests
-        let notificationsModule = DBXCReportModel.Module.testMake(
+        let notificationsModule = ReportModel.Module.testMake(
             name: "Notifications",
             files: [
                 .testMake(

@@ -1,6 +1,6 @@
 import Foundation
 
-extension DBXCTextFormatter {
+extension TextFormatter {
     /// Output format options
     public enum Format: String, Decodable {
         case list  // Outputs detailed list of test results
@@ -8,18 +8,18 @@ extension DBXCTextFormatter {
     }
 }
 
-public class DBXCTextFormatter {
+public class TextFormatter {
     public init() {}
 
     /// Formats a given report based on specified criteria.
     ///
-    /// This method takes a `DBXCReportModel` instance and formats it according to the provided parameters.
+    /// This method takes a `ReportModel` instance and formats it according to the provided parameters.
     /// It allows filtering based on the status of tests within the report and supports different formatting styles.
     /// The method can also localize the output based on the provided locale.
     ///
     /// - Parameters:
     ///   - report: The report model instance to be formatted.
-    ///   - include: An array of `DBXCReportModel.Module.File.RepeatableTest.Test.Status` values that specifies which test statuses to include in the formatted report.
+    ///   - include: An array of `ReportModel.Module.File.RepeatableTest.Test.Status` values that specifies which test statuses to include in the formatted report.
     ///   - format: The formatting style to be applied to the report.
     ///   - locale: An optional `Locale` to localize the formatted report. If nil, the system locale is used.
     ///
@@ -27,8 +27,8 @@ public class DBXCTextFormatter {
     ///
     /// - Throws: This method may throw an error if the formatting fails for any reason, such as an issue with the report model.
     public func format(
-        _ report: DBXCReportModel,
-        include: [DBXCReportModel.Module.File.RepeatableTest.Test.Status] = DBXCReportModel.Module
+        _ report: ReportModel,
+        include: [ReportModel.Module.File.RepeatableTest.Test.Status] = ReportModel.Module
             .File.RepeatableTest.Test.Status.allCases,
         format: Format = .list,
         locale: Locale? = nil
@@ -64,9 +64,9 @@ public class DBXCTextFormatter {
     }
 }
 
-extension DBXCReportModel.Module.File {
+extension ReportModel.Module.File {
     func report(
-        testResults: [DBXCReportModel.Module.File.RepeatableTest.Test.Status]
+        testResults: [ReportModel.Module.File.RepeatableTest.Test.Status]
     ) -> String? {
         let tests = repeatableTests.filtered(testResults: testResults).sorted { $0.name < $1.name }
 
@@ -102,7 +102,7 @@ extension DBXCReportModel.Module.File {
     }
 }
 
-extension DBXCReportModel.Module.File.RepeatableTest {
+extension ReportModel.Module.File.RepeatableTest {
     fileprivate func report() -> String {
         [
             combinedStatus.icon,
@@ -114,7 +114,7 @@ extension DBXCReportModel.Module.File.RepeatableTest {
     }
 }
 
-extension DBXCReportModel.Module.File.RepeatableTest.Test {
+extension ReportModel.Module.File.RepeatableTest.Test {
     fileprivate func report(repeatableTestName: String) -> String {
         [
             status.icon,

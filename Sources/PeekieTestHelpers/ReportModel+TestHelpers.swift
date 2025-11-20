@@ -2,7 +2,7 @@ import Foundation
 
 @testable import peekiesdk
 
-extension DBXCReportModel {
+extension ReportModel {
     public static func testMake(
         modules: Set<Module> = [],
         coverage: Double? = nil,
@@ -34,7 +34,7 @@ extension DBXCReportModel {
     }
 }
 
-extension DBXCReportModel.Module {
+extension ReportModel.Module {
     public static func testMake(
         name: String = "",
         files: Set<File> = [],
@@ -44,7 +44,7 @@ extension DBXCReportModel.Module {
     }
 }
 
-extension DBXCReportModel.Module.Coverage {
+extension ReportModel.Module.Coverage {
     public static func testMake(
         name: String = "",
         coveredLines: Int = 0,
@@ -59,7 +59,7 @@ extension DBXCReportModel.Module.Coverage {
     }
 }
 
-extension DBXCReportModel.Module.File {
+extension ReportModel.Module.File {
     public static func testMake(
         name: String = "",
         repeatableTests: Set<RepeatableTest> = []
@@ -68,7 +68,7 @@ extension DBXCReportModel.Module.File {
     }
 }
 
-extension DBXCReportModel.Module.File.RepeatableTest {
+extension ReportModel.Module.File.RepeatableTest {
     public static func testMake(
         name: String = "",
         tests: [Test] = []
@@ -82,7 +82,7 @@ extension DBXCReportModel.Module.File.RepeatableTest {
         message: String? = nil
     ) -> Self {
         let tests = Array(
-            repeating: DBXCReportModel.Module.File.RepeatableTest.Test.testMake(
+            repeating: ReportModel.Module.File.RepeatableTest.Test.testMake(
                 status: .failure, message: message),
             count: times
         )
@@ -114,14 +114,14 @@ extension DBXCReportModel.Module.File.RepeatableTest {
         failedTimes: Int = 1
     ) -> Self {
         let failedTests = Array(
-            repeating: DBXCReportModel.Module.File.RepeatableTest.Test.testMake(status: .failure),
+            repeating: ReportModel.Module.File.RepeatableTest.Test.testMake(status: .failure),
             count: failedTimes
         )
         return .testMake(name: name, tests: failedTests + [.testMake(status: .success)])
     }
 }
 
-extension DBXCReportModel.Module.File.RepeatableTest.Test {
+extension ReportModel.Module.File.RepeatableTest.Test {
     public static func testMake(
         status: Status = .success,
         duration: Measurement<UnitDuration> = .testMake(),

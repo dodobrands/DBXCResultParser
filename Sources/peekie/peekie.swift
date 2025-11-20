@@ -10,7 +10,7 @@ public class Peekie: AsyncParsableCommand {
     public var xcresultPath: String
 
     @Option(help: "Result format")
-    public var format: DBXCTextFormatter.Format = .list
+    public var format: TextFormatter.Format = .list
 
     /// The locale to use for formatting numbers and measurements
     @Option(
@@ -20,17 +20,18 @@ public class Peekie: AsyncParsableCommand {
     public var locale: String?
 
     @Option(help: "Test statutes to include in report, comma separated")
-    public var include: String = DBXCReportModel.Module.File.RepeatableTest.Test.Status.allCases.map
-    { $0.rawValue }.joined(separator: ",")
+    public var include: String = ReportModel.Module.File.RepeatableTest.Test.Status.allCases.map {
+        $0.rawValue
+    }.joined(separator: ",")
 
     public func run() async throws {
         let xcresultPath = URL(fileURLWithPath: xcresultPath)
 
-        let report = try await DBXCReportModel(xcresultPath: xcresultPath)
+        let report = try await ReportModel(xcresultPath: xcresultPath)
 
         let include = include.split(separator: ",")
             .compactMap {
-                DBXCReportModel.Module.File.RepeatableTest.Test.Status(rawValue: String($0))
+                ReportModel.Module.File.RepeatableTest.Test.Status(rawValue: String($0))
             }
 
         let localeValue: Locale
@@ -48,7 +49,7 @@ public class Peekie: AsyncParsableCommand {
             localeValue = Locale.current
         }
 
-        let formatter = DBXCTextFormatter()
+        let formatter = TextFormatter()
 
         let result = formatter.format(
             report,
@@ -65,7 +66,7 @@ enum PeekieSDKError: Error {
     case invalidLocaleIdentifier(String)
 }
 
-extension DBXCTextFormatter.Format: ExpressibleByArgument {
+extension TextFormatter.Format: ExpressibleByArgument {
     public init?(argument: String) {
         self.init(rawValue: argument)
     }

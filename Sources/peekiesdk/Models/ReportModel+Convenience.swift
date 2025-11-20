@@ -1,7 +1,7 @@
 import Foundation
 
-extension DBXCReportModel {
-    /// Initializes a new instance of the `DBXCReportModel` using the provided `xcresultPath`.
+extension ReportModel {
+    /// Initializes a new instance of the `ReportModel` using the provided `xcresultPath`.
     /// The initialization process involves parsing the `.xcresult` file to extract various reports.
     /// Coverage data for targets specified in `excludingCoverageNames` will be excluded from the report.
     ///
@@ -49,7 +49,7 @@ extension DBXCReportModel {
 
                 var module =
                     modules[moduleName]
-                    ?? DBXCReportModel.Module(
+                    ?? ReportModel.Module(
                         name: moduleName,
                         files: [],
                         coverage: coverages?.forModule(named: moduleName)
@@ -60,7 +60,7 @@ extension DBXCReportModel {
                 for testSuite in testSuites {
                     guard testSuite.nodeType == .testSuite else { continue }
 
-                    // Extract file name from test suite name (e.g., "DBXCReportModelTests")
+                    // Extract file name from test suite name (e.g., "ReportModelTests")
                     let fileName = testSuite.name
                     var file =
                         module.files[fileName]
@@ -74,7 +74,7 @@ extension DBXCReportModel {
                         let testName = testCase.name
                         var repeatableTest =
                             file.repeatableTests[testName]
-                            ?? DBXCReportModel.Module.File.RepeatableTest(
+                            ?? ReportModel.Module.File.RepeatableTest(
                                 name: testName,
                                 tests: []
                             )
@@ -87,7 +87,7 @@ extension DBXCReportModel {
                         if !repetitions.isEmpty {
                             // Has repetitions (multiple runs)
                             for repetition in repetitions {
-                                let test = try DBXCReportModel.Module.File.RepeatableTest.Test(
+                                let test = try ReportModel.Module.File.RepeatableTest.Test(
                                     from: repetition)
                                 repeatableTest.tests.append(test)
                             }
@@ -104,7 +104,7 @@ extension DBXCReportModel {
                                 let baseDurationSeconds = testCase.durationInSeconds ?? 0.0
                                 for (argumentName, argumentResult) in arguments {
                                     let status:
-                                        DBXCReportModel.Module.File.RepeatableTest.Test.Status
+                                        ReportModel.Module.File.RepeatableTest.Test.Status
                                     if let result = argumentResult {
                                         switch result {
                                         case .passed:
@@ -146,11 +146,11 @@ extension DBXCReportModel {
 
                                     let duration = Measurement<UnitDuration>(
                                         value: baseDurationSeconds * 1000,
-                                        unit: DBXCReportModel.Module.File.RepeatableTest.Test
+                                        unit: ReportModel.Module.File.RepeatableTest.Test
                                             .defaultDurationUnit
                                     )
 
-                                    let test = DBXCReportModel.Module.File.RepeatableTest.Test(
+                                    let test = ReportModel.Module.File.RepeatableTest.Test(
                                         status: status,
                                         duration: duration,
                                         message: message
@@ -160,7 +160,7 @@ extension DBXCReportModel {
                             } else {
                                 // No arguments, treat test case as single test
                                 guard let result = testCase.result else { continue }
-                                let status: DBXCReportModel.Module.File.RepeatableTest.Test.Status
+                                let status: ReportModel.Module.File.RepeatableTest.Test.Status
                                 switch result {
                                 case .passed:
                                     status = .success
@@ -174,7 +174,7 @@ extension DBXCReportModel {
                                 let durationSeconds = testCase.durationInSeconds ?? 0.0
                                 let duration = Measurement<UnitDuration>(
                                     value: durationSeconds * 1000,
-                                    unit: DBXCReportModel.Module.File.RepeatableTest.Test
+                                    unit: ReportModel.Module.File.RepeatableTest.Test
                                         .defaultDurationUnit
                                 )
                                 // Extract message based on test status
@@ -195,7 +195,7 @@ extension DBXCReportModel {
                                         })?
                                         .name
                                 }
-                                let test = DBXCReportModel.Module.File.RepeatableTest.Test(
+                                let test = ReportModel.Module.File.RepeatableTest.Test(
                                     status: status,
                                     duration: duration,
                                     message: message
@@ -231,7 +231,7 @@ extension DBXCReportModel {
     }
 }
 
-extension DBXCReportModel.Warning {
+extension ReportModel.Warning {
     /// Creates a Warning from BuildResultsDTO.Issue, skipping if required fields are missing
     init?(from issue: BuildResultsDTO.Issue) {
         guard let sourceURL = issue.sourceURL, let className = issue.className else {
