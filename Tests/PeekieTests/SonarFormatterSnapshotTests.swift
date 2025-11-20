@@ -45,18 +45,39 @@ struct SonarFormatterSnapshotTests {
         }
         try FileManager.default.createDirectory(at: testDir, withIntermediateDirectories: true)
 
-        // Extract all file names from report and create mock Swift files
-        let fileNames = report.modules
-            .flatMap { $0.files }
-            .map { $0.name }
+        // Copy all actual test files from Tests/PeekieTests to the temporary directory
+        let testsSourceDir = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()  // Remove SonarFormatterSnapshotTests.swift
+        let fileManager = FileManager.default
 
-        for fileName in fileNames {
-            // Create a simple Swift file with a class matching the file name
-            // Remove file extension if present
-            let className = fileName.replacingOccurrences(of: ".swift", with: "")
-            let swiftContent = "class \(className) {}"
-            let filePath = testDir.appendingPathComponent("\(className).swift")
-            try swiftContent.write(to: filePath, atomically: true, encoding: .utf8)
+        // Find all .swift files in the tests directory
+        let enumerator = fileManager.enumerator(
+            at: testsSourceDir,
+            includingPropertiesForKeys: [.isRegularFileKey],
+            options: [.skipsHiddenFiles]
+        )
+
+        while let element = enumerator?.nextObject() as? URL {
+            guard try element.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile == true,
+                element.pathExtension == "swift"
+            else {
+                continue
+            }
+
+            // Calculate relative path from tests source directory
+            guard let relativePath = element.relativePath(from: testsSourceDir) else {
+                continue
+            }
+            let destinationPath = testDir.appendingPathComponent(relativePath)
+
+            // Create destination directory if needed
+            try fileManager.createDirectory(
+                at: destinationPath.deletingLastPathComponent(),
+                withIntermediateDirectories: true
+            )
+
+            // Copy the file
+            try fileManager.copyItem(at: element, to: destinationPath)
         }
 
         // Return standardized URL to avoid /private/var vs /var issues
