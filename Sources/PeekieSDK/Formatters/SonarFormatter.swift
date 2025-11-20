@@ -145,7 +145,9 @@ extension testExecutions.file.testCase {
 }
 
 extension testExecutions.file {
-    static func testCases(from file: Report.Module.File) throws -> [testExecutions.file.testCase] {
+    fileprivate static func testCases(from file: Report.Module.File) throws -> [testExecutions.file
+        .testCase]
+    {
         var testCases: [testExecutions.file.testCase] = []
 
         for repeatableTest in file.repeatableTests.sorted(by: { $0.name < $1.name }) {
