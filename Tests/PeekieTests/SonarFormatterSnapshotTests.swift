@@ -64,6 +64,13 @@ struct SonarFormatterSnapshotTests {
                 continue
             }
 
+            // Skip snapshot test files and the test file itself
+            let fileName = element.lastPathComponent
+            if fileName.contains("SnapshotTests") || fileName == "SonarFormatterSnapshotTests.swift"
+            {
+                continue
+            }
+
             // Calculate relative path from tests source directory
             guard let relativePath = element.relativePath(from: testsSourceDir) else {
                 continue
