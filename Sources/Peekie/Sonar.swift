@@ -16,9 +16,6 @@ public struct Sonar: AsyncParsableCommand {
     @Option(help: "Path to folder with tests")
     public var testsPath: String
 
-    @Option(help: "Where to store .xml with sonar test data. Using stdout if not presented.")
-    public var outputPath: String?
-
     @Flag
     public var verbose: Bool = false
 
@@ -33,11 +30,6 @@ public struct Sonar: AsyncParsableCommand {
         let formatter = SonarFormatter()
         let result = try formatter.format(report: report, testsPath: testsPath)
 
-        if let outputPath {
-            let outputPath = URL(fileURLWithPath: outputPath)
-            try result.write(to: outputPath, atomically: true, encoding: .utf8)
-        } else {
-            Logger.logInfo(result)
-        }
+        Logger.logInfo(result)
     }
 }
