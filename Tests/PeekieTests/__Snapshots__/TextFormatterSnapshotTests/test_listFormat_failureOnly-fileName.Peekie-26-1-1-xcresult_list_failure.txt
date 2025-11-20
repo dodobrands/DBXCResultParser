@@ -1,0 +1,5 @@
+FakeSUITests
+❌ failure() (Failure message)
+
+FakeXCTests
+❌ test_failure() (Failure message)

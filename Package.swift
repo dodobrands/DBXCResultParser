@@ -3,14 +3,14 @@
 
 import PackageDescription
 
-let packageName = "DBXCResultParser"
+let packageName = "Peekie"
 
-let parserLibraryName = packageName
-let executableLibraryName = parserLibraryName + "Exec"
-let testHelpersLibraryName = parserLibraryName + "TestHelpers"
+let parserLibraryName = "PeekieSDK"
+let executableLibraryName = "peekie"
+let testHelpersLibraryName = "PeekieTestHelpers"
 
-let parserTargetName = parserLibraryName
-let executableTargetName = executableLibraryName
+let parserTargetName = "PeekieSDK"
+let executableTargetName = "Peekie"
 let testHelpersTargetName = testHelpersLibraryName
 
 let parserTestsTargetName = parserTargetName + "Tests"
@@ -67,6 +67,7 @@ let package = Package(
                     package: "swift-subprocess"
                 ),
             ],
+            path: "Sources/PeekieSDK",
             swiftSettings: [
                 .swiftLanguageMode(.v6),
                 .treatAllWarnings(as: .error),
@@ -106,6 +107,7 @@ let package = Package(
                     package: "swift-snapshot-testing"
                 ),
             ],
+            path: "Tests/PeekieTests",
             exclude: [
                 "__Snapshots__"
             ],
