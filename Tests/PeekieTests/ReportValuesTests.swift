@@ -28,7 +28,7 @@ struct ReportValuesTests {
         #expect(coverage == expected.coveragePercentage)
 
         // Check coverage for each module
-        // Modules in report are test modules (e.g., "DBXCResultParserTests")
+        // Modules in report are test modules (e.g., "PeekieTests")
         // Coverage is attached to test modules based on source module names
         for (moduleName, expectedModuleCoverage) in expected.moduleCoverages {
             let module = try #require(

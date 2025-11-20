@@ -44,7 +44,7 @@ extension Report {
             for testNode in unitTestBundles {
                 guard testNode.nodeType == .unitTestBundle else { continue }
 
-                // Extract module name from unit test bundle name (e.g., "DBXCResultParserTests")
+                // Extract module name from unit test bundle name (e.g., "PeekieTests")
                 let moduleName = testNode.name
 
                 var module =
@@ -103,8 +103,7 @@ extension Report {
                                 // Create separate test for each argument with its own status
                                 let baseDurationSeconds = testCase.durationInSeconds ?? 0.0
                                 for (argumentName, argumentResult) in arguments {
-                                    let status:
-                                        Report.Module.File.RepeatableTest.Test.Status
+                                    let status: Report.Module.File.RepeatableTest.Test.Status
                                     if let result = argumentResult {
                                         switch result {
                                         case .passed:
