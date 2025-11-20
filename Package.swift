@@ -82,7 +82,6 @@ let package = Package(
                     package: "swift-argument-parser"
                 ),
             ],
-            path: "Sources/Peekie",
             swiftSettings: [
                 .swiftLanguageMode(.v6),
                 .treatAllWarnings(as: .error),
