@@ -11,7 +11,11 @@ struct DBXCTextFormatterSnapshotTests {
 
     @Test(arguments: Constants.testsReportFileNames)
     func test_listFormat_allStatuses(fileName: String) async throws {
-        let reportPath = try Constants.url(for: fileName)
+        let originalPath = try Constants.url(for: fileName)
+        let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
+        defer {
+            try? FileManager.default.removeItem(at: reportPath)
+        }
         let report = try await DBXCReportModel(xcresultPath: reportPath)
         let formatted = formatter.format(report, format: .list, locale: locale)
 
@@ -24,7 +28,11 @@ struct DBXCTextFormatterSnapshotTests {
 
     @Test(arguments: Constants.testsReportFileNames)
     func test_listFormat_successOnly(fileName: String) async throws {
-        let reportPath = try Constants.url(for: fileName)
+        let originalPath = try Constants.url(for: fileName)
+        let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
+        defer {
+            try? FileManager.default.removeItem(at: reportPath)
+        }
         let report = try await DBXCReportModel(xcresultPath: reportPath)
         let formatted = formatter.format(
             report,
@@ -42,7 +50,11 @@ struct DBXCTextFormatterSnapshotTests {
 
     @Test(arguments: Constants.testsReportFileNames)
     func test_listFormat_failureOnly(fileName: String) async throws {
-        let reportPath = try Constants.url(for: fileName)
+        let originalPath = try Constants.url(for: fileName)
+        let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
+        defer {
+            try? FileManager.default.removeItem(at: reportPath)
+        }
         let report = try await DBXCReportModel(xcresultPath: reportPath)
         let formatted = formatter.format(
             report,
@@ -60,7 +72,11 @@ struct DBXCTextFormatterSnapshotTests {
 
     @Test(arguments: Constants.testsReportFileNames)
     func test_listFormat_skippedOnly(fileName: String) async throws {
-        let reportPath = try Constants.url(for: fileName)
+        let originalPath = try Constants.url(for: fileName)
+        let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
+        defer {
+            try? FileManager.default.removeItem(at: reportPath)
+        }
         let report = try await DBXCReportModel(xcresultPath: reportPath)
         let formatted = formatter.format(
             report,
@@ -78,7 +94,11 @@ struct DBXCTextFormatterSnapshotTests {
 
     @Test(arguments: Constants.testsReportFileNames)
     func test_countFormat_allStatuses(fileName: String) async throws {
-        let reportPath = try Constants.url(for: fileName)
+        let originalPath = try Constants.url(for: fileName)
+        let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
+        defer {
+            try? FileManager.default.removeItem(at: reportPath)
+        }
         let report = try await DBXCReportModel(xcresultPath: reportPath)
         let formatted = formatter.format(report, format: .count, locale: locale)
 
@@ -91,7 +111,11 @@ struct DBXCTextFormatterSnapshotTests {
 
     @Test(arguments: Constants.testsReportFileNames)
     func test_countFormat_failureOnly(fileName: String) async throws {
-        let reportPath = try Constants.url(for: fileName)
+        let originalPath = try Constants.url(for: fileName)
+        let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
+        defer {
+            try? FileManager.default.removeItem(at: reportPath)
+        }
         let report = try await DBXCReportModel(xcresultPath: reportPath)
         let formatted = formatter.format(
             report,
