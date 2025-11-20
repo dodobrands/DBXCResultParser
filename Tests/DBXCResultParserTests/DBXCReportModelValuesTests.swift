@@ -7,7 +7,11 @@ import Testing
 struct DBXCReportModelValuesTests {
     @Test(arguments: Constants.testsReportFileNames)
     func test_coverageValues(fileName: String) async throws {
-        let reportPath = try Constants.url(for: fileName)
+        let originalPath = try Constants.url(for: fileName)
+        let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
+        defer {
+            try? FileManager.default.removeItem(at: reportPath)
+        }
         let report = try await DBXCReportModel(xcresultPath: reportPath)
         let expected = try Constants.expectedReportValues(for: fileName)
 
@@ -41,7 +45,11 @@ struct DBXCReportModelValuesTests {
 
     @Test(arguments: Constants.testsReportFileNames)
     func test_warningsValues(fileName: String) async throws {
-        let reportPath = try Constants.url(for: fileName)
+        let originalPath = try Constants.url(for: fileName)
+        let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
+        defer {
+            try? FileManager.default.removeItem(at: reportPath)
+        }
         let report = try await DBXCReportModel(xcresultPath: reportPath)
         let expected = try Constants.expectedWarningsValues(for: fileName)
 
