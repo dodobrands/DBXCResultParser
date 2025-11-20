@@ -83,6 +83,18 @@ This keeps the codebase clean and avoids unnecessary maintenance overhead.
 
 ## GitHub Workflow
 
+### Branch Management
+
+**Never commit directly to the `main` branch.** All changes must be made in feature branches. The `main` branch should always remain synchronized with `origin/main` and should only be updated through pull requests that have been reviewed and merged.
+
+**Always create a new branch for your changes:**
+```bash
+git checkout main
+git fetch origin
+git reset --hard origin/main
+git checkout -b your-branch-name
+```
+
 ### Language Requirements
 
 **All issues and pull requests must be written in English.** This includes titles, descriptions, and comments. This ensures consistency and accessibility for all contributors.
@@ -98,7 +110,7 @@ All GitHub operations (creating PRs, issues, etc.) should be performed using the
 ```bash
 git checkout main
 git fetch origin
-git pull origin main
+git reset --hard origin/main
 git checkout -b your-branch-name
 ```
 
