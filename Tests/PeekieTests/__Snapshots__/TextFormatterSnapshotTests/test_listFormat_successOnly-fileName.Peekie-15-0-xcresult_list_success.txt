@@ -1,0 +1,22 @@
+ActionTestPlanRunSummariesDTOTests
+✅ test_parseWithExplicitRefId()
+✅ test_parseWithImplicitRefId()
+
+ActionsInvocationRecordDTOTests
+✅ test()
+
+CoverageDTOTests
+✅ test_coverageDtoData()
+✅ test_coverageDtoParse()
+
+DBShellTests
+✅ test()
+
+DBXCReportModelTests
+✅ test_success()
+
+DBXCTextFormatterTests
+✅ test_testResult_any_count()
+✅ test_testResult_any_list()
+✅ test_testResult_failure_count()
+✅ test_testResult_success_list()
