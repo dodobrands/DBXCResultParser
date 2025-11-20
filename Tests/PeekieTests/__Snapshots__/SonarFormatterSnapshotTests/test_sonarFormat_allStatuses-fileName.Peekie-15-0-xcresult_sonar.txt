@@ -1,0 +1,36 @@
+<testExecutions version="1">
+    <file path="../../../../../../private/var/folders/q6/7r_sv0q141x1w64lyv5wyzg80000gn/T/PeekieSonarTests-test_sonarFormat_allStatuses(fileName:)/ActionTestPlanRunSummariesDTOTests.swift">
+        <testCase name="test_parseWithExplicitRefId()" duration="47" />
+        <testCase name="test_parseWithImplicitRefId()" duration="42" />
+    </file>
+    <file path="../../../../../../private/var/folders/q6/7r_sv0q141x1w64lyv5wyzg80000gn/T/PeekieSonarTests-test_sonarFormat_allStatuses(fileName:)/ActionsInvocationRecordDTOTests.swift">
+        <testCase name="test()" duration="20" />
+    </file>
+    <file path="../../../../../../private/var/folders/q6/7r_sv0q141x1w64lyv5wyzg80000gn/T/PeekieSonarTests-test_sonarFormat_allStatuses(fileName:)/CoverageDTOTests.swift">
+        <testCase name="test_coverageDtoData()" duration="428" />
+        <testCase name="test_coverageDtoParse()" duration="313" />
+    </file>
+    <file path="../../../../../../private/var/folders/q6/7r_sv0q141x1w64lyv5wyzg80000gn/T/PeekieSonarTests-test_sonarFormat_allStatuses(fileName:)/DBShellTests.swift">
+        <testCase name="test()" duration="5" />
+    </file>
+    <file path="../../../../../../private/var/folders/q6/7r_sv0q141x1w64lyv5wyzg80000gn/T/PeekieSonarTests-test_sonarFormat_allStatuses(fileName:)/DBXCReportModelTests.swift">
+        <testCase name="test()" duration="2087">
+            <failure message="DBXCReportModelTests.swift:40: XCTAssertEqual failed: (&quot;1&quot;) is not equal to (&quot;2&quot;)" />
+        </testCase>
+        <testCase name="test_expectedFailure()" duration="362" />
+        <testCase name="test_failure()" duration="7">
+            <failure message="Failure message" />
+        </testCase>
+        <testCase name="test_flacky()" duration="1" />
+        <testCase name="test_skip()" duration="0">
+            <skipped message="Skip message" />
+        </testCase>
+        <testCase name="test_success()" duration="10" />
+    </file>
+    <file path="../../../../../../private/var/folders/q6/7r_sv0q141x1w64lyv5wyzg80000gn/T/PeekieSonarTests-test_sonarFormat_allStatuses(fileName:)/DBXCTextFormatterTests.swift">
+        <testCase name="test_testResult_any_count()" duration="1" />
+        <testCase name="test_testResult_any_list()" duration="0" />
+        <testCase name="test_testResult_failure_count()" duration="0" />
+        <testCase name="test_testResult_success_list()" duration="0" />
+    </file>
+</testExecutions>
