@@ -83,13 +83,18 @@ struct SonarFormatterSnapshotTests {
                 withIntermediateDirectories: true
             )
 
-            // Remove existing file if present (can happen with parallel test execution)
-            if fileManager.fileExists(atPath: destinationPath.path) {
-                try fileManager.removeItem(at: destinationPath)
+            // Skip if source file doesn't exist
+            guard fileManager.fileExists(atPath: element.path) else {
+                continue
             }
 
-            // Copy the file
-            try fileManager.copyItem(at: element, to: destinationPath)
+            // Remove existing file if present (can happen with parallel test execution)
+            if fileManager.fileExists(atPath: destinationPath.path) {
+                try? fileManager.removeItem(at: destinationPath)
+            }
+
+            // Copy the file (ignore errors for missing files)
+            try? fileManager.copyItem(at: element, to: destinationPath)
         }
 
         // Return standardized URL to avoid /private/var vs /var issues
