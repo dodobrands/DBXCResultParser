@@ -3,7 +3,7 @@ import DBXCResultParser
 import Foundation
 
 @main
-public class DBXCTextFormatterExecutable: AsyncParsableCommand {
+public class Peekie: AsyncParsableCommand {
     public required init() {}
 
     @Option(help: "Path to .xcresult")
