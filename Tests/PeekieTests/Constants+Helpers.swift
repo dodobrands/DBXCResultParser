@@ -59,7 +59,7 @@ struct Constants {
     ///
     /// ```
     /// processFailed(exitCode: exited(64), error: "Error: "database.sqlite3" couldn't be moved
-    /// to "DBXCResultParser-15.0.xcresult" because an item with the same name already exists.")
+    /// to "Peekie-15.0.xcresult" because an item with the same name already exists.")
     /// ```
     ///
     /// Note: This issue appears to be specific to Xcode 15.0 xcresult files. The exact reason
@@ -140,7 +140,7 @@ extension Constants {
     /// - Throws: TestError if the file name is unknown
     static func expectedReportValues(for fileName: String) throws -> ExpectedReportValues {
         switch fileName {
-        case "DBXCResultParser-15.0.xcresult":
+        case "Peekie-15.0.xcresult":
             return ExpectedReportValues(
                 coveredLines: 1054,
                 coveragePercentage: 0.92039586919104988,
@@ -149,7 +149,7 @@ extension Constants {
                     "DBXCResultParser-TextFormatterTests": 0.91242038216560506,
                 ]
             )
-        case "DBXCResultParser-26.1.1.xcresult":
+        case "Peekie-26.1.1.xcresult":
             return ExpectedReportValues(
                 coveredLines: 1069,
                 coveragePercentage: 0.7650485436893204,
@@ -169,9 +169,9 @@ extension Constants {
     /// - Throws: TestError if the file name is unknown
     static func expectedWarningsValues(for fileName: String) throws -> ExpectedWarningsValues {
         switch fileName {
-        case "DBXCResultParser-15.0.xcresult":
+        case "Peekie-15.0.xcresult":
             return ExpectedWarningsValues(warningCount: 0, warnings: [])
-        case "DBXCResultParser-26.1.1.xcresult":
+        case "Peekie-26.1.1.xcresult":
             return ExpectedWarningsValues(
                 warningCount: 1,
                 warnings: [

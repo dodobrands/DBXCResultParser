@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-// XCODE_VERSION=$(xcodebuild -version | head -1 | awk '{print $2}') && xcodebuild test -scheme DBXCResultParser-Package -destination 'platform=macOS' -enableCodeCoverage YES -retry-tests-on-failure -test-iterations 3 -collect-test-diagnostics never -enablePerformanceTestsDiagnostics NO -resultBundlePath "Tests/PeekieTests/Resources/DBXCResultParser-${XCODE_VERSION}.xcresult"
+// XCODE_VERSION=$(xcodebuild -version | head -1 | awk '{print $2}') && xcodebuild test -scheme DBXCResultParser-Package -destination 'platform=macOS' -enableCodeCoverage YES -retry-tests-on-failure -test-iterations 3 -collect-test-diagnostics never -enablePerformanceTestsDiagnostics NO -resultBundlePath "Tests/PeekieTests/Resources/Peekie-${XCODE_VERSION}.xcresult"
 //
 // Flow:
 // 1) uncomment the tests below
