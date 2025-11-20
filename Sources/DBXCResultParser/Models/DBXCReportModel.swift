@@ -143,18 +143,6 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test {
     }
 }
 
-extension DBXCReportModel {
-    enum Error: Swift.Error {
-        case missingFilename(testName: String)
-    }
-}
-
-extension String {
-    fileprivate var testFilename: String? {
-        split(separator: "/").first.map(String.init)
-    }
-}
-
 extension Set where Element == DBXCReportModel.Module.File.RepeatableTest {
     /// Filters tests based on statis
     /// - Parameter testResults: statuses to leave in result
@@ -251,7 +239,6 @@ extension DBXCReportModel.Module.File.RepeatableTest.Test {
     }
 
     enum Error: Swift.Error {
-        case invalidDuration(duration: String)
         case invalidNodeType
         case missingResult
     }

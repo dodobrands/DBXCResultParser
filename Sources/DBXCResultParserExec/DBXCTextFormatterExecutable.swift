@@ -61,80 +61,8 @@ public class DBXCTextFormatterExecutable: AsyncParsableCommand {
     }
 }
 
-extension DBXCReportModel.Module.File {
-    func report(
-        testResults: [DBXCReportModel.Module.File.RepeatableTest.Test.Status],
-        formatter: MeasurementFormatter
-    ) -> String? {
-        let tests = repeatableTests.filtered(testResults: testResults).sorted { $0.name < $1.name }
-
-        guard !tests.isEmpty else {
-            return nil
-        }
-
-        var rows =
-            tests
-            .sorted { $0.name < $1.name }
-            .map { test in
-                test.report(formatter: formatter)
-            }
-
-        rows.insert(name, at: 0)
-
-        return rows.joined(separator: "\n")
-    }
-}
-
-extension DBXCReportModel.Module.File.RepeatableTest {
-    fileprivate func report(formatter: MeasurementFormatter) -> String {
-        [
-            combinedStatus.icon,
-            name,
-        ]
-        .compactMap { $0 }
-        .joined(separator: " ")
-    }
-}
-
-extension String {
-    var wrappedInBrackets: Self {
-        "(" + self + ")"
-    }
-}
-
-extension MeasurementFormatter {
-    static var singleTestDurationFormatter: MeasurementFormatter {
-        let formatter = MeasurementFormatter()
-        formatter.unitOptions = [.providedUnit]
-        formatter.numberFormatter.maximumFractionDigits = 0
-        return formatter
-    }
-
-    static var totalTestsDurationFormatter: MeasurementFormatter {
-        let formatter = MeasurementFormatter()
-        formatter.unitOptions = [.naturalScale]
-        formatter.numberFormatter.maximumFractionDigits = 0
-        return formatter
-    }
-}
-
-extension NumberFormatter {
-    static var testsCountFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.maximumFractionDigits = 0
-        return formatter
-    }
-}
-
 enum DBXCResultParserError: Error {
     case invalidLocaleIdentifier(String)
-
-    var localizedDescription: String {
-        switch self {
-        case .invalidLocaleIdentifier(let identifier):
-            return "Invalid locale identifier: '\(identifier)'"
-        }
-    }
 }
 
 extension DBXCTextFormatter.Format: ExpressibleByArgument {
