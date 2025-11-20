@@ -219,22 +219,22 @@ swift run peekie --xcresult-path path/to/tests.xcresult
 
 ```bash
 # Default: list format with all test statuses
-swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult
+swift run peekie --xcresult-path path/to/tests.xcresult
 
 # Count format (summary)
-swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult --format count
+swift run peekie --xcresult-path path/to/tests.xcresult --format count
 
 # Show only failures
-swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult --include failure
+swift run peekie --xcresult-path path/to/tests.xcresult --include failure
 
 # Show failures and skipped tests
-swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult --include failure,skipped
+swift run peekie --xcresult-path path/to/tests.xcresult --include failure,skipped
 
 # Use specific locale for formatting
-swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult --locale ru-RU
+swift run peekie --xcresult-path path/to/tests.xcresult --locale ru-RU
 
 # Combine options: count format with only failures, using French locale
-swift run DBXCResultParserExec --xcresult-path path/to/tests.xcresult --format count --include failure --locale fr-FR
+swift run peekie --xcresult-path path/to/tests.xcresult --format count --include failure --locale fr-FR
 ```
 
 **Available options:**
