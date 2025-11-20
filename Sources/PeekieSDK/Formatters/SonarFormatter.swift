@@ -10,13 +10,26 @@ public class SonarFormatter {
     ) throws -> String {
         let fsIndex = try FSIndex(path: testsPath)
 
-        let sonarFiles =
-            try report
-            .modules
-            .flatMap { $0.files }
-            .sorted { $0.name < $1.name }
-            .concurrentMap { try testExecutions.file($0, index: fsIndex) }
+        // Group files by actual file path (multiple test suites can be in one file)
+        var filesByPath: [String: testExecutions.file] = [:]
 
+        for file in report.modules.flatMap({ $0.files }).sorted(by: { $0.name < $1.name }) {
+            let path =
+                try fsIndex.classes[file.name] ?! testExecutions.file.Error.missingFile(file.name)
+
+            // If we already have this file path, merge test cases
+            if var existingFile = filesByPath[path] {
+                let newTestCases = try testExecutions.file.testCases(from: file)
+                existingFile.testCase.append(contentsOf: newTestCases)
+                filesByPath[path] = existingFile
+            } else {
+                // Create new file entry
+                let testCases = try testExecutions.file.testCases(from: file)
+                filesByPath[path] = testExecutions.file(path: path, testCase: testCases)
+            }
+        }
+
+        let sonarFiles = Array(filesByPath.values).sorted { $0.path < $1.path }
         let dto = testExecutions(file: sonarFiles)
 
         let encoder = XMLEncoder()
@@ -130,8 +143,8 @@ extension testExecutions.file.testCase {
 }
 
 extension testExecutions.file {
-    init(_ file: Report.Module.File, index: FSIndex) throws {
-        var testCases: [testExecutions.file.testCase] = []
+    static func testCases(from file: Report.Module.File) throws -> [testCase] {
+        var testCases: [testCase] = []
 
         for repeatableTest in file.repeatableTests.sorted(by: { $0.name < $1.name }) {
             // Check if tests have different messages, which indicates they're parameterized
@@ -144,22 +157,17 @@ extension testExecutions.file {
                 // Output each test separately (parameterized case)
                 for test in repeatableTest.tests {
                     testCases.append(
-                        testExecutions.file.testCase.init(
+                        testCase.init(
                             test, repeatableTestName: repeatableTest.name)
                     )
                 }
             } else {
                 // Single test or multiple tests with same message (repetitions/mixed), use original format
-                testCases.append(testExecutions.file.testCase.init(repeatableTest))
+                testCases.append(testCase.init(repeatableTest))
             }
         }
 
-        let path = try index.classes[file.name] ?! Error.missingFile(file.name)
-
-        self.init(
-            path: path,
-            testCase: testCases
-        )
+        return testCases
     }
 
     enum Error: Swift.Error {
