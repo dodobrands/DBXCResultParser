@@ -54,13 +54,13 @@ let package = Package(
 
 ### Parsing xcresult Files
 
-To parse an `.xcresult` file and access the report data, initialize a `ReportModel` with the path to the `.xcresult` file:
+To parse an `.xcresult` file and access the report data, initialize a `Report` with the path to the `.xcresult` file:
 
 ```swift
 import peekiesdk
 
 let xcresultPath = URL(fileURLWithPath: "/path/to/your.xcresult")
-let reportModel = try await ReportModel(xcresultPath: xcresultPath)
+let reportModel = try await Report(xcresultPath: xcresultPath)
 
 // Access different parts of the report:
 let modules = reportModel.modules
@@ -91,7 +91,7 @@ for module in modules {
 
 ### Formatting Test Reports
 
-The `TextFormatter` class provides a way to format the data from a `ReportModel` into a human-readable string. It supports two output formats: a detailed list of test results and a summary count of test results.
+The `TextFormatter` class provides a way to format the data from a `Report` into a human-readable string. It supports two output formats: a detailed list of test results and a summary count of test results.
 
 #### Usage
 
@@ -100,8 +100,8 @@ To format your test report data, create an instance of `TextFormatter`:
 ```swift
 import peekiesdk
 
-// Assuming you have already created a `ReportModel` instance as `reportModel`
-let reportModel: ReportModel = ...
+// Assuming you have already created a `Report` instance as `reportModel`
+let reportModel: Report = ...
 
 // Create a text formatter
 let formatter = TextFormatter()
@@ -113,7 +113,7 @@ let formattedOutput = formatter.format(reportModel)
 print("Formatted Output:\n\(formattedOutput)")
 ```
 
-The `format` method can also take an array of `ReportModel.Module.File.RepeatableTest.Test.Status` to filter which test results are included in the output. By default, it includes all test statuses.
+The `format` method can also take an array of `Report.Module.File.RepeatableTest.Test.Status` to filter which test results are included in the output. By default, it includes all test statuses.
 
 **Filtering by status:**
 

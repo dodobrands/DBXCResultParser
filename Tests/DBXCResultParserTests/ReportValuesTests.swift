@@ -4,7 +4,7 @@ import Testing
 @testable import peekiesdk
 
 @Suite
-struct ReportModelValuesTests {
+struct ReportValuesTests {
     @Test(arguments: Constants.testsReportFileNames)
     func test_coverageValues(fileName: String) async throws {
         let originalPath = try Constants.url(for: fileName)
@@ -12,7 +12,7 @@ struct ReportModelValuesTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await ReportModel(xcresultPath: reportPath)
+        let report = try await Report(xcresultPath: reportPath)
         let expected = try Constants.expectedReportValues(for: fileName)
 
         // Calculate total covered lines from all modules
@@ -50,7 +50,7 @@ struct ReportModelValuesTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await ReportModel(xcresultPath: reportPath)
+        let report = try await Report(xcresultPath: reportPath)
         let expected = try Constants.expectedWarningsValues(for: fileName)
 
         // Check warnings count exactly as in xcresult file

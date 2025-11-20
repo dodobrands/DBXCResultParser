@@ -16,7 +16,7 @@ struct TextFormatterSnapshotTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await ReportModel(xcresultPath: reportPath)
+        let report = try await Report(xcresultPath: reportPath)
         let formatted = formatter.format(report, format: .list, locale: locale)
 
         assertSnapshot(
@@ -33,7 +33,7 @@ struct TextFormatterSnapshotTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await ReportModel(xcresultPath: reportPath)
+        let report = try await Report(xcresultPath: reportPath)
         let formatted = formatter.format(
             report,
             include: [.success],
@@ -55,7 +55,7 @@ struct TextFormatterSnapshotTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await ReportModel(xcresultPath: reportPath)
+        let report = try await Report(xcresultPath: reportPath)
         let formatted = formatter.format(
             report,
             include: [.failure],
@@ -77,7 +77,7 @@ struct TextFormatterSnapshotTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await ReportModel(xcresultPath: reportPath)
+        let report = try await Report(xcresultPath: reportPath)
         let formatted = formatter.format(
             report,
             include: [.skipped],
@@ -99,7 +99,7 @@ struct TextFormatterSnapshotTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await ReportModel(xcresultPath: reportPath)
+        let report = try await Report(xcresultPath: reportPath)
         let formatted = formatter.format(report, format: .count, locale: locale)
 
         assertSnapshot(
@@ -116,7 +116,7 @@ struct TextFormatterSnapshotTests {
         defer {
             try? FileManager.default.removeItem(at: reportPath)
         }
-        let report = try await ReportModel(xcresultPath: reportPath)
+        let report = try await Report(xcresultPath: reportPath)
         let formatted = formatter.format(
             report,
             include: [.failure],

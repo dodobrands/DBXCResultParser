@@ -13,13 +13,13 @@ public class TextFormatter {
 
     /// Formats a given report based on specified criteria.
     ///
-    /// This method takes a `ReportModel` instance and formats it according to the provided parameters.
+    /// This method takes a `Report` instance and formats it according to the provided parameters.
     /// It allows filtering based on the status of tests within the report and supports different formatting styles.
     /// The method can also localize the output based on the provided locale.
     ///
     /// - Parameters:
     ///   - report: The report model instance to be formatted.
-    ///   - include: An array of `ReportModel.Module.File.RepeatableTest.Test.Status` values that specifies which test statuses to include in the formatted report.
+    ///   - include: An array of `Report.Module.File.RepeatableTest.Test.Status` values that specifies which test statuses to include in the formatted report.
     ///   - format: The formatting style to be applied to the report.
     ///   - locale: An optional `Locale` to localize the formatted report. If nil, the system locale is used.
     ///
@@ -27,8 +27,8 @@ public class TextFormatter {
     ///
     /// - Throws: This method may throw an error if the formatting fails for any reason, such as an issue with the report model.
     public func format(
-        _ report: ReportModel,
-        include: [ReportModel.Module.File.RepeatableTest.Test.Status] = ReportModel.Module
+        _ report: Report,
+        include: [Report.Module.File.RepeatableTest.Test.Status] = Report.Module
             .File.RepeatableTest.Test.Status.allCases,
         format: Format = .list,
         locale: Locale? = nil
@@ -64,9 +64,9 @@ public class TextFormatter {
     }
 }
 
-extension ReportModel.Module.File {
+extension Report.Module.File {
     func report(
-        testResults: [ReportModel.Module.File.RepeatableTest.Test.Status]
+        testResults: [Report.Module.File.RepeatableTest.Test.Status]
     ) -> String? {
         let tests = repeatableTests.filtered(testResults: testResults).sorted { $0.name < $1.name }
 
@@ -102,7 +102,7 @@ extension ReportModel.Module.File {
     }
 }
 
-extension ReportModel.Module.File.RepeatableTest {
+extension Report.Module.File.RepeatableTest {
     fileprivate func report() -> String {
         [
             combinedStatus.icon,
@@ -114,7 +114,7 @@ extension ReportModel.Module.File.RepeatableTest {
     }
 }
 
-extension ReportModel.Module.File.RepeatableTest.Test {
+extension Report.Module.File.RepeatableTest.Test {
     fileprivate func report(repeatableTestName: String) -> String {
         [
             status.icon,

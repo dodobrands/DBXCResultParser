@@ -2,7 +2,7 @@ import Foundation
 
 @testable import peekiesdk
 
-extension ReportModel {
+extension Report {
     public static func testMake(
         modules: Set<Module> = [],
         coverage: Double? = nil,
@@ -34,7 +34,7 @@ extension ReportModel {
     }
 }
 
-extension ReportModel.Module {
+extension Report.Module {
     public static func testMake(
         name: String = "",
         files: Set<File> = [],
@@ -44,7 +44,7 @@ extension ReportModel.Module {
     }
 }
 
-extension ReportModel.Module.Coverage {
+extension Report.Module.Coverage {
     public static func testMake(
         name: String = "",
         coveredLines: Int = 0,
@@ -59,7 +59,7 @@ extension ReportModel.Module.Coverage {
     }
 }
 
-extension ReportModel.Module.File {
+extension Report.Module.File {
     public static func testMake(
         name: String = "",
         repeatableTests: Set<RepeatableTest> = []
@@ -68,7 +68,7 @@ extension ReportModel.Module.File {
     }
 }
 
-extension ReportModel.Module.File.RepeatableTest {
+extension Report.Module.File.RepeatableTest {
     public static func testMake(
         name: String = "",
         tests: [Test] = []
@@ -82,7 +82,7 @@ extension ReportModel.Module.File.RepeatableTest {
         message: String? = nil
     ) -> Self {
         let tests = Array(
-            repeating: ReportModel.Module.File.RepeatableTest.Test.testMake(
+            repeating: Report.Module.File.RepeatableTest.Test.testMake(
                 status: .failure, message: message),
             count: times
         )
@@ -114,14 +114,14 @@ extension ReportModel.Module.File.RepeatableTest {
         failedTimes: Int = 1
     ) -> Self {
         let failedTests = Array(
-            repeating: ReportModel.Module.File.RepeatableTest.Test.testMake(status: .failure),
+            repeating: Report.Module.File.RepeatableTest.Test.testMake(status: .failure),
             count: failedTimes
         )
         return .testMake(name: name, tests: failedTests + [.testMake(status: .success)])
     }
 }
 
-extension ReportModel.Module.File.RepeatableTest.Test {
+extension Report.Module.File.RepeatableTest.Test {
     public static func testMake(
         status: Status = .success,
         duration: Measurement<UnitDuration> = .testMake(),

@@ -68,10 +68,10 @@ struct TextFormatterTests {
     }
 }
 
-extension ReportModel {
-    static var genericReport: ReportModel {
+extension Report {
+    static var genericReport: Report {
         // Module with all possible tests
-        let profileModule = ReportModel.Module.testMake(
+        let profileModule = Report.Module.testMake(
             name: "Profile",
             files: [
                 .testMake(
@@ -91,7 +91,7 @@ extension ReportModel {
         )
 
         // Module with repeated tests
-        let networkModule = ReportModel.Module.testMake(
+        let networkModule = Report.Module.testMake(
             name: "Network",
             files: [
                 .testMake(
@@ -111,7 +111,7 @@ extension ReportModel {
         )
 
         // Module with skipped tests
-        let notificationsModule = ReportModel.Module.testMake(
+        let notificationsModule = Report.Module.testMake(
             name: "Notifications",
             files: [
                 .testMake(

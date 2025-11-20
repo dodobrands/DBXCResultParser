@@ -20,18 +20,18 @@ public class Peekie: AsyncParsableCommand {
     public var locale: String?
 
     @Option(help: "Test statutes to include in report, comma separated")
-    public var include: String = ReportModel.Module.File.RepeatableTest.Test.Status.allCases.map {
+    public var include: String = Report.Module.File.RepeatableTest.Test.Status.allCases.map {
         $0.rawValue
     }.joined(separator: ",")
 
     public func run() async throws {
         let xcresultPath = URL(fileURLWithPath: xcresultPath)
 
-        let report = try await ReportModel(xcresultPath: xcresultPath)
+        let report = try await Report(xcresultPath: xcresultPath)
 
         let include = include.split(separator: ",")
             .compactMap {
-                ReportModel.Module.File.RepeatableTest.Test.Status(rawValue: String($0))
+                Report.Module.File.RepeatableTest.Test.Status(rawValue: String($0))
             }
 
         let localeValue: Locale

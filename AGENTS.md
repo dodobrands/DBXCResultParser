@@ -35,7 +35,7 @@ Options:
 
 ### Core Components
 
-**ReportModel** (`Sources/peekiesdk/Models/ReportModel.swift`)
+**Report** (`Sources/peekiesdk/Models/Report.swift`)
 - Primary data model representing parsed `.xcresult` data
 - Hierarchical structure: `Module` → `File` → `RepeatableTest` → `Test`
 - Each test has a status (success, failure, expectedFailure, skipped, mixed, unknown) and duration
@@ -52,7 +52,7 @@ Options:
 - DTOs are initialized by executing `xcresulttool` commands via `Shell` and parsing JSON output
 
 **TextFormatter** (`Sources/peekiesdk/TextFormatter.swift`)
-- Formats `ReportModel` into human-readable text
+- Formats `Report` into human-readable text
 - Two output formats:
   - `list`: Detailed test results with file names and statuses
   - `count`: Summary count with total duration
