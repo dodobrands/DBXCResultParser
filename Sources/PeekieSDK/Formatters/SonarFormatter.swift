@@ -32,23 +32,21 @@ public class SonarFormatter {
         let sonarFiles = filesByPath.map { path, testCases in
             TestExecutions.File(path: path, testCase: testCases)
         }.sorted { $0.path < $1.path }
-        let dto = TestExecutionsWrapper(testExecutions: TestExecutions(file: sonarFiles))
+        let dto = TestExecutionsRoot(testExecutions: TestExecutions(file: sonarFiles))
 
         let encoder = XMLEncoder()
         encoder.outputFormatting = .prettyPrinted
         let data = try encoder.encode(dto)
-        var xmlString = String(decoding: data, as: UTF8.self)
-        // Replace wrapper element name with correct XML element name
-        xmlString = xmlString.replacingOccurrences(
-            of: "<TestExecutionsWrapper>", with: "<testExecutions>")
-        xmlString = xmlString.replacingOccurrences(
-            of: "</TestExecutionsWrapper>", with: "</testExecutions>")
-        return xmlString
+        return String(decoding: data, as: UTF8.self)
     }
 }
 
-private struct TestExecutionsWrapper: Encodable {
+private struct TestExecutionsRoot: Encodable, DynamicNodeEncoding {
     let testExecutions: TestExecutions
+
+    enum CodingKeys: String, CodingKey {
+        case testExecutions = "testExecutions"
+    }
 }
 
 private struct TestExecutions: Encodable, DynamicNodeEncoding {
@@ -57,7 +55,7 @@ private struct TestExecutions: Encodable, DynamicNodeEncoding {
 
     enum CodingKeys: String, CodingKey {
         case version
-        case file = "file"
+        case file
     }
 
     static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
