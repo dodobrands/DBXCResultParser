@@ -25,8 +25,11 @@ struct SonarFormatterSnapshotTests {
 
         let formatted = try formatter.format(report: report, testsPath: testsPath)
 
+        // Normalize paths in snapshot to avoid CI/local differences
+        let normalized = normalizePaths(in: formatted, testsPath: testsPath)
+
         assertSnapshot(
-            of: formatted,
+            of: normalized,
             as: .lines,
             named: "\(fileName)_sonar"
         )
@@ -46,7 +49,6 @@ struct SonarFormatterSnapshotTests {
         try FileManager.default.createDirectory(at: testDir, withIntermediateDirectories: true)
 
         // Generate mock Swift test files based on test suite names from the report
-        let fileManager = FileManager.default
         let testSuites = Set(report.modules.flatMap { $0.files.map { $0.name } })
 
         for testSuiteName in testSuites {
@@ -70,5 +72,27 @@ struct SonarFormatterSnapshotTests {
 
         // Return standardized URL to avoid /private/var vs /var issues
         return URL(fileURLWithPath: testDir.path).standardized
+    }
+
+    private func normalizePaths(in xml: String, testsPath: URL) -> String {
+        // Find the marker "PeekieSonarTests-" in paths and replace everything before it with {TEMP_DIR}/
+        let marker = "PeekieSonarTests-"
+
+        // Use regex to match path="...PeekieSonarTests-..." and replace everything before marker with {TEMP_DIR}/
+        // Pattern matches: path="(anything)PeekieSonarTests-(rest of path)"
+        let pattern =
+            #"path="[^"]*"# + NSRegularExpression.escapedPattern(for: marker) + #"([^"]*)""#
+
+        guard let regex = try? NSRegularExpression(pattern: pattern) else {
+            return xml
+        }
+
+        let range = NSRange(xml.startIndex..., in: xml)
+        return regex.stringByReplacingMatches(
+            in: xml,
+            options: [],
+            range: range,
+            withTemplate: #"path="{TEMP_DIR}/$1""#
+        )
     }
 }

@@ -1,6 +1,6 @@
 <TestExecutionsRoot>
     <testExecutions version="1">
-        <file path="../../../../../../private/var/folders/q6/7r_sv0q141x1w64lyv5wyzg80000gn/T/PeekieSonarTests-test_sonarFormat_allStatuses(fileName:)/FakeSUITests.swift">
+        <file path="{TEMP_DIR}/test_sonarFormat_allStatuses(fileName:)/FakeSUITests.swift">
             <testCase name="disabled()" duration="0">
                 <skipped message="Test &apos;disabled()&apos; skipped: Disabled reason" />
             </testCase>
@@ -16,7 +16,7 @@
             <testCase name="somethingWithWarning()" duration="0" />
             <testCase name="success()" duration="0" />
         </file>
-        <file path="../../../../../../private/var/folders/q6/7r_sv0q141x1w64lyv5wyzg80000gn/T/PeekieSonarTests-test_sonarFormat_allStatuses(fileName:)/FakeXCTests.swift">
+        <file path="{TEMP_DIR}/test_sonarFormat_allStatuses(fileName:)/FakeXCTests.swift">
             <testCase name="test_expectedFailure()" duration="486" />
             <testCase name="test_failure()" duration="2">
                 <failure message="Failure message" />
@@ -27,7 +27,7 @@
             </testCase>
             <testCase name="test_success()" duration="0" />
         </file>
-        <file path="../../../../../../private/var/folders/q6/7r_sv0q141x1w64lyv5wyzg80000gn/T/PeekieSonarTests-test_sonarFormat_allStatuses(fileName:)/ReportValuesTests.swift">
+        <file path="{TEMP_DIR}/test_sonarFormat_allStatuses(fileName:)/ReportValuesTests.swift">
             <testCase name="test_coverageValues(fileName:) (Peekie-15.0.xcresult)" duration="1666" />
             <testCase name="test_coverageValues(fileName:) (Peekie-26.1.1.xcresult)" duration="1666">
                 <failure message="Peekie-26.1.1.xcresult" />
@@ -37,10 +37,10 @@
                 <failure message="Peekie-26.1.1.xcresult" />
             </testCase>
         </file>
-        <file path="../../../../../../private/var/folders/q6/7r_sv0q141x1w64lyv5wyzg80000gn/T/PeekieSonarTests-test_sonarFormat_allStatuses(fileName:)/ShellTests.swift">
+        <file path="{TEMP_DIR}/test_sonarFormat_allStatuses(fileName:)/ShellTests.swift">
             <testCase name="test()" duration="0" />
         </file>
-        <file path="../../../../../../private/var/folders/q6/7r_sv0q141x1w64lyv5wyzg80000gn/T/PeekieSonarTests-test_sonarFormat_allStatuses(fileName:)/TextFormatterSnapshotTests.swift">
+        <file path="{TEMP_DIR}/test_sonarFormat_allStatuses(fileName:)/TextFormatterSnapshotTests.swift">
             <testCase name="test_countFormat_allStatuses(fileName:) (Peekie-15.0.xcresult)" duration="1500" />
             <testCase name="test_countFormat_allStatuses(fileName:) (Peekie-26.1.1.xcresult)" duration="1500">
                 <failure message="Peekie-26.1.1.xcresult" />
@@ -66,7 +66,7 @@
                 <failure message="Peekie-26.1.1.xcresult" />
             </testCase>
         </file>
-        <file path="../../../../../../private/var/folders/q6/7r_sv0q141x1w64lyv5wyzg80000gn/T/PeekieSonarTests-test_sonarFormat_allStatuses(fileName:)/TextFormatterTests.swift">
+        <file path="{TEMP_DIR}/test_sonarFormat_allStatuses(fileName:)/TextFormatterTests.swift">
             <testCase name="test_testResult_any_count()" duration="0" />
             <testCase name="test_testResult_any_list()" duration="0" />
             <testCase name="test_testResult_failure_count()" duration="0" />
