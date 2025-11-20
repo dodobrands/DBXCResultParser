@@ -67,7 +67,7 @@ The package exports:
 
 ## Testing
 
-Test resources are stored in `Tests/DBXCResultParserTests/Resources/DBXCResultParser.xcresult` - this is a sample `.xcresult` file used for testing.
+Test resources are stored in `Tests/PeekieTests/Resources/DBXCResultParser.xcresult` - this is a sample `.xcresult` file used for testing.
 
 ## Code Style Guidelines
 
