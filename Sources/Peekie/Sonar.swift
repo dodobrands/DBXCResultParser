@@ -16,12 +16,7 @@ public struct Sonar: AsyncParsableCommand {
     @Option(help: "Path to folder with tests")
     public var testsPath: String
 
-    @Flag
-    public var verbose: Bool = false
-
     public func run() async throws {
-        Logger.verbose = verbose
-
         let xcresultPath = URL(fileURLWithPath: xcresultPath)
         let testsPath = URL(fileURLWithPath: testsPath)
 
@@ -30,6 +25,6 @@ public struct Sonar: AsyncParsableCommand {
         let formatter = SonarFormatter()
         let result = try formatter.format(report: report, testsPath: testsPath)
 
-        Logger.logInfo(result)
+        print(result)
     }
 }

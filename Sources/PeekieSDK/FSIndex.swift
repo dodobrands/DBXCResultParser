@@ -20,8 +20,9 @@ extension FSIndex {
             includingPropertiesForKeys: [.isRegularFileKey],
             options: [.skipsHiddenFiles]
         ) { (url, error) -> Bool in
-            Logger.logWarning("Directory enumeration error at \(url)")
-            Logger.logWarning(error.localizedDescription)
+            let message =
+                "Warning: Directory enumeration error at \(url)\nWarning: \(error.localizedDescription)\n"
+            FileHandle.standardError.write(Data(message.utf8))
             return true
         }
 
@@ -32,7 +33,8 @@ extension FSIndex {
         // Iterate over each file found by the enumerator
         while let element = enumerator?.nextObject() as? URL {
             let isFile =
-                try element.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile ?? false
+                try element.resourceValues(forKeys: [URLResourceKey.isRegularFileKey]).isRegularFile
+                ?? false
             guard isFile,
                 element.pathExtension == "swift"
             else {
@@ -49,7 +51,7 @@ extension FSIndex {
             for match in matches {
                 if let range = Range(match.range(at: 1), in: fileContent) {
                     let className = String(fileContent[range])
-                    let relativePath =
+                    let relativePath: String =
                         try element.relativePath(from: path)
                         ?! Error.cantGetRelativePath(filePath: element, basePath: path)
                     classDictionary[className] = relativePath

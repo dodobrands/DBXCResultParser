@@ -10,7 +10,6 @@ class SonarFormatter {
         testsPath: URL
     ) throws -> String {
         let fsIndex = try FSIndex(path: testsPath)
-        Logger.logDebug("Test classes: \(fsIndex.classes)")
 
         let sonarFiles =
             try report
@@ -114,8 +113,6 @@ extension testExecutions.file.testCase {
 
 extension testExecutions.file {
     init(_ file: Report.Module.File, index: FSIndex) throws {
-        Logger.logDebug("Formatting \(file.name)")
-
         let testCases = file.repeatableTests
             .sorted { $0.name < $1.name }
             .map { testExecutions.file.testCase.init($0) }
