@@ -1,0 +1,153 @@
+import Foundation
+import PeekieSDK
+import XMLCoder
+
+class SonarFormatter {
+    init() {}
+
+    func format(
+        report: Report,
+        testsPath: URL
+    ) throws -> String {
+        let fsIndex = try FSIndex(path: testsPath)
+        Logger.logDebug("Test classes: \(fsIndex.classes)")
+
+        let sonarFiles =
+            try report
+            .modules
+            .flatMap { $0.files }
+            .sorted { $0.name < $1.name }
+            .concurrentMap { try testExecutions.file($0, index: fsIndex) }
+
+        let dto = testExecutions(file: sonarFiles)
+
+        let encoder = XMLEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let data = try encoder.encode(dto)
+        return String(decoding: data, as: UTF8.self)
+    }
+}
+
+private struct testExecutions: Encodable, DynamicNodeEncoding {
+    let version = 1
+    let file: [file]
+
+    static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
+        switch key {
+        case Self.CodingKeys.version:
+            return .attribute
+        default:
+            return .element
+        }
+    }
+
+    struct file: Encodable, DynamicNodeEncoding {
+        let path: String
+        let testCase: [testCase]
+
+        static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
+            switch key {
+            case Self.CodingKeys.path:
+                return .attribute
+            default:
+                return .element
+            }
+        }
+
+        struct testCase: Encodable, DynamicNodeEncoding {
+            let name: String
+            let duration: Int
+            let skipped: skipped?
+            let failure: failure?
+
+            static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
+                switch key {
+                case Self.CodingKeys.name,
+                    Self.CodingKeys.duration:
+                    return .attribute
+                default:
+                    return .element
+                }
+            }
+
+            struct skipped: Encodable, DynamicNodeEncoding {
+                let message: String
+
+                static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
+                    switch key {
+                    case Self.CodingKeys.message:
+                        return .attribute
+                    default:
+                        return .element
+                    }
+                }
+            }
+
+            struct failure: Encodable, DynamicNodeEncoding {
+                let message: String
+
+                static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
+                    switch key {
+                    case Self.CodingKeys.message:
+                        return .attribute
+                    default:
+                        return .element
+                    }
+                }
+            }
+        }
+    }
+}
+
+extension testExecutions.file.testCase {
+    init(_ test: Report.Module.File.RepeatableTest) {
+        self.init(
+            name: test.name,
+            duration: Int(test.totalDuration.converted(to: .milliseconds).value),
+            skipped: test.combinedStatus == .skipped
+                ? .init(message: test.message ?? "Test message missing") : nil,
+            failure: test.combinedStatus == .failure
+                ? .init(message: test.message ?? "Test message missing") : nil
+        )
+    }
+}
+
+extension testExecutions.file {
+    init(_ file: Report.Module.File, index: FSIndex) throws {
+        Logger.logDebug("Formatting \(file.name)")
+
+        let testCases = file.repeatableTests
+            .sorted { $0.name < $1.name }
+            .map { testExecutions.file.testCase.init($0) }
+
+        let path = try index.classes[file.name] ?! Error.missingFile(file.name)
+
+        self.init(
+            path: path,
+            testCase: testCases
+        )
+    }
+
+    enum Error: Swift.Error {
+        case missingFile(String)
+    }
+}
+
+extension Sequence {
+    func concurrentMap<T: Sendable>(_ transform: @escaping @Sendable (Self.Element) throws -> T)
+        rethrows -> [T]
+    {
+        nonisolated(unsafe) let elements = Array(self)
+        nonisolated(unsafe) var results = [T?](repeating: nil, count: elements.count)
+        let lock = NSLock()
+
+        DispatchQueue.concurrentPerform(iterations: elements.count) { index in
+            let transformed = try? transform(elements[index])
+            lock.lock()
+            results[index] = transformed
+            lock.unlock()
+        }
+
+        return results.compactMap { $0 }
+    }
+}

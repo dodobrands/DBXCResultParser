@@ -53,6 +53,10 @@ let package = Package(
             url: "https://github.com/pointfreeco/swift-snapshot-testing.git",
             .upToNextMajor(from: "1.16.0")
         ),
+        .package(
+            url: "https://github.com/CoreOffice/XMLCoder.git",
+            .upToNextMajor(from: "0.17.1")
+        ),
     ],
     targets: [
         .target(
@@ -80,6 +84,10 @@ let package = Package(
                 .product(
                     name: "ArgumentParser",
                     package: "swift-argument-parser"
+                ),
+                .product(
+                    name: "XMLCoder",
+                    package: "XMLCoder"
                 ),
             ],
             swiftSettings: [
