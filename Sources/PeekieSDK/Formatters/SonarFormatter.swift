@@ -11,25 +11,27 @@ public class SonarFormatter {
         let fsIndex = try FSIndex(path: testsPath)
 
         // Group files by actual file path (multiple test suites can be in one file)
-        var filesByPath: [String: testExecutions.file] = [:]
+        var filesByPath: [String: [testExecutions.file.testCase]] = [:]
 
         for file in report.modules.flatMap({ $0.files }).sorted(by: { $0.name < $1.name }) {
             let path =
                 try fsIndex.classes[file.name] ?! testExecutions.file.Error.missingFile(file.name)
 
-            // If we already have this file path, merge test cases
-            if var existingFile = filesByPath[path] {
-                let newTestCases = try testExecutions.file.testCases(from: file)
-                existingFile.testCase.append(contentsOf: newTestCases)
-                filesByPath[path] = existingFile
+            // Extract test cases from this file
+            let testCases = try testExecutions.file.testCases(from: file)
+
+            // Merge test cases by file path
+            if filesByPath[path] != nil {
+                filesByPath[path]?.append(contentsOf: testCases)
             } else {
-                // Create new file entry
-                let testCases = try testExecutions.file.testCases(from: file)
-                filesByPath[path] = testExecutions.file(path: path, testCase: testCases)
+                filesByPath[path] = testCases
             }
         }
 
-        let sonarFiles = Array(filesByPath.values).sorted { $0.path < $1.path }
+        // Create file entries from grouped test cases
+        let sonarFiles = filesByPath.map { path, testCases in
+            testExecutions.file(path: path, testCase: testCases)
+        }.sorted { $0.path < $1.path }
         let dto = testExecutions(file: sonarFiles)
 
         let encoder = XMLEncoder()
