@@ -166,11 +166,11 @@ extension Report {
                         ?? .init(
                             name: fileName,
                             repeatableTests: [],
-                            warnings: Self.findWarnings(for: fileName, in: warningsByFileName),
+                            warnings: Self.warningsFor(fileName: fileName, in: warningsByFileName),
                             coverage: fileCoverage
                         )
 
-                    let fileWarnings = Self.findWarnings(for: fileName, in: warningsByFileName)
+                    let fileWarnings = Self.warningsFor(fileName: fileName, in: warningsByFileName)
                     if !fileWarnings.isEmpty {
                         file.warnings = Self.mergeWarnings(file.warnings, fileWarnings)
                     }
@@ -382,7 +382,7 @@ extension Report {
                             repeatableTests: existingFile.repeatableTests,
                             warnings: Self.mergeWarnings(
                                 existingFile.warnings,
-                                Self.findWarnings(for: fileName, in: warningsByFileName)
+                                Self.warningsFor(fileName: fileName, in: warningsByFileName)
                             ),
                             coverage: coverage
                         )
@@ -395,7 +395,7 @@ extension Report {
                     let newFile = Report.Module.File(
                         name: fileName,
                         repeatableTests: [],
-                        warnings: Self.findWarnings(for: fileName, in: warningsByFileName),
+                        warnings: Self.warningsFor(fileName: fileName, in: warningsByFileName),
                         coverage: coverage
                     )
                     moduleFiles.insert(newFile)

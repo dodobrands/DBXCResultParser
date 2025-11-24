@@ -63,30 +63,17 @@ extension Report {
         return collapsed.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    /// Finds warnings for a given file name by checking various candidate names
-    static func findWarnings(
-        for fileName: String,
+    /// Retrieves warnings matching a file name, optionally trying with a `.swift` suffix
+    static func warningsFor(
+        fileName: String,
         in warningsByFileName: [String: [Module.File.Issue]]
     ) -> [Module.File.Issue] {
-        var candidates: [String] = [fileName]
+        if let warnings = warningsByFileName[fileName] {
+            return warnings
+        }
         if !fileName.hasSuffix(".swift") {
-            candidates.append(fileName + ".swift")
+            return warningsByFileName[fileName + ".swift"] ?? []
         }
-
-        let baseName = fileName.replacingOccurrences(of: "Tests", with: "")
-        if baseName != fileName {
-            candidates.append(baseName)
-            if !baseName.hasSuffix(".swift") {
-                candidates.append(baseName + ".swift")
-            }
-        }
-
-        for candidate in candidates {
-            if let warnings = warningsByFileName[candidate] {
-                return warnings
-            }
-        }
-
         return []
     }
 
