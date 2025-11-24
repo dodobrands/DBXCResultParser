@@ -11,7 +11,3 @@ public struct Peekie: AsyncParsableCommand {
 
     public init() {}
 }
-
-enum PeekieSDKError: Error {
-    case invalidLocaleIdentifier(String)
-}
