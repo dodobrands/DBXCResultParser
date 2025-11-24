@@ -50,7 +50,7 @@ jobs:
       run: swift run peekie sonar --xcresult-path Tests/PeekieTests/Resources/Peekie-26.1.1.xcresult --tests-path Tests/PeekieTests
 
     - name: Install mise
-      uses: jdx/mise-action@v2
+      uses: jdx/mise-action@v3
 
     - name: Scan for unused code with Periphery
       run: periphery scan --skip-build
