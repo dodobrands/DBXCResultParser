@@ -15,7 +15,7 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
 - [Usage](#usage)
   - [Parsing xcresult Files](#parsing-xcresult-files)
   - [Formatters](#formatters)
-    - [TextFormatter](#textformatter)
+    - [ListFormatter](#listformatter)
     - [SonarFormatter](#sonarformatter)
   - [Command-Line Tool](#command-line-tool)
 - [Updating Test Resources](#updating-test-resources)
@@ -66,6 +66,19 @@ import PeekieSDK
 let xcresultPath = URL(fileURLWithPath: "/path/to/your.xcresult")
 let reportModel = try await Report(xcresultPath: xcresultPath)
 
+// Optionally, you can control what data to include:
+// Parse without coverage data (faster)
+let reportWithoutCoverage = try await Report(
+    xcresultPath: xcresultPath,
+    includeCoverage: false
+)
+
+// Parse without warnings
+let reportWithoutWarnings = try await Report(
+    xcresultPath: xcresultPath,
+    includeWarnings: false
+)
+
 // Access different parts of the report:
 let modules = reportModel.modules
 let coverage = reportModel.coverage // Coverage value from 0.0 to 1.0
@@ -98,16 +111,16 @@ for module in modules {
 
 The `PeekieSDK` package provides multiple formatters to convert parsed `.xcresult` data into different output formats. Each formatter is designed for specific use cases:
 
-- **TextFormatter**: Generates human-readable text output for terminal display and logs
+- **ListFormatter**: Generates human-readable list output for terminal display and logs
 - **SonarFormatter**: Generates SonarQube Generic Test Execution XML format for CI/CD integration
 
-### TextFormatter
+### ListFormatter
 
-The `TextFormatter` class provides a way to format the data from a `Report` into a human-readable string. It supports two output formats: a detailed list of test results and a summary count of test results.
+The `ListFormatter` class provides a way to format the data from a `Report` into a human-readable string. It outputs a detailed list of test results.
 
 #### Usage
 
-To format your test report data, create an instance of `TextFormatter`:
+To format your test report data, create an instance of `ListFormatter`:
 
 ```swift
 import PeekieSDK
@@ -115,8 +128,8 @@ import PeekieSDK
 // Assuming you have already created a `Report` instance as `reportModel`
 let reportModel: Report = ...
 
-// Create a text formatter
-let formatter = TextFormatter()
+// Create a list formatter
+let formatter = ListFormatter()
 
 // Format the report data into a string
 let formattedOutput = formatter.format(reportModel)
@@ -140,21 +153,7 @@ let failuresAndSkipped = formatter.format(reportModel, include: [.failure, .skip
 let successesOnly = formatter.format(reportModel, include: [.success])
 ```
 
-**Using count format:**
-
-```swift
-// Get summary count instead of detailed list
-let summary = formatter.format(reportModel, format: .count)
-// Output: "12 tests (1m 23s)"
-
-// Count only failures
-let failureCount = formatter.format(reportModel, include: [.failure], format: .count)
-// Output: "3 tests (45s)"
-```
-
-#### Output Formats
-
-##### List Format
+#### Output Format
 
 Outputs a detailed list of test results, including the name of each file and the status of each test.
 
@@ -190,30 +189,6 @@ CalculatorTests.swift
 ✅ testMultiplication(factor:) (5)
 ❌ testDivision(dividend:divisor:) (10, 2)
 ✅ testDivision(dividend:divisor:) (20, 4)
-```
-
-##### Count Format
-
-Outputs a summary count of test results, including the total number of tests and their combined duration.
-
-```
-12 tests (1m 23s)
-```
-
-When filtering by status (e.g., only failures), duration is omitted if only skipped tests are included:
-
-```
-5 tests
-```
-
-#### Customizing Number and Measurement Formatting
-
-The `TextFormatter` allows you to specify a locale when formatting the report. This locale is used to format numbers and measurements according to the provided locale's conventions.
-
-```swift
-let formatter = TextFormatter()
-let output = formatter.format(reportModel, locale: Locale(identifier: "fr_FR"))
-print(output) // Will output numbers and durations formatted in French
 ```
 
 ### SonarFormatter
@@ -281,41 +256,32 @@ The formatter generates XML in the following structure:
 
 ### Command-Line Tool
 
-The package includes a command-line tool that can be executed to generate test reports. The tool supports two subcommands: `text` for human-readable text output and `sonar` for SonarQube XML format.
+The package includes a command-line tool that can be executed to generate test reports. The tool supports two subcommands: `list` for human-readable list output and `sonar` for SonarQube XML format.
 
-#### Text Format Subcommand
+#### List Format Subcommand
 
 ```bash
-swift run peekie text path/to/tests.xcresult
+swift run peekie list path/to/tests.xcresult
 ```
 
 **Examples:**
 
 ```bash
-# Default: list format with all test statuses
-swift run peekie text path/to/tests.xcresult
-
-# Count format (summary)
-swift run peekie text path/to/tests.xcresult --format count
+# Default: all test statuses
+swift run peekie list path/to/tests.xcresult
 
 # Show only failures
-swift run peekie text path/to/tests.xcresult --include failure
+swift run peekie list path/to/tests.xcresult --include failure
 
 # Show failures and skipped tests
-swift run peekie text path/to/tests.xcresult --include failure,skipped
-
-# Use specific locale for formatting
-swift run peekie text path/to/tests.xcresult --locale ru-RU
-
-# Combine options: count format with only failures, using French locale
-swift run peekie text path/to/tests.xcresult --format count --include failure --locale fr-FR
+swift run peekie list path/to/tests.xcresult --include failure,skipped
 ```
 
-**Available options for `text` subcommand:**
+**Available options for `list` subcommand:**
 - `<xcresult-path>`: Path to the `.xcresult` file (required, positional argument).
-- `--format`: Determines the output format (`list` or `count`). Default: `list`.
-- `--locale`: Sets the locale for number and measurement formatting (e.g., "en-GB", "ru-RU", "fr-FR"). Default: system locale.
 - `--include`: Filters the test results to include only certain statuses. Comma-separated list of: `success`, `failure`, `skipped`, `expectedFailure`, `mixed`, `unknown`. Default: all statuses.
+- `--include-coverage`: Whether to parse and include code coverage data. Default: `true`.
+- `--include-warnings`: Whether to parse and include build warnings. Default: `true`.
 
 #### SonarQube Format Subcommand
 
