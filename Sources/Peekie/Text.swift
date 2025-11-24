@@ -13,13 +13,6 @@ public struct Text: AsyncParsableCommand {
     @Argument(help: "Path to .xcresult")
     public var xcresultPath: String
 
-    /// The locale to use for formatting numbers and measurements
-    @Option(
-        help:
-            "Locale identifier to use for numbers and measurements formatting (e.g., 'en-US', 'ru-RU'). If not provided, system locale is used."
-    )
-    public var locale: String?
-
     @Option(help: "Test statutes to include in report, comma separated")
     public var include: String = Report.Module.File.RepeatableTest.Test.Status.allCases.map {
         $0.rawValue
@@ -45,27 +38,11 @@ public struct Text: AsyncParsableCommand {
                 Report.Module.File.RepeatableTest.Test.Status(rawValue: String($0))
             }
 
-        let localeValue: Locale
-        if let localeString = locale {
-            guard !localeString.isEmpty else {
-                throw PeekieSDKError.invalidLocaleIdentifier(localeString)
-            }
-            let createdLocale = Locale(identifier: localeString)
-            // Validate that the locale identifier is valid
-            guard Locale.availableIdentifiers.contains(localeString) else {
-                throw PeekieSDKError.invalidLocaleIdentifier(localeString)
-            }
-            localeValue = createdLocale
-        } else {
-            localeValue = Locale.current
-        }
-
         let formatter = TextFormatter()
 
         let result = formatter.format(
             report,
-            include: include,
-            locale: localeValue
+            include: include
         )
 
         print(result)

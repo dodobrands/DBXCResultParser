@@ -20,8 +20,7 @@ public class TextFormatter {
     public func format(
         _ report: Report,
         include: [Report.Module.File.RepeatableTest.Test.Status] = Report.Module
-            .File.RepeatableTest.Test.Status.allCases,
-        locale: Locale? = nil
+            .File.RepeatableTest.Test.Status.allCases
     ) -> String {
         let files = report.modules
             .flatMap { Array($0.files) }
