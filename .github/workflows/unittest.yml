@@ -39,10 +39,14 @@ jobs:
       run: swift package resolve
 
     - name: Build
-      run: swift build --build-tests -Xswiftc -enable-experimental-feature -Xswiftc UnbufferedIO
+      env:
+        SWIFT_ACTIONS_ENABLE_UNBUFFERED_IO: 1
+      run: swift build --build-tests
 
     - name: Test
-      run: swift test --skip-build -Xswiftc -enable-experimental-feature -Xswiftc UnbufferedIO
+      env:
+        SWIFT_ACTIONS_ENABLE_UNBUFFERED_IO: 1
+      run: swift test --skip-build
 
     # Verify CLI tool functionality by parsing test xcresult file
     - name: Parse xcresult (text format)
