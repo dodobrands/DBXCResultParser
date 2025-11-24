@@ -28,10 +28,20 @@ public struct Text: AsyncParsableCommand {
         $0.rawValue
     }.joined(separator: ",")
 
+    @Option(help: "Whether to parse and include code coverage data")
+    public var includeCoverage: Bool = true
+
+    @Option(help: "Whether to parse and include build warnings")
+    public var includeWarnings: Bool = true
+
     public func run() async throws {
         let xcresultPath = URL(fileURLWithPath: xcresultPath)
 
-        let report = try await Report(xcresultPath: xcresultPath)
+        let report = try await Report(
+            xcresultPath: xcresultPath,
+            includeCoverage: includeCoverage,
+            includeWarnings: includeWarnings
+        )
 
         let include = include.split(separator: ",")
             .compactMap {
