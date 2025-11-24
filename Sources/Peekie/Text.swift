@@ -10,7 +10,7 @@ public struct Text: AsyncParsableCommand {
 
     public init() {}
 
-    @Option(help: "Path to .xcresult")
+    @Argument(help: "Path to .xcresult")
     public var xcresultPath: String
 
     @Option(help: "Result format")

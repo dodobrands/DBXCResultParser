@@ -10,7 +10,7 @@ public struct Sonar: AsyncParsableCommand {
 
     public init() {}
 
-    @Option(help: "Path to .xcresult")
+    @Argument(help: "Path to .xcresult")
     public var xcresultPath: String
 
     @Option(help: "Path to folder with tests")
