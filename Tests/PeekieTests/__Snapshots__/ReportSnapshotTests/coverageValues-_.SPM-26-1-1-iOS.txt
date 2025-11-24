@@ -265,10 +265,7 @@
               - totalLines: 67
           - name: "SwiftTestingTests.swift"
           - repeatableTests: 0 members
-          ▿ warnings: 2 elements
-            ▿ Warning
-              - issueType: IssueType.buildWarning
-              - message: "Some warning from ExampleSUITests\n#warning(\"Some warning from ExampleSUITests\")\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+          ▿ warnings: 1 element
             ▿ Warning
               - issueType: IssueType.buildWarning
               - message: "Some warning from ExampleSUITests"
@@ -418,10 +415,7 @@
                     - unit: "ms"
                   - message: Optional<String>.none
                   - status: Status.success
-          ▿ warnings: 2 elements
-            ▿ Warning
-              - issueType: IssueType.buildWarning
-              - message: "Some warning from ExampleSUITests\n#warning(\"Some warning from ExampleSUITests\")\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+          ▿ warnings: 1 element
             ▿ Warning
               - issueType: IssueType.buildWarning
               - message: "Some warning from ExampleSUITests"
@@ -433,10 +427,7 @@
               - totalLines: 96
           - name: "XCTestTests.swift"
           - repeatableTests: 0 members
-          ▿ warnings: 2 elements
-            ▿ Warning
-              - issueType: IssueType.buildWarning
-              - message: "Some warning from ExampleSUITests\n#warning(\"Some warning from ExampleSUITests\")\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+          ▿ warnings: 1 element
             ▿ Warning
               - issueType: IssueType.buildWarning
               - message: "Some warning from ExampleSUITests"

@@ -34,6 +34,54 @@ extension Report {
             guard let warnings = buildResultsDTO.warnings else { return [:] }
 
             var map: [String: [Report.Module.File.Warning]] = [:]
+            var seenMessages: [String: Set<String>] = [:]
+
+            func normalizedMessage(_ message: String) -> String {
+                // 1) Remove duplicate #warning patterns: message followed by #warning("message")
+                let duplicateWarningRemoved: String = {
+                    // Pattern: message\n#warning("message")
+                    // Using named capture group to match the message and its duplicate
+                    let pattern = "(?m)^(.+?)\\r?\\n#warning\\(\"\\1\"\\)"
+                    if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
+                        let range = NSRange(location: 0, length: (message as NSString).length)
+                        let result = regex.stringByReplacingMatches(
+                            in: message,
+                            options: [],
+                            range: range,
+                            withTemplate: "$1"
+                        )
+                        return result
+                    }
+                    return message
+                }()
+
+                // 2) Drop caret pointer lines and remaining #warning lines
+                let caretAndWarningFiltered: String = {
+                    let lines = duplicateWarningRemoved.split(whereSeparator: \.isNewline)
+                    let filtered = lines.filter { line in
+                        let trimmed = line.trimmingCharacters(in: .whitespaces)
+                        if trimmed.hasPrefix("^") { return false }
+                        if trimmed.hasPrefix("#warning(") { return false }
+                        return true
+                    }
+                    return filtered.joined(separator: "\n")
+                }()
+
+                // 3) Collapse whitespace
+                let regex = try? NSRegularExpression(pattern: "\\s+", options: [])
+                let range = NSRange(
+                    location: 0, length: (caretAndWarningFiltered as NSString).length)
+                let collapsed =
+                    regex?.stringByReplacingMatches(
+                        in: caretAndWarningFiltered,
+                        options: [],
+                        range: range,
+                        withTemplate: " "
+                    ) ?? caretAndWarningFiltered
+
+                return collapsed.trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+
             for warning in warnings {
                 guard
                     let message = warning.message?.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -41,9 +89,20 @@ extension Report {
                     let fileName = warning.fileName
                 else { continue }
 
+                // Normalize message to remove duplicates and clean up
+                let normalized = normalizedMessage(message)
+                guard !normalized.isEmpty else { continue }
+
+                // Check for duplicates using normalized message
+                var seen = seenMessages[fileName, default: []]
+                if seen.contains(normalized) { continue }
+                seen.insert(normalized)
+                seenMessages[fileName] = seen
+
+                // Store normalized message in the warning
                 let parsedWarning = Report.Module.File.Warning(
                     issueType: .buildWarning,
-                    message: message
+                    message: normalized
                 )
 
                 map[fileName, default: []].append(parsedWarning)
@@ -81,7 +140,9 @@ extension Report {
         ) -> [Report.Module.File.Warning] {
             guard !new.isEmpty else { return existing }
             var combined = existing
-            for warning in new where !combined.contains(warning) {
+            // Use normalized messages for comparison since warnings are already normalized
+            let existingMessages = Set(combined.map { $0.message })
+            for warning in new where !existingMessages.contains(warning.message) {
                 combined.append(warning)
             }
             return combined
