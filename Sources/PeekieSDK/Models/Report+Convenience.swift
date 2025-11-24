@@ -3,17 +3,12 @@ import Foundation
 extension Report {
     /// Initializes a new instance of the `Report` using the provided `xcresultPath`.
     /// The initialization process involves parsing the `.xcresult` file to extract various reports.
-    /// Coverage data for targets specified in `excludingCoverageNames` will be excluded from the report.
     ///
     /// - Parameters:
     ///   - xcresultPath: The file URL of the `.xcresult` file to parse.
-    ///   - excludingCoverageNames: An array of strings representing the names of the targets to be excluded
-    ///                             from the code coverage report. Defaults to an empty array, meaning no
-    ///                             targets will be excluded.
     /// - Throws: An error if the `.xcresult` file cannot be parsed.
     public init(
-        xcresultPath: URL,
-        excludingCoverageNames: [String] = []
+        xcresultPath: URL
     ) async throws {
         let testResultsDTO = try await TestResultsDTO(from: xcresultPath)
         let buildResultsDTO = try await BuildResultsDTO(from: xcresultPath)
@@ -22,7 +17,6 @@ extension Report {
         // Build a map of file paths to coverage data
         var fileCoverageMap: [String: FileCoverageDTO] = [:]
         for target in coverageReportDTO.targets {
-            guard !excludingCoverageNames.contains(target.name) else { continue }
             for fileCoverage in target.files {
                 // Use both path and name as keys for matching
                 let path = fileCoverage.path
@@ -59,7 +53,6 @@ extension Report {
                 var moduleCoverageFiles: [String: FileCoverageDTO] = [:]
                 var matchedTargetCoverage: Report.Coverage? = nil
                 for target in coverageReportDTO.targets {
-                    guard !excludingCoverageNames.contains(target.name) else { continue }
                     // Try to match target name with module name
                     // Module name is like "DBXCResultParserTests", target might be "DBXCResultParser"
                     let targetBaseName = target.name.replacingOccurrences(of: "Tests", with: "")
@@ -331,8 +324,6 @@ extension Report {
 
         // Add all files with coverage to modules, even if they don't have test files
         for target in coverageReportDTO.targets {
-            guard !excludingCoverageNames.contains(target.name) else { continue }
-
             // Create coverage from target-level data if available
             let targetCoverage: Report.Coverage? = {
                 guard target.executableLines > 0 else { return nil }
