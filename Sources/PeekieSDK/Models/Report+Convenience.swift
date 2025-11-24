@@ -30,10 +30,10 @@ extension Report {
             }
         }
 
-        let warningsByFileName: [String: [Report.Module.File.Warning]] = {
+        let warningsByFileName: [String: [Report.Module.File.Issue]] = {
             guard let warnings = buildResultsDTO.warnings else { return [:] }
 
-            var map: [String: [Report.Module.File.Warning]] = [:]
+            var map: [String: [Report.Module.File.Issue]] = [:]
             var seenMessages: [String: Set<String>] = [:]
 
             func normalizedMessage(_ message: String) -> String {
@@ -83,8 +83,8 @@ extension Report {
             }
 
             for warning in warnings {
+                let message = warning.message.trimmingCharacters(in: .whitespacesAndNewlines)
                 guard
-                    let message = warning.message?.trimmingCharacters(in: .whitespacesAndNewlines),
                     !message.isEmpty,
                     let fileName = warning.fileName
                 else { continue }
@@ -100,7 +100,7 @@ extension Report {
                 seenMessages[fileName] = seen
 
                 // Store normalized message in the warning
-                let parsedWarning = Report.Module.File.Warning(
+                let parsedWarning = Report.Module.File.Issue(
                     issueType: .buildWarning,
                     message: normalized
                 )
@@ -111,7 +111,7 @@ extension Report {
             return map
         }()
 
-        func warnings(for fileName: String) -> [Report.Module.File.Warning] {
+        func warnings(for fileName: String) -> [Report.Module.File.Issue] {
             var candidates: [String] = [fileName]
             if !fileName.hasSuffix(".swift") {
                 candidates.append(fileName + ".swift")
@@ -135,9 +135,9 @@ extension Report {
         }
 
         func mergeWarnings(
-            _ existing: [Report.Module.File.Warning],
-            _ new: [Report.Module.File.Warning]
-        ) -> [Report.Module.File.Warning] {
+            _ existing: [Report.Module.File.Issue],
+            _ new: [Report.Module.File.Issue]
+        ) -> [Report.Module.File.Issue] {
             guard !new.isEmpty else { return existing }
             var combined = existing
             // Use normalized messages for comparison since warnings are already normalized

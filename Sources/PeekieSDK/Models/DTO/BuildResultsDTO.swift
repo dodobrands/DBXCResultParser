@@ -1,16 +1,16 @@
 import Foundation
 
 struct BuildResultsDTO: Decodable {
-    let warnings: [Warning]?
+    let warnings: [Issue]?
 
-    struct Warning: Decodable {
-        let issueType: String?
-        let message: String?
+    struct Issue: Decodable {
+        let issueType: String
+        let message: String
         let sourceURL: String?
     }
 }
 
-extension BuildResultsDTO.Warning {
+extension BuildResultsDTO.Issue {
     var fileName: String? {
         guard let sourceURL else { return nil }
         let url = URL(string: sourceURL) ?? URL(fileURLWithPath: sourceURL)

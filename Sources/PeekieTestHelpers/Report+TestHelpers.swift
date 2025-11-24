@@ -59,7 +59,7 @@ extension Report.Module.File {
     public static func testMake(
         name: String = "",
         repeatableTests: Set<RepeatableTest> = [],
-        warnings: [Warning] = [],
+        warnings: [Issue] = [],
         coverage: Coverage? = nil
     ) -> Self {
         .init(
