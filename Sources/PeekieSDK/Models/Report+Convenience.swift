@@ -31,7 +31,8 @@ extension Report {
         }
 
         let warningsByFileName: [String: [Report.Module.File.Issue]] = {
-            guard let warnings = buildResultsDTO.warnings else { return [:] }
+            let warnings = buildResultsDTO.warnings
+            guard !warnings.isEmpty else { return [:] }
 
             var map: [String: [Report.Module.File.Issue]] = [:]
             var seenMessages: [String: Set<String>] = [:]

@@ -1,7 +1,7 @@
 import Foundation
 
 struct BuildResultsDTO: Decodable {
-    let warnings: [Issue]?
+    let warnings: [Issue]
 
     struct Issue: Decodable {
         let issueType: String
