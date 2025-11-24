@@ -55,4 +55,4 @@ jobs:
       uses: jdx/mise-action@v3
 
     - name: Scan for unused code with Periphery
-      run: periphery scan --skip-build
+      run: periphery scan --skip-build --strict

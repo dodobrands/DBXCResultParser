@@ -84,7 +84,7 @@ extension Report.Module.File {
         public let message: String
 
         public enum IssueType: String, Equatable {
-            case buildWarning
+            case buildWarning = "Swift Compiler Warning"
         }
     }
 }

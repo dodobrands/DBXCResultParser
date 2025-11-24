@@ -25,8 +25,10 @@ extension Report {
             guard !excludingCoverageNames.contains(target.name) else { continue }
             for fileCoverage in target.files {
                 // Use both path and name as keys for matching
-                fileCoverageMap[fileCoverage.path] = fileCoverage
-                fileCoverageMap[fileCoverage.name] = fileCoverage
+                let path = fileCoverage.path
+                let name = fileCoverage.name
+                fileCoverageMap[path] = fileCoverage
+                fileCoverageMap[name] = fileCoverage
             }
         }
 
@@ -84,6 +86,11 @@ extension Report {
             }
 
             for warning in warnings {
+                // Try to create IssueType from rawValue, skip if not supported
+                guard
+                    let issueType = Report.Module.File.Issue.IssueType(rawValue: warning.issueType)
+                else { continue }
+
                 let message = warning.message.trimmingCharacters(in: .whitespacesAndNewlines)
                 guard
                     !message.isEmpty,
@@ -102,7 +109,7 @@ extension Report {
 
                 // Store normalized message in the warning
                 let parsedWarning = Report.Module.File.Issue(
-                    type: .buildWarning,
+                    type: issueType,
                     message: normalized
                 )
 

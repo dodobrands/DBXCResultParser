@@ -110,12 +110,4 @@ enum TestError: Error {
     case resourcesDirectoryDoesNotExist(path: String)
     case couldNotReadResourcesDirectory
     case couldNotFindXcresultFile(fileName: String)
-    case unknownXcresultFileForExpectedValues(fileName: String)
-}
-
-// Expected coverage values per xcresult file
-struct ExpectedReportValues {
-    let coveredLines: Int
-    let coveragePercentage: Double
-    let fileCoverages: [String: Double]  // File name -> coverage value
 }
