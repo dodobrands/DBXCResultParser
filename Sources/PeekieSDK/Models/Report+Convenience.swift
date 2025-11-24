@@ -32,129 +32,8 @@ extension Report {
             }
         }
 
-        let warningsByFileName: [String: [Report.Module.File.Issue]] = {
-            let warnings = buildResultsDTO.warnings
-            guard !warnings.isEmpty else { return [:] }
-
-            var map: [String: [Report.Module.File.Issue]] = [:]
-            var seenMessages: [String: Set<String>] = [:]
-
-            func normalizedMessage(_ message: String) -> String {
-                // 1) Remove duplicate #warning patterns: message followed by #warning("message")
-                let duplicateWarningRemoved: String = {
-                    // Pattern: message\n#warning("message")
-                    // Using named capture group to match the message and its duplicate
-                    let pattern = "(?m)^(.+?)\\r?\\n#warning\\(\"\\1\"\\)"
-                    if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
-                        let range = NSRange(location: 0, length: (message as NSString).length)
-                        let result = regex.stringByReplacingMatches(
-                            in: message,
-                            options: [],
-                            range: range,
-                            withTemplate: "$1"
-                        )
-                        return result
-                    }
-                    return message
-                }()
-
-                // 2) Drop caret pointer lines and remaining #warning lines
-                let caretAndWarningFiltered: String = {
-                    let lines = duplicateWarningRemoved.split(whereSeparator: \.isNewline)
-                    let filtered = lines.filter { line in
-                        let trimmed = line.trimmingCharacters(in: .whitespaces)
-                        if trimmed.hasPrefix("^") { return false }
-                        if trimmed.hasPrefix("#warning(") { return false }
-                        return true
-                    }
-                    return filtered.joined(separator: "\n")
-                }()
-
-                // 3) Collapse whitespace
-                let regex = try? NSRegularExpression(pattern: "\\s+", options: [])
-                let range = NSRange(
-                    location: 0, length: (caretAndWarningFiltered as NSString).length)
-                let collapsed =
-                    regex?.stringByReplacingMatches(
-                        in: caretAndWarningFiltered,
-                        options: [],
-                        range: range,
-                        withTemplate: " "
-                    ) ?? caretAndWarningFiltered
-
-                return collapsed.trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-
-            for warning in warnings {
-                // Try to create IssueType from rawValue, skip if not supported
-                guard
-                    let issueType = Report.Module.File.Issue.IssueType(rawValue: warning.issueType)
-                else { continue }
-
-                let message = warning.message.trimmingCharacters(in: .whitespacesAndNewlines)
-                guard
-                    !message.isEmpty,
-                    let fileName = warning.fileName
-                else { continue }
-
-                // Normalize message to remove duplicates and clean up
-                let normalized = normalizedMessage(message)
-                guard !normalized.isEmpty else { continue }
-
-                // Check for duplicates using normalized message
-                var seen = seenMessages[fileName, default: []]
-                if seen.contains(normalized) { continue }
-                seen.insert(normalized)
-                seenMessages[fileName] = seen
-
-                // Store normalized message in the warning
-                let parsedWarning = Report.Module.File.Issue(
-                    type: issueType,
-                    message: normalized
-                )
-
-                map[fileName, default: []].append(parsedWarning)
-            }
-
-            return map
-        }()
-
-        func warnings(for fileName: String) -> [Report.Module.File.Issue] {
-            var candidates: [String] = [fileName]
-            if !fileName.hasSuffix(".swift") {
-                candidates.append(fileName + ".swift")
-            }
-
-            let baseName = fileName.replacingOccurrences(of: "Tests", with: "")
-            if baseName != fileName {
-                candidates.append(baseName)
-                if !baseName.hasSuffix(".swift") {
-                    candidates.append(baseName + ".swift")
-                }
-            }
-
-            for candidate in candidates {
-                if let warnings = warningsByFileName[candidate] {
-                    return warnings
-                }
-            }
-
-            return []
-        }
-
-        func mergeWarnings(
-            _ existing: [Report.Module.File.Issue],
-            _ new: [Report.Module.File.Issue]
-        ) -> [Report.Module.File.Issue] {
-            guard !new.isEmpty else { return existing }
-            var combined = existing
-            // Use normalized messages for comparison since warnings are already normalized
-            let existingMessages = Set(combined.map { $0.message })
-            for warning in new where !existingMessages.contains(warning.message) {
-                combined.append(warning)
-            }
-            return combined
-        }
+        // Parse warnings from build results
+        let warningsByFileName = Self.parseWarnings(from: buildResultsDTO)
 
         // Try to get total coverage from xcresult file
         let totalCoverageDTO = try await TotalCoverageDTO(from: xcresultPath)
@@ -287,13 +166,13 @@ extension Report {
                         ?? .init(
                             name: fileName,
                             repeatableTests: [],
-                            warnings: warnings(for: fileName),
+                            warnings: Self.findWarnings(for: fileName, in: warningsByFileName),
                             coverage: fileCoverage
                         )
 
-                    let fileWarnings = warnings(for: fileName)
+                    let fileWarnings = Self.findWarnings(for: fileName, in: warningsByFileName)
                     if !fileWarnings.isEmpty {
-                        file.warnings = mergeWarnings(file.warnings, fileWarnings)
+                        file.warnings = Self.mergeWarnings(file.warnings, fileWarnings)
                     }
 
                     // Process test cases
@@ -501,7 +380,10 @@ extension Report {
                         let updatedFile = Report.Module.File(
                             name: fileName,
                             repeatableTests: existingFile.repeatableTests,
-                            warnings: mergeWarnings(existingFile.warnings, warnings(for: fileName)),
+                            warnings: Self.mergeWarnings(
+                                existingFile.warnings,
+                                Self.findWarnings(for: fileName, in: warningsByFileName)
+                            ),
                             coverage: coverage
                         )
                         moduleFiles.remove(existingFile)
@@ -513,7 +395,7 @@ extension Report {
                     let newFile = Report.Module.File(
                         name: fileName,
                         repeatableTests: [],
-                        warnings: warnings(for: fileName),
+                        warnings: Self.findWarnings(for: fileName, in: warningsByFileName),
                         coverage: coverage
                     )
                     moduleFiles.insert(newFile)
