@@ -178,16 +178,6 @@ CalculatorTests.swift
 ✅ testDivision(dividend:divisor:) (20, 4)
 ```
 
-#### Customizing Number and Measurement Formatting
-
-The `TextFormatter` allows you to specify a locale when formatting the report. This locale is used to format numbers and measurements according to the provided locale's conventions.
-
-```swift
-let formatter = TextFormatter()
-let output = formatter.format(reportModel, locale: Locale(identifier: "fr_FR"))
-print(output) // Will output numbers and durations formatted in French
-```
-
 ### SonarFormatter
 
 The `SonarFormatter` class generates test execution reports in SonarQube Generic Test Execution XML format. This format is compatible with SonarQube's test execution import feature, allowing you to visualize test results directly in SonarQube.
@@ -272,17 +262,10 @@ swift run peekie text path/to/tests.xcresult --include failure
 
 # Show failures and skipped tests
 swift run peekie text path/to/tests.xcresult --include failure,skipped
-
-# Use specific locale for formatting
-swift run peekie text path/to/tests.xcresult --locale ru-RU
-
-# Combine options: only failures, using French locale
-swift run peekie text path/to/tests.xcresult --include failure --locale fr-FR
 ```
 
 **Available options for `text` subcommand:**
 - `<xcresult-path>`: Path to the `.xcresult` file (required, positional argument).
-- `--locale`: Sets the locale for number and measurement formatting (e.g., "en-GB", "ru-RU", "fr-FR"). Default: system locale.
 - `--include`: Filters the test results to include only certain statuses. Comma-separated list of: `success`, `failure`, `skipped`, `expectedFailure`, `mixed`, `unknown`. Default: all statuses.
 
 #### SonarQube Format Subcommand
