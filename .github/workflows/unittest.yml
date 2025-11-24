@@ -40,12 +40,12 @@ jobs:
 
     - name: Build
       env:
-        SWIFT_ACTIONS_ENABLE_UNBUFFERED_IO: 1
+        NSUnbufferedIO: YES
       run: swift build --build-tests
 
     - name: Test
       env:
-        SWIFT_ACTIONS_ENABLE_UNBUFFERED_IO: 1
+        NSUnbufferedIO: YES
       run: swift test --skip-build
 
     # Verify CLI tool functionality by parsing test xcresult file
