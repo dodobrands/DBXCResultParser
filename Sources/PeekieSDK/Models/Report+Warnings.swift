@@ -1,5 +1,11 @@
 import Foundation
 
+private enum WarningRegex {
+    static let duplicate = try! NSRegularExpression(
+        pattern: "(?m)^(.+?)\\r?\\n#warning\\(\"\\1\"\\)")
+    static let whitespace = try! NSRegularExpression(pattern: "\\s+")
+}
+
 extension Report {
     // MARK: - Warnings Processing
 
@@ -7,89 +13,52 @@ extension Report {
     static func parseWarnings(
         from buildResultsDTO: BuildResultsDTO
     ) -> [String: [Module.File.Issue]] {
-        let warnings = buildResultsDTO.warnings
-        guard !warnings.isEmpty else { return [:] }
+        buildResultsDTO.warnings
+            .compactMap { warning -> (String, Module.File.Issue)? in
+                guard
+                    let issueType = Module.File.Issue.IssueType(rawValue: warning.issueType),
+                    let fileName = warning.fileName
+                else { return nil }
 
-        var map: [String: [Module.File.Issue]] = [:]
-        var seenMessages: [String: Set<String>] = [:]
+                let normalized = normalizeWarningMessage(warning.message)
+                guard !normalized.isEmpty else { return nil }
 
-        for warning in warnings {
-            // Try to create IssueType from rawValue, skip if not supported
-            guard
-                let issueType = Module.File.Issue.IssueType(rawValue: warning.issueType)
-            else { continue }
-
-            let message = warning.message.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard
-                !message.isEmpty,
-                let fileName = warning.fileName
-            else { continue }
-
-            // Normalize message to remove duplicates and clean up
-            let normalized = normalizeWarningMessage(message)
-            guard !normalized.isEmpty else { continue }
-
-            // Check for duplicates using normalized message
-            var seen = seenMessages[fileName, default: []]
-            if seen.contains(normalized) { continue }
-            seen.insert(normalized)
-            seenMessages[fileName] = seen
-
-            // Store normalized message in the warning
-            let parsedWarning = Module.File.Issue(
-                type: issueType,
-                message: normalized
-            )
-
-            map[fileName, default: []].append(parsedWarning)
-        }
-
-        return map
+                return (
+                    fileName,
+                    Module.File.Issue(type: issueType, message: normalized)
+                )
+            }
+            .reduce(into: [:] as [String: [Module.File.Issue]]) { acc, pair in
+                let (file, issue) = pair
+                var seen = Set(acc[file, default: []].map(\.message))
+                if seen.insert(issue.message).inserted {
+                    acc[file, default: []].append(issue)
+                }
+            }
     }
 
     /// Normalizes a warning message by removing duplicate patterns and cleaning up formatting
     static func normalizeWarningMessage(_ message: String) -> String {
-        // 1) Remove duplicate #warning patterns: message followed by #warning("message")
-        let duplicateWarningRemoved: String = {
-            // Pattern: message\n#warning("message")
-            // Using named capture group to match the message and its duplicate
-            let pattern = "(?m)^(.+?)\\r?\\n#warning\\(\"\\1\"\\)"
-            if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
-                let range = NSRange(location: 0, length: (message as NSString).length)
-                let result = regex.stringByReplacingMatches(
-                    in: message,
-                    options: [],
-                    range: range,
-                    withTemplate: "$1"
-                )
-                return result
-            }
-            return message
-        }()
+        let duplicateWarningRemoved = WarningRegex.duplicate.stringByReplacingMatches(
+            in: message,
+            options: [],
+            range: NSRange(location: 0, length: (message as NSString).length),
+            withTemplate: "$1"
+        )
 
-        // 2) Drop caret pointer lines and remaining #warning lines
-        let caretAndWarningFiltered: String = {
-            let lines = duplicateWarningRemoved.split(whereSeparator: \.isNewline)
-            let filtered = lines.filter { line in
-                let trimmed = line.trimmingCharacters(in: .whitespaces)
-                if trimmed.hasPrefix("^") { return false }
-                if trimmed.hasPrefix("#warning(") { return false }
-                return true
-            }
-            return filtered.joined(separator: "\n")
-        }()
+        let filtered =
+            duplicateWarningRemoved
+            .split(whereSeparator: \.isNewline)
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.hasPrefix("^") && !$0.hasPrefix("#warning(") }
+            .joined(separator: "\n")
 
-        // 3) Collapse whitespace
-        let regex = try? NSRegularExpression(pattern: "\\s+", options: [])
-        let range = NSRange(
-            location: 0, length: (caretAndWarningFiltered as NSString).length)
-        let collapsed =
-            regex?.stringByReplacingMatches(
-                in: caretAndWarningFiltered,
-                options: [],
-                range: range,
-                withTemplate: " "
-            ) ?? caretAndWarningFiltered
+        let collapsed = WarningRegex.whitespace.stringByReplacingMatches(
+            in: filtered,
+            options: [],
+            range: NSRange(location: 0, length: (filtered as NSString).length),
+            withTemplate: " "
+        )
 
         return collapsed.trimmingCharacters(in: .whitespacesAndNewlines)
     }
