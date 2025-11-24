@@ -3,6 +3,11 @@ import Foundation
 public struct Report {
     public let modules: Set<Module>
     public let coverage: Double?
+
+    /// All warnings from all modules in this report
+    public var warnings: [Module.File.Issue] {
+        modules.flatMap { $0.warnings }
+    }
 }
 
 extension Report {
@@ -17,6 +22,11 @@ extension Report {
 
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.name == rhs.name
+        }
+
+        /// All warnings from all files in this module
+        public var warnings: [File.Issue] {
+            files.flatMap { $0.warnings }
         }
     }
 
