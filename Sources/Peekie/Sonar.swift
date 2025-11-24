@@ -20,7 +20,11 @@ public struct Sonar: AsyncParsableCommand {
         let xcresultPath = URL(fileURLWithPath: xcresultPath)
         let testsPath = URL(fileURLWithPath: testsPath)
 
-        let report = try await Report(xcresultPath: xcresultPath)
+        let report = try await Report(
+            xcresultPath: xcresultPath,
+            includeCoverage: false,
+            includeWarnings: false
+        )
 
         let formatter = SonarFormatter()
         let result = try formatter.format(report: report, testsPath: testsPath)
