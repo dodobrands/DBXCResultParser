@@ -15,7 +15,7 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
 - [Usage](#usage)
   - [Parsing xcresult Files](#parsing-xcresult-files)
   - [Formatters](#formatters)
-    - [TextFormatter](#textformatter)
+    - [ListFormatter](#listformatter)
     - [SonarFormatter](#sonarformatter)
   - [Command-Line Tool](#command-line-tool)
 - [Updating Test Resources](#updating-test-resources)
@@ -98,16 +98,16 @@ for module in modules {
 
 The `PeekieSDK` package provides multiple formatters to convert parsed `.xcresult` data into different output formats. Each formatter is designed for specific use cases:
 
-- **TextFormatter**: Generates human-readable text output for terminal display and logs
+- **ListFormatter**: Generates human-readable list output for terminal display and logs
 - **SonarFormatter**: Generates SonarQube Generic Test Execution XML format for CI/CD integration
 
-### TextFormatter
+### ListFormatter
 
-The `TextFormatter` class provides a way to format the data from a `Report` into a human-readable string. It outputs a detailed list of test results.
+The `ListFormatter` class provides a way to format the data from a `Report` into a human-readable string. It outputs a detailed list of test results.
 
 #### Usage
 
-To format your test report data, create an instance of `TextFormatter`:
+To format your test report data, create an instance of `ListFormatter`:
 
 ```swift
 import PeekieSDK
@@ -115,8 +115,8 @@ import PeekieSDK
 // Assuming you have already created a `Report` instance as `reportModel`
 let reportModel: Report = ...
 
-// Create a text formatter
-let formatter = TextFormatter()
+// Create a list formatter
+let formatter = ListFormatter()
 
 // Format the report data into a string
 let formattedOutput = formatter.format(reportModel)
@@ -243,28 +243,28 @@ The formatter generates XML in the following structure:
 
 ### Command-Line Tool
 
-The package includes a command-line tool that can be executed to generate test reports. The tool supports two subcommands: `text` for human-readable text output and `sonar` for SonarQube XML format.
+The package includes a command-line tool that can be executed to generate test reports. The tool supports two subcommands: `list` for human-readable list output and `sonar` for SonarQube XML format.
 
-#### Text Format Subcommand
+#### List Format Subcommand
 
 ```bash
-swift run peekie text path/to/tests.xcresult
+swift run peekie list path/to/tests.xcresult
 ```
 
 **Examples:**
 
 ```bash
 # Default: all test statuses
-swift run peekie text path/to/tests.xcresult
+swift run peekie list path/to/tests.xcresult
 
 # Show only failures
-swift run peekie text path/to/tests.xcresult --include failure
+swift run peekie list path/to/tests.xcresult --include failure
 
 # Show failures and skipped tests
-swift run peekie text path/to/tests.xcresult --include failure,skipped
+swift run peekie list path/to/tests.xcresult --include failure,skipped
 ```
 
-**Available options for `text` subcommand:**
+**Available options for `list` subcommand:**
 - `<xcresult-path>`: Path to the `.xcresult` file (required, positional argument).
 - `--include`: Filters the test results to include only certain statuses. Comma-separated list of: `success`, `failure`, `skipped`, `expectedFailure`, `mixed`, `unknown`. Default: all statuses.
 

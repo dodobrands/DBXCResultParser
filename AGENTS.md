@@ -44,12 +44,11 @@ periphery scan
 
 ### Running the Command-Line Tool
 ```bash
-swift run peekie text path/to/tests.xcresult
+swift run peekie list path/to/tests.xcresult
 ```
 
 Options:
 - `<xcresult-path>`: Path to the `.xcresult` file (positional argument)
-- `--locale`: Locale for number formatting (e.g., "en-GB")
 - `--include`: Filter test results by status (e.g., `failure,skipped`)
 
 ## Architecture
@@ -72,12 +71,9 @@ Options:
 - `CoverageDTO`: Code coverage data from `xccov`
 - DTOs are initialized by executing `xcresulttool` commands via `Shell` and parsing JSON output
 
-**TextFormatter** (`Sources/PeekieSDK/TextFormatter.swift`)
-- Formats `Report` into human-readable text
-- Two output formats:
-  - `list`: Detailed test results with file names and statuses
-  - `count`: Summary count with total duration
-- Supports locale-specific number and measurement formatting
+**ListFormatter** (`Sources/PeekieSDK/Formatters/ListFormatter.swift`)
+- Formats `Report` into human-readable list
+- Outputs detailed test results with file names and statuses
 
 ### Package Structure
 
