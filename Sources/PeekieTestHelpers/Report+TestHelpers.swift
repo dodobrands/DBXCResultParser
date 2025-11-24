@@ -59,9 +59,15 @@ extension Report.Module.File {
     public static func testMake(
         name: String = "",
         repeatableTests: Set<RepeatableTest> = [],
+        warnings: [Warning] = [],
         coverage: Coverage? = nil
     ) -> Self {
-        .init(name: name, repeatableTests: repeatableTests, coverage: coverage)
+        .init(
+            name: name,
+            repeatableTests: repeatableTests,
+            warnings: warnings,
+            coverage: coverage
+        )
     }
 }
 

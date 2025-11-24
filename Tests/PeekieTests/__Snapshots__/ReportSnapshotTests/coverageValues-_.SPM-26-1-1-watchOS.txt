@@ -21,6 +21,7 @@
               - totalLines: 36
           - name: "NumberHelper.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -29,6 +30,7 @@
               - totalLines: 34
           - name: "Calculator.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
       - name: "Calculator"
     ▿ Module
       ▿ coverage: Optional<Coverage>
@@ -236,6 +238,7 @@
                     - unit: "ms"
                   - message: Optional<String>.none
                   - status: Status.success
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -244,6 +247,7 @@
               - totalLines: 36
           - name: "NumberHelper.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -252,6 +256,7 @@
               - totalLines: 34
           - name: "Calculator.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -260,6 +265,13 @@
               - totalLines: 67
           - name: "SwiftTestingTests.swift"
           - repeatableTests: 0 members
+          ▿ warnings: 2 elements
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from ExampleSUITests\n#warning(\"Some warning from ExampleSUITests\")\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from ExampleSUITests"
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -406,6 +418,13 @@
                     - unit: "ms"
                   - message: Optional<String>.none
                   - status: Status.success
+          ▿ warnings: 2 elements
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from ExampleSUITests\n#warning(\"Some warning from ExampleSUITests\")\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from ExampleSUITests"
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -414,4 +433,11 @@
               - totalLines: 96
           - name: "XCTestTests.swift"
           - repeatableTests: 0 members
+          ▿ warnings: 2 elements
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from ExampleSUITests\n#warning(\"Some warning from ExampleSUITests\")\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from ExampleSUITests"
       - name: "ExamplesTests"

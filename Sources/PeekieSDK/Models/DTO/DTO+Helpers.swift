@@ -84,3 +84,25 @@ extension TotalCoverageDTO {
         self = try JSONDecoder().decode(TotalCoverageDTO.self, from: data)
     }
 }
+
+extension BuildResultsDTO {
+    init(from xcresultPath: URL) async throws {
+        let output = try await Shell.execute(
+            "xcrun",
+            arguments: [
+                "xcresulttool", "get", "build-results",
+                "--path", xcresultPath.path,
+                "--format", "json",
+            ]
+        )
+        guard let data = output.data(using: .utf8) else {
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: [],
+                    debugDescription: "Failed to convert output to Data"
+                )
+            )
+        }
+        self = try JSONDecoder().decode(BuildResultsDTO.self, from: data)
+    }
+}

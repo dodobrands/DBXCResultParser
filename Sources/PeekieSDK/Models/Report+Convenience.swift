@@ -16,25 +16,79 @@ extension Report {
         excludingCoverageNames: [String] = []
     ) async throws {
         let testResultsDTO = try await TestResultsDTO(from: xcresultPath)
-
-        // Attempt to parse the code coverage data from the xcresult file, excluding specified targets.
-        let coverageReportDTO = try? await CoverageReportDTO(from: xcresultPath)
+        let buildResultsDTO = try await BuildResultsDTO(from: xcresultPath)
+        let coverageReportDTO = try await CoverageReportDTO(from: xcresultPath)
 
         // Build a map of file paths to coverage data
         var fileCoverageMap: [String: FileCoverageDTO] = [:]
-        if let coverageReport = coverageReportDTO {
-            for target in coverageReport.targets {
-                guard !excludingCoverageNames.contains(target.name) else { continue }
-                for fileCoverage in target.files {
-                    // Use both path and name as keys for matching
-                    fileCoverageMap[fileCoverage.path] = fileCoverage
-                    fileCoverageMap[fileCoverage.name] = fileCoverage
-                }
+        for target in coverageReportDTO.targets {
+            guard !excludingCoverageNames.contains(target.name) else { continue }
+            for fileCoverage in target.files {
+                // Use both path and name as keys for matching
+                fileCoverageMap[fileCoverage.path] = fileCoverage
+                fileCoverageMap[fileCoverage.name] = fileCoverage
             }
         }
 
+        let warningsByFileName: [String: [Report.Module.File.Warning]] = {
+            guard let warnings = buildResultsDTO.warnings else { return [:] }
+
+            var map: [String: [Report.Module.File.Warning]] = [:]
+            for warning in warnings {
+                guard
+                    let message = warning.message?.trimmingCharacters(in: .whitespacesAndNewlines),
+                    !message.isEmpty,
+                    let fileName = warning.fileName
+                else { continue }
+
+                let parsedWarning = Report.Module.File.Warning(
+                    issueType: .buildWarning,
+                    message: message
+                )
+
+                map[fileName, default: []].append(parsedWarning)
+            }
+
+            return map
+        }()
+
+        func warnings(for fileName: String) -> [Report.Module.File.Warning] {
+            var candidates: [String] = [fileName]
+            if !fileName.hasSuffix(".swift") {
+                candidates.append(fileName + ".swift")
+            }
+
+            let baseName = fileName.replacingOccurrences(of: "Tests", with: "")
+            if baseName != fileName {
+                candidates.append(baseName)
+                if !baseName.hasSuffix(".swift") {
+                    candidates.append(baseName + ".swift")
+                }
+            }
+
+            for candidate in candidates {
+                if let warnings = warningsByFileName[candidate] {
+                    return warnings
+                }
+            }
+
+            return []
+        }
+
+        func mergeWarnings(
+            _ existing: [Report.Module.File.Warning],
+            _ new: [Report.Module.File.Warning]
+        ) -> [Report.Module.File.Warning] {
+            guard !new.isEmpty else { return existing }
+            var combined = existing
+            for warning in new where !combined.contains(warning) {
+                combined.append(warning)
+            }
+            return combined
+        }
+
         // Try to get total coverage from xcresult file
-        let totalCoverageDTO = try? await TotalCoverageDTO(from: xcresultPath)
+        let totalCoverageDTO = try await TotalCoverageDTO(from: xcresultPath)
 
         var modules = Set<Module>()
 
@@ -56,33 +110,31 @@ extension Report {
                 // We need to find all coverage files that belong to this test module's source
                 var moduleCoverageFiles: [String: FileCoverageDTO] = [:]
                 var matchedTargetCoverage: Report.Coverage? = nil
-                if let coverageReport = coverageReportDTO {
-                    for target in coverageReport.targets {
-                        guard !excludingCoverageNames.contains(target.name) else { continue }
-                        // Try to match target name with module name
-                        // Module name is like "DBXCResultParserTests", target might be "DBXCResultParser"
-                        let targetBaseName = target.name.replacingOccurrences(of: "Tests", with: "")
-                        let moduleBaseName = moduleName.replacingOccurrences(of: "Tests", with: "")
+                for target in coverageReportDTO.targets {
+                    guard !excludingCoverageNames.contains(target.name) else { continue }
+                    // Try to match target name with module name
+                    // Module name is like "DBXCResultParserTests", target might be "DBXCResultParser"
+                    let targetBaseName = target.name.replacingOccurrences(of: "Tests", with: "")
+                    let moduleBaseName = moduleName.replacingOccurrences(of: "Tests", with: "")
 
-                        if target.name == moduleName || targetBaseName == moduleBaseName
-                            || moduleName.contains(target.name)
-                            || target.name.contains(moduleBaseName)
-                        {
-                            // Store target-level coverage
-                            if target.executableLines > 0 {
-                                matchedTargetCoverage = Report.Coverage(
-                                    coveredLines: target.coveredLines,
-                                    totalLines: target.executableLines,
-                                    coverage: target.lineCoverage
-                                )
-                            }
+                    if target.name == moduleName || targetBaseName == moduleBaseName
+                        || moduleName.contains(target.name)
+                        || target.name.contains(moduleBaseName)
+                    {
+                        // Store target-level coverage
+                        if target.executableLines > 0 {
+                            matchedTargetCoverage = Report.Coverage(
+                                coveredLines: target.coveredLines,
+                                totalLines: target.executableLines,
+                                coverage: target.lineCoverage
+                            )
+                        }
 
-                            for fileCoverage in target.files {
-                                // Use file name (without path) as key
-                                moduleCoverageFiles[fileCoverage.name] = fileCoverage
-                                // Also use path as key for matching
-                                moduleCoverageFiles[fileCoverage.path] = fileCoverage
-                            }
+                        for fileCoverage in target.files {
+                            // Use file name (without path) as key
+                            moduleCoverageFiles[fileCoverage.name] = fileCoverage
+                            // Also use path as key for matching
+                            moduleCoverageFiles[fileCoverage.path] = fileCoverage
                         }
                     }
                 }
@@ -163,7 +215,17 @@ extension Report {
 
                     var file =
                         module.files[fileName]
-                        ?? .init(name: fileName, repeatableTests: [], coverage: fileCoverage)
+                        ?? .init(
+                            name: fileName,
+                            repeatableTests: [],
+                            warnings: warnings(for: fileName),
+                            coverage: fileCoverage
+                        )
+
+                    let fileWarnings = warnings(for: fileName)
+                    if !fileWarnings.isEmpty {
+                        file.warnings = mergeWarnings(file.warnings, fileWarnings)
+                    }
 
                     // Process test cases
                     guard let testCases = testSuite.children else { continue }
@@ -320,96 +382,100 @@ extension Report {
         }
 
         // Add all files with coverage to modules, even if they don't have test files
-        if let coverageReport = coverageReportDTO {
-            for target in coverageReport.targets {
-                guard !excludingCoverageNames.contains(target.name) else { continue }
+        for target in coverageReportDTO.targets {
+            guard !excludingCoverageNames.contains(target.name) else { continue }
 
-                // Create coverage from target-level data if available
-                let targetCoverage: Report.Coverage? = {
-                    guard target.executableLines > 0 else { return nil }
-                    return Report.Coverage(
-                        coveredLines: target.coveredLines,
-                        totalLines: target.executableLines,
-                        coverage: target.lineCoverage
-                    )
-                }()
+            // Create coverage from target-level data if available
+            let targetCoverage: Report.Coverage? = {
+                guard target.executableLines > 0 else { return nil }
+                return Report.Coverage(
+                    coveredLines: target.coveredLines,
+                    totalLines: target.executableLines,
+                    coverage: target.lineCoverage
+                )
+            }()
 
-                // Try to find existing module by target name or create a new one
-                // Target name might be like "DBXCResultParser", module might be "DBXCResultParserTests"
-                var moduleName = target.name
-                var existingModule = modules[moduleName]
+            // Try to find existing module by target name or create a new one
+            // Target name might be like "DBXCResultParser", module might be "DBXCResultParserTests"
+            var moduleName = target.name
+            var existingModule = modules[moduleName]
 
-                // If not found, try to find module with "Tests" suffix
-                if existingModule == nil {
-                    let moduleNameWithTests = target.name + "Tests"
-                    if let foundModule = modules[moduleNameWithTests] {
-                        existingModule = foundModule
-                        moduleName = moduleNameWithTests
-                    }
+            // If not found, try to find module with "Tests" suffix
+            if existingModule == nil {
+                let moduleNameWithTests = target.name + "Tests"
+                if let foundModule = modules[moduleNameWithTests] {
+                    existingModule = foundModule
+                    moduleName = moduleNameWithTests
+                }
+            }
+
+            // Start with existing module files or empty set
+            var moduleFiles = existingModule?.files ?? Set<Report.Module.File>()
+
+            // Determine module coverage: use target coverage if module doesn't have one, or keep existing
+            let moduleCoverage = existingModule?.coverage ?? targetCoverage
+
+            // Add all coverage files to this module
+            for fileCoverageDTO in target.files {
+                let coverage = Report.Module.File.Coverage(from: fileCoverageDTO)
+                // Use the name as it appears in xcresult
+                // If name contains path separators, extract just the filename
+                var fileName = fileCoverageDTO.name
+                if let lastSlash = fileName.lastIndex(of: "/") {
+                    fileName = String(fileName[fileName.index(after: lastSlash)...])
                 }
 
-                // Start with existing module files or empty set
-                var moduleFiles = existingModule?.files ?? Set<Report.Module.File>()
-
-                // Determine module coverage: use target coverage if module doesn't have one, or keep existing
-                let moduleCoverage = existingModule?.coverage ?? targetCoverage
-
-                // Add all coverage files to this module
-                for fileCoverageDTO in target.files {
-                    let coverage = Report.Module.File.Coverage(from: fileCoverageDTO)
-                    // Use the name as it appears in xcresult
-                    // If name contains path separators, extract just the filename
-                    var fileName = fileCoverageDTO.name
-                    if let lastSlash = fileName.lastIndex(of: "/") {
-                        fileName = String(fileName[fileName.index(after: lastSlash)...])
-                    }
-
-                    // Check if file already exists in module (from test suites)
-                    if let existingFile = moduleFiles[fileName] {
-                        // File exists - update coverage if it doesn't have one
-                        if existingFile.coverage == nil {
-                            let updatedFile = Report.Module.File(
-                                name: fileName,
-                                repeatableTests: existingFile.repeatableTests,
-                                coverage: coverage
-                            )
-                            moduleFiles.remove(existingFile)
-                            moduleFiles.insert(updatedFile)
-                        }
-                        // If file already has coverage, keep existing one (from test suite matching)
-                    } else {
-                        // Create new file entry with coverage but no tests
-                        let newFile = Report.Module.File(
+                // Check if file already exists in module (from test suites)
+                if let existingFile = moduleFiles[fileName] {
+                    // File exists - update coverage if it doesn't have one
+                    if existingFile.coverage == nil {
+                        let updatedFile = Report.Module.File(
                             name: fileName,
-                            repeatableTests: [],
+                            repeatableTests: existingFile.repeatableTests,
+                            warnings: mergeWarnings(existingFile.warnings, warnings(for: fileName)),
                             coverage: coverage
                         )
-                        moduleFiles.insert(newFile)
+                        moduleFiles.remove(existingFile)
+                        moduleFiles.insert(updatedFile)
                     }
+                    // If file already has coverage, keep existing one (from test suite matching)
+                } else {
+                    // Create new file entry with coverage but no tests
+                    let newFile = Report.Module.File(
+                        name: fileName,
+                        repeatableTests: [],
+                        warnings: warnings(for: fileName),
+                        coverage: coverage
+                    )
+                    moduleFiles.insert(newFile)
                 }
-
-                // Remove old module if it existed and add updated one
-                if let oldModule = existingModule {
-                    modules.remove(oldModule)
-                }
-
-                // Create or update module with all files and coverage
-                let updatedModule = Report.Module(
-                    name: moduleName, files: moduleFiles, coverage: moduleCoverage)
-                modules.insert(updatedModule)
             }
+
+            // Remove old module if it existed and add updated one
+            if let oldModule = existingModule {
+                modules.remove(oldModule)
+            }
+
+            // Create or update module with all files and coverage
+            let updatedModule = Report.Module(
+                name: moduleName, files: moduleFiles, coverage: moduleCoverage)
+            modules.insert(updatedModule)
         }
 
         // Use total coverage from xcresult file if available, otherwise calculate from files
-        let totalCoverage =
-            totalCoverageDTO?.lineCoverage
-            ?? {
-                let fileCoverages = modules.flatMap { $0.files }.compactMap { $0.coverage }
-                guard !fileCoverages.isEmpty else { return nil }
-                let totalLines = fileCoverages.reduce(0) { $0 + $1.totalLines }
-                let totalCoveredLines = fileCoverages.reduce(0) { $0 + $1.coveredLines }
-                return totalLines != 0 ? Double(totalCoveredLines) / Double(totalLines) : 0.0
-            }()
+        let totalCoverage: Double? = {
+            let lineCoverage = totalCoverageDTO.lineCoverage
+            // totalCoverageDTO is available; still allow fallback in case of zeroed data
+            if lineCoverage > 0 {
+                return lineCoverage
+            }
+
+            let fileCoverages = modules.flatMap { $0.files }.compactMap { $0.coverage }
+            guard !fileCoverages.isEmpty else { return nil }
+            let totalLines = fileCoverages.reduce(0) { $0 + $1.totalLines }
+            let totalCoveredLines = fileCoverages.reduce(0) { $0 + $1.coveredLines }
+            return totalLines != 0 ? Double(totalCoveredLines) / Double(totalLines) : 0.0
+        }()
 
         self.modules = modules
         self.coverage = totalCoverage

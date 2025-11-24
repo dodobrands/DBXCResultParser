@@ -65,6 +65,7 @@ extension Report.Module {
     public struct File: Hashable {
         public let name: String
         public internal(set) var repeatableTests: Set<RepeatableTest>
+        public internal(set) var warnings: [Warning]
         public let coverage: Coverage?
 
         public func hash(into hasher: inout Hasher) {
@@ -76,6 +77,18 @@ extension Report.Module {
         }
     }
 }
+
+extension Report.Module.File {
+    public struct Warning: Equatable {
+        public let issueType: IssueType
+        public let message: String
+
+        public enum IssueType: String, Equatable {
+            case buildWarning
+        }
+    }
+}
+
 extension Report.Module.File {
     public struct RepeatableTest: Hashable {
         public let name: String

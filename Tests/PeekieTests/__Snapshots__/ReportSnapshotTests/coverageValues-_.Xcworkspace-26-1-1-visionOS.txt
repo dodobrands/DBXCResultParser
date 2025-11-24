@@ -17,6 +17,13 @@
               - totalLines: 23
           - name: "TextProcessor.swift"
           - repeatableTests: 0 members
+          ▿ warnings: 2 elements
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from StringUtils\n#warning(\"Some warning from StringUtils\")\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from StringUtils"
       - name: "XcodeprojExampleFramework.framework"
     ▿ Module
       ▿ coverage: Optional<Coverage>
@@ -33,6 +40,7 @@
               - totalLines: 36
           - name: "NumberHelper.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -41,6 +49,13 @@
               - totalLines: 34
           - name: "Calculator.swift"
           - repeatableTests: 0 members
+          ▿ warnings: 2 elements
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from Calculator\n        #warning(\"Some warning from Calculator\")\n                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from Calculator"
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -49,6 +64,7 @@
               - totalLines: 14
           - name: "XcodeprojExampleApp.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
       - name: "XcodeprojExample.app"
     ▿ Module
       ▿ coverage: Optional<Coverage>
@@ -256,6 +272,7 @@
                     - unit: "ms"
                   - message: Optional<String>.none
                   - status: Status.success
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -402,6 +419,22 @@
                     - unit: "ms"
                   - message: Optional<String>.none
                   - status: Status.success
+          ▿ warnings: 5 elements
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from ExampleSUITests\n#warning(\"Some warning from ExampleSUITests\")\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from ExampleSUITests"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Main actor-isolated initializer \'init()\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Main actor-isolated instance method \'add\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Main actor-isolated instance method \'multiply\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
       - name: "XcodeprojExampleTests"
     ▿ Module
       ▿ coverage: Optional<Coverage>
@@ -418,6 +451,19 @@
               - totalLines: 67
           - name: "SwiftTestingTests.swift"
           - repeatableTests: 0 members
+          ▿ warnings: 4 elements
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from ExampleSUITests\n#warning(\"Some warning from ExampleSUITests\")\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from ExampleSUITests"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Main actor-isolated initializer \'init()\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Main actor-isolated instance method \'add\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -426,4 +472,20 @@
               - totalLines: 96
           - name: "XCTestTests.swift"
           - repeatableTests: 0 members
+          ▿ warnings: 5 elements
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from ExampleSUITests\n#warning(\"Some warning from ExampleSUITests\")\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Some warning from ExampleSUITests"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Main actor-isolated initializer \'init()\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Main actor-isolated instance method \'add\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
+            ▿ Warning
+              - issueType: IssueType.buildWarning
+              - message: "Main actor-isolated instance method \'multiply\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
       - name: "XcodeprojExampleTests.xctest"

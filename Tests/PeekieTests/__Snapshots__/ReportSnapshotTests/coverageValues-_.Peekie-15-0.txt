@@ -17,6 +17,7 @@
               - totalLines: 9
           - name: "Measurement+TestHelpers.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -25,6 +26,7 @@
               - totalLines: 51
           - name: "DBXCReportModel+TestHelpers.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -33,6 +35,7 @@
               - totalLines: 9
           - name: "CoverageDTO+TestHelpers.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
       - name: "DBXCResultParserTestHelpers"
     ▿ Module
       ▿ coverage: Optional<Coverage>
@@ -49,6 +52,7 @@
               - totalLines: 9
           - name: "Measurement+TestHelpers.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -57,6 +61,7 @@
               - totalLines: 7
           - name: "Math.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -65,6 +70,7 @@
               - totalLines: 12
           - name: "Constants+Helpers.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -73,6 +79,7 @@
               - totalLines: 232
           - name: "DBXCReportModel.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -81,6 +88,7 @@
               - totalLines: 31
           - name: "Constants.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -89,6 +97,7 @@
               - totalLines: 10
           - name: "ActionsInvocationRecordDTO.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -106,6 +115,7 @@
                     - unit: "ms"
                   - message: Optional<String>.none
                   - status: Status.success
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -114,6 +124,7 @@
               - totalLines: 36
           - name: "DTO+Helpers.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -122,6 +133,7 @@
               - totalLines: 197
           - name: "DBXCReportModel+Convenience.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -130,6 +142,7 @@
               - totalLines: 10
           - name: "OverviewReportDTOTests.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -147,6 +160,7 @@
                     - unit: "ms"
                   - message: Optional<String>.none
                   - status: Status.success
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -155,6 +169,7 @@
               - totalLines: 11
           - name: "DBShellTests.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -181,6 +196,7 @@
                     - unit: "ms"
                   - message: Optional<String>.none
                   - status: Status.success
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -189,6 +205,7 @@
               - totalLines: 15
           - name: "ActionTestPlanRunSummariesDTOTests.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -197,6 +214,7 @@
               - totalLines: 16
           - name: "DBShell.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -223,6 +241,7 @@
                     - unit: "ms"
                   - message: Optional<String>.none
                   - status: Status.success
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -231,6 +250,7 @@
               - totalLines: 36
           - name: "CoverageDTOTests.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -239,6 +259,7 @@
               - totalLines: 51
           - name: "DBXCReportModel+TestHelpers.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -247,6 +268,7 @@
               - totalLines: 6
           - name: "ActionTestSummaryDTO.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -255,6 +277,7 @@
               - totalLines: 9
           - name: "CoverageDTO+TestHelpers.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -356,6 +379,7 @@
                     - unit: "ms"
                   - message: Optional<String>.none
                   - status: Status.success
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -364,6 +388,7 @@
               - totalLines: 95
           - name: "DBXCReportModelTests.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
       - name: "DBXCResultParserTests"
     ▿ Module
       ▿ coverage: Optional<Coverage>
@@ -380,6 +405,7 @@
               - totalLines: 9
           - name: "Measurement+TestHelpers.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -388,6 +414,7 @@
               - totalLines: 7
           - name: "Math.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -396,6 +423,7 @@
               - totalLines: 232
           - name: "DBXCReportModel.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -404,6 +432,7 @@
               - totalLines: 31
           - name: "Constants.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -412,6 +441,7 @@
               - totalLines: 10
           - name: "ActionsInvocationRecordDTO.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -420,6 +450,7 @@
               - totalLines: 36
           - name: "DTO+Helpers.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -428,6 +459,7 @@
               - totalLines: 93
           - name: "DBXCTextFormatter.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -436,6 +468,7 @@
               - totalLines: 197
           - name: "DBXCReportModel+Convenience.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -480,6 +513,7 @@
                     - unit: "ms"
                   - message: Optional<String>.none
                   - status: Status.success
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -488,6 +522,7 @@
               - totalLines: 147
           - name: "DBXCTextFormatterTests.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -496,6 +531,7 @@
               - totalLines: 16
           - name: "DBShell.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -504,6 +540,7 @@
               - totalLines: 51
           - name: "DBXCReportModel+TestHelpers.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -512,6 +549,7 @@
               - totalLines: 6
           - name: "ActionTestSummaryDTO.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
             ▿ some: Coverage
@@ -520,4 +558,5 @@
               - totalLines: 9
           - name: "CoverageDTO+TestHelpers.swift"
           - repeatableTests: 0 members
+          - warnings: 0 elements
       - name: "DBXCResultParser-TextFormatterTests"
