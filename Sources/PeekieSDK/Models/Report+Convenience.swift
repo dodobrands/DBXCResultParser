@@ -102,7 +102,7 @@ extension Report {
 
                 // Store normalized message in the warning
                 let parsedWarning = Report.Module.File.Issue(
-                    issueType: .buildWarning,
+                    type: .buildWarning,
                     message: normalized
                 )
 

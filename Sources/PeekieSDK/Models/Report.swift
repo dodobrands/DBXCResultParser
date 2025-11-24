@@ -80,7 +80,7 @@ extension Report.Module {
 
 extension Report.Module.File {
     public struct Issue: Equatable {
-        public let issueType: IssueType
+        public let type: IssueType
         public let message: String
 
         public enum IssueType: String, Equatable {
