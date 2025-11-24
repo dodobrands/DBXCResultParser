@@ -103,7 +103,7 @@ The `PeekieSDK` package provides multiple formatters to convert parsed `.xcresul
 
 ### TextFormatter
 
-The `TextFormatter` class provides a way to format the data from a `Report` into a human-readable string. It supports two output formats: a detailed list of test results and a summary count of test results.
+The `TextFormatter` class provides a way to format the data from a `Report` into a human-readable string. It outputs a detailed list of test results.
 
 #### Usage
 
@@ -140,21 +140,7 @@ let failuresAndSkipped = formatter.format(reportModel, include: [.failure, .skip
 let successesOnly = formatter.format(reportModel, include: [.success])
 ```
 
-**Using count format:**
-
-```swift
-// Get summary count instead of detailed list
-let summary = formatter.format(reportModel, format: .count)
-// Output: "12 tests (1m 23s)"
-
-// Count only failures
-let failureCount = formatter.format(reportModel, include: [.failure], format: .count)
-// Output: "3 tests (45s)"
-```
-
-#### Output Formats
-
-##### List Format
+#### Output Format
 
 Outputs a detailed list of test results, including the name of each file and the status of each test.
 
@@ -190,20 +176,6 @@ CalculatorTests.swift
 ✅ testMultiplication(factor:) (5)
 ❌ testDivision(dividend:divisor:) (10, 2)
 ✅ testDivision(dividend:divisor:) (20, 4)
-```
-
-##### Count Format
-
-Outputs a summary count of test results, including the total number of tests and their combined duration.
-
-```
-12 tests (1m 23s)
-```
-
-When filtering by status (e.g., only failures), duration is omitted if only skipped tests are included:
-
-```
-5 tests
 ```
 
 #### Customizing Number and Measurement Formatting
@@ -292,11 +264,8 @@ swift run peekie text path/to/tests.xcresult
 **Examples:**
 
 ```bash
-# Default: list format with all test statuses
+# Default: all test statuses
 swift run peekie text path/to/tests.xcresult
-
-# Count format (summary)
-swift run peekie text path/to/tests.xcresult --format count
 
 # Show only failures
 swift run peekie text path/to/tests.xcresult --include failure
@@ -307,13 +276,12 @@ swift run peekie text path/to/tests.xcresult --include failure,skipped
 # Use specific locale for formatting
 swift run peekie text path/to/tests.xcresult --locale ru-RU
 
-# Combine options: count format with only failures, using French locale
-swift run peekie text path/to/tests.xcresult --format count --include failure --locale fr-FR
+# Combine options: only failures, using French locale
+swift run peekie text path/to/tests.xcresult --include failure --locale fr-FR
 ```
 
 **Available options for `text` subcommand:**
 - `<xcresult-path>`: Path to the `.xcresult` file (required, positional argument).
-- `--format`: Determines the output format (`list` or `count`). Default: `list`.
 - `--locale`: Sets the locale for number and measurement formatting (e.g., "en-GB", "ru-RU", "fr-FR"). Default: system locale.
 - `--include`: Filters the test results to include only certain statuses. Comma-separated list of: `success`, `failure`, `skipped`, `expectedFailure`, `mixed`, `unknown`. Default: all statuses.
 

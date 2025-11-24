@@ -13,9 +13,6 @@ public struct Text: AsyncParsableCommand {
     @Argument(help: "Path to .xcresult")
     public var xcresultPath: String
 
-    @Option(help: "Result format")
-    public var format: TextFormatter.Format = .list
-
     /// The locale to use for formatting numbers and measurements
     @Option(
         help:
@@ -68,16 +65,9 @@ public struct Text: AsyncParsableCommand {
         let result = formatter.format(
             report,
             include: include,
-            format: format,
             locale: localeValue
         )
 
         print(result)
-    }
-}
-
-extension TextFormatter.Format: ExpressibleByArgument {
-    public init?(argument: String) {
-        self.init(rawValue: argument)
     }
 }

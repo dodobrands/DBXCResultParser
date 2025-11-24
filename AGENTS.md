@@ -49,7 +49,6 @@ swift run peekie text path/to/tests.xcresult
 
 Options:
 - `<xcresult-path>`: Path to the `.xcresult` file (positional argument)
-- `--format`: Output format (`list` or `count`)
 - `--locale`: Locale for number formatting (e.g., "en-GB")
 - `--include`: Filter test results by status (e.g., `failure,skipped`)
 
