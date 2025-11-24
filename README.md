@@ -286,33 +286,33 @@ The package includes a command-line tool that can be executed to generate test r
 #### Text Format Subcommand
 
 ```bash
-swift run peekie text --xcresult-path path/to/tests.xcresult
+swift run peekie text path/to/tests.xcresult
 ```
 
 **Examples:**
 
 ```bash
 # Default: list format with all test statuses
-swift run peekie text --xcresult-path path/to/tests.xcresult
+swift run peekie text path/to/tests.xcresult
 
 # Count format (summary)
-swift run peekie text --xcresult-path path/to/tests.xcresult --format count
+swift run peekie text path/to/tests.xcresult --format count
 
 # Show only failures
-swift run peekie text --xcresult-path path/to/tests.xcresult --include failure
+swift run peekie text path/to/tests.xcresult --include failure
 
 # Show failures and skipped tests
-swift run peekie text --xcresult-path path/to/tests.xcresult --include failure,skipped
+swift run peekie text path/to/tests.xcresult --include failure,skipped
 
 # Use specific locale for formatting
-swift run peekie text --xcresult-path path/to/tests.xcresult --locale ru-RU
+swift run peekie text path/to/tests.xcresult --locale ru-RU
 
 # Combine options: count format with only failures, using French locale
-swift run peekie text --xcresult-path path/to/tests.xcresult --format count --include failure --locale fr-FR
+swift run peekie text path/to/tests.xcresult --format count --include failure --locale fr-FR
 ```
 
 **Available options for `text` subcommand:**
-- `--xcresult-path`: Specifies the path to the `.xcresult` file (required).
+- `<xcresult-path>`: Path to the `.xcresult` file (required, positional argument).
 - `--format`: Determines the output format (`list` or `count`). Default: `list`.
 - `--locale`: Sets the locale for number and measurement formatting (e.g., "en-GB", "ru-RU", "fr-FR"). Default: system locale.
 - `--include`: Filters the test results to include only certain statuses. Comma-separated list of: `success`, `failure`, `skipped`, `expectedFailure`, `mixed`, `unknown`. Default: all statuses.
@@ -320,7 +320,7 @@ swift run peekie text --xcresult-path path/to/tests.xcresult --format count --in
 #### SonarQube Format Subcommand
 
 ```bash
-swift run peekie sonar --xcresult-path path/to/tests.xcresult --tests-path path/to/tests
+swift run peekie sonar path/to/tests.xcresult --tests-path path/to/tests
 ```
 
 **Examples:**
@@ -328,14 +328,14 @@ swift run peekie sonar --xcresult-path path/to/tests.xcresult --tests-path path/
 ```bash
 # Generate SonarQube XML report
 # Note: --tests-path must point to a directory containing test source files, not the .xcresult file
-swift run peekie sonar --xcresult-path path/to/tests.xcresult --tests-path path/to/tests
+swift run peekie sonar path/to/tests.xcresult --tests-path path/to/tests
 
 # Save output to file
-swift run peekie sonar --xcresult-path path/to/tests.xcresult --tests-path Tests/PeekieTests > sonar-report.xml
+swift run peekie sonar path/to/tests.xcresult --tests-path Tests/PeekieTests > sonar-report.xml
 ```
 
 **Available options for `sonar` subcommand:**
-- `--xcresult-path`: Specifies the path to the `.xcresult` file (required).
+- `<xcresult-path>`: Path to the `.xcresult` file (required, positional argument).
 - `--tests-path`: Specifies the path to the directory containing test source files (required). This must be a directory path (not a `.xcresult` file) containing your test source code (`.swift` files). This is used to map test suite names to file paths.
 
 ## Updating Test Resources
