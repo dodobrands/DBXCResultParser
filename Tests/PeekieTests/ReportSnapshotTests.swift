@@ -9,7 +9,7 @@ import Testing
 struct ReportSnapshotTests {
 
     @Test(arguments: Constants.testsReportFileNames)
-    func coverageValues(_ fileName: String) async throws {
+    func reportSnapshots(_ fileName: String) async throws {
         let originalPath = try Constants.url(for: fileName)
         let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
         defer {
