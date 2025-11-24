@@ -24,16 +24,6 @@ extension Report {
         public let coveredLines: Int
         public let totalLines: Int
         public let coverage: Double
-
-        init(
-            coveredLines: Int,
-            totalLines: Int,
-            coverage: Double
-        ) {
-            self.coveredLines = coveredLines
-            self.totalLines = totalLines
-            self.coverage = coverage
-        }
     }
 }
 
