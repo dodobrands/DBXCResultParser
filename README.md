@@ -181,18 +181,15 @@ FileB.swift
 ```
 
 **Parameterized Tests (Swift Testing):**
-Each argument from parameterized tests is displayed as a separate test line with its own status:
+Each argument from parameterized tests is displayed as a separate test line with its own status. The example below shows a regular test and two parameterized tests with different argument types:
 
 ```
-FakeSUITests
-✅ success()
-❌ failure() (GenerateXCResultTests.swift:56: Issue recorded: Failure message)
-⏭️ disabled() (Test 'disabled()' skipped: Disabled reason)
-🤡 expectedFailure()
-⚠️ flacky() (GenerateXCResultTests.swift:75: Issue recorded: Flacky failure message)
-✅ flackyParameterized(value:) (true)
-❌ flackyParameterized(value:) (false)
-✅ somethingWithWarning()
+CalculatorTests.swift
+✅ testAddition()
+✅ testMultiplication(factor:) (2)
+✅ testMultiplication(factor:) (5)
+❌ testDivision(dividend:divisor:) (10, 2)
+✅ testDivision(dividend:divisor:) (20, 4)
 ```
 
 ##### Count Format
