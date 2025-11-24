@@ -9,8 +9,8 @@ public class Shell {
         let result = try await run(
             .name(executable),
             arguments: .init(arguments),
-            output: .string(limit: 10 * 1024 * 1024),  // 10MB limit
-            error: .string(limit: 10 * 1024 * 1024)  // 10MB limit for stderr
+            output: .string(limit: .max),
+            error: .string(limit: .max)
         )
 
         // Check if process exited successfully
