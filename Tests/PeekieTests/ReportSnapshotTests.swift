@@ -1,4 +1,5 @@
 import Foundation
+import PeekieTestHelpers
 import SnapshotTesting
 import Testing
 
@@ -6,9 +7,6 @@ import Testing
 
 @Suite
 struct ReportSnapshotTests {
-    private func snapshotName(from fileName: String) -> String {
-        fileName.replacingOccurrences(of: ".xcresult", with: "")
-    }
 
     @Test(arguments: Constants.testsReportFileNames)
     func coverageValues(_ fileName: String) async throws {

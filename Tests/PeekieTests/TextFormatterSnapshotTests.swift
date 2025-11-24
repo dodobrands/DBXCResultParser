@@ -1,4 +1,5 @@
 import Foundation
+import PeekieTestHelpers
 import SnapshotTesting
 import Testing
 
@@ -8,10 +9,6 @@ import Testing
 struct TextFormatterSnapshotTests {
     let locale = Locale(identifier: "en-US")
     let formatter = TextFormatter()
-
-    private func snapshotName(from fileName: String) -> String {
-        fileName.replacingOccurrences(of: ".xcresult", with: "")
-    }
 
     @Test(arguments: Constants.testsReportFileNames)
     func listFormat_allStatuses(_ fileName: String) async throws {

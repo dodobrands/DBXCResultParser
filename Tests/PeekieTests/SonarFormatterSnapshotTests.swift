@@ -1,4 +1,5 @@
 import Foundation
+import PeekieTestHelpers
 import SnapshotTesting
 import Testing
 
@@ -7,10 +8,6 @@ import Testing
 @Suite
 struct SonarFormatterSnapshotTests {
     let formatter = SonarFormatter()
-
-    private func snapshotName(from fileName: String) -> String {
-        fileName.replacingOccurrences(of: ".xcresult", with: "")
-    }
 
     @Test(arguments: Constants.testsReportFileNames)
     func sonarFormat_allStatuses(_ fileName: String) async throws {
