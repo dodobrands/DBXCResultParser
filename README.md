@@ -66,6 +66,19 @@ import PeekieSDK
 let xcresultPath = URL(fileURLWithPath: "/path/to/your.xcresult")
 let reportModel = try await Report(xcresultPath: xcresultPath)
 
+// Optionally, you can control what data to include:
+// Parse without coverage data (faster)
+let reportWithoutCoverage = try await Report(
+    xcresultPath: xcresultPath,
+    includeCoverage: false
+)
+
+// Parse without warnings
+let reportWithoutWarnings = try await Report(
+    xcresultPath: xcresultPath,
+    includeWarnings: false
+)
+
 // Access different parts of the report:
 let modules = reportModel.modules
 let coverage = reportModel.coverage // Coverage value from 0.0 to 1.0
@@ -267,6 +280,8 @@ swift run peekie list path/to/tests.xcresult --include failure,skipped
 **Available options for `list` subcommand:**
 - `<xcresult-path>`: Path to the `.xcresult` file (required, positional argument).
 - `--include`: Filters the test results to include only certain statuses. Comma-separated list of: `success`, `failure`, `skipped`, `expectedFailure`, `mixed`, `unknown`. Default: all statuses.
+- `--include-coverage`: Whether to parse and include code coverage data. Default: `true`.
+- `--include-warnings`: Whether to parse and include build warnings. Default: `true`.
 
 #### SonarQube Format Subcommand
 
