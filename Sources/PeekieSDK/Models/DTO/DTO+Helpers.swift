@@ -22,12 +22,12 @@ extension TestResultsDTO {
     }
 }
 
-extension Array where Element == CoverageDTO {
+extension CoverageReportDTO {
     init(from xcresultPath: URL) async throws {
         let output = try await Shell.execute(
             "xcrun",
             arguments: [
-                "xccov", "view", "--report", "--only-targets", "--json",
+                "xccov", "view", "--report", "--json",
                 xcresultPath.path,
             ]
         )
@@ -39,7 +39,7 @@ extension Array where Element == CoverageDTO {
                 )
             )
         }
-        self = try JSONDecoder().decode(Array<CoverageDTO>.self, from: data)
+        self = try JSONDecoder().decode(CoverageReportDTO.self, from: data)
     }
 }
 
@@ -71,20 +71,9 @@ extension BuildResultsDTO {
             arguments: [
                 "xcresulttool", "get", "build-results",
                 "--path", xcresultPath.path,
-                "--compact",
+                "--format", "json",
             ]
         )
-
-        // If output is empty, build-results are not available (e.g., test-only xcresult)
-        guard !output.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            throw DecodingError.dataCorrupted(
-                DecodingError.Context(
-                    codingPath: [],
-                    debugDescription: "Build results not available in this xcresult file"
-                )
-            )
-        }
-
         guard let data = output.data(using: .utf8) else {
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
@@ -93,11 +82,6 @@ extension BuildResultsDTO {
                 )
             )
         }
-        var decoded = try JSONDecoder().decode(BuildResultsDTO.self, from: data)
-        // Filter warnings to include only "Swift Compiler Warning" (exclude "Swift Compiler Error" duplicates)
-        decoded = BuildResultsDTO(
-            warnings: decoded.warnings.filter { $0.issueType == "Swift Compiler Warning" }
-        )
-        self = decoded
+        self = try JSONDecoder().decode(BuildResultsDTO.self, from: data)
     }
 }

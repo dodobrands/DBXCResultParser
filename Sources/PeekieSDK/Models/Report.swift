@@ -3,12 +3,10 @@ import Foundation
 public struct Report {
     public let modules: Set<Module>
     public let coverage: Double?
-    public let warnings: [Warning]
 
-    public struct Warning {
-        public let message: String
-        public let sourceURL: String
-        public let className: String
+    /// All warnings from all modules in this report
+    public var warnings: [Module.File.Issue] {
+        modules.flatMap { $0.warnings }
     }
 }
 
@@ -25,30 +23,37 @@ extension Report {
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.name == rhs.name
         }
+
+        /// All warnings from all files in this module
+        public var warnings: [File.Issue] {
+            files.flatMap { $0.warnings }
+        }
+    }
+
+    public struct Coverage: Equatable {
+        public let coveredLines: Int
+        public let totalLines: Int
+        public let coverage: Double
     }
 }
 
-extension Report.Module {
+extension Report.Module.File {
     public struct Coverage: Equatable {
-        public let name: String
         public let coveredLines: Int
         public let totalLines: Int
         public let coverage: Double
 
         init(
-            name: String,
             coveredLines: Int,
             totalLines: Int,
             coverage: Double
         ) {
-            self.name = name
             self.coveredLines = coveredLines
             self.totalLines = totalLines
             self.coverage = coverage
         }
 
-        init(from dto: CoverageDTO) {
-            self.name = dto.name
+        init(from dto: FileCoverageDTO) {
             self.coveredLines = dto.coveredLines
             self.totalLines = dto.executableLines
             self.coverage = dto.lineCoverage
@@ -60,6 +65,8 @@ extension Report.Module {
     public struct File: Hashable {
         public let name: String
         public internal(set) var repeatableTests: Set<RepeatableTest>
+        public internal(set) var warnings: [Issue]
+        public let coverage: Coverage?
 
         public func hash(into hasher: inout Hasher) {
             hasher.combine(name)
@@ -70,6 +77,18 @@ extension Report.Module {
         }
     }
 }
+
+extension Report.Module.File {
+    public struct Issue: Equatable, Sendable {
+        public let type: IssueType
+        public let message: String
+
+        public enum IssueType: String, Equatable, Sendable {
+            case buildWarning = "Swift Compiler Warning"
+        }
+    }
+}
+
 extension Report.Module.File {
     public struct RepeatableTest: Hashable {
         public let name: String
@@ -278,15 +297,6 @@ extension Array where Element == Report.Module.File.RepeatableTest {
             first?.totalDuration.unit
             ?? Report.Module.File.RepeatableTest.Test.defaultDurationUnit
         return .init(value: value, unit: unit)
-    }
-}
-
-extension Array where Element == Report.Module.Coverage {
-    func forModule(named name: String) -> Element? {
-        first {
-            guard let prefix = $0.name.split(separator: ".").first else { return false }
-            return prefix + "Tests" == name
-        }
     }
 }
 

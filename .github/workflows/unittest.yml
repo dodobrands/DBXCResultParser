@@ -20,6 +20,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: true
 
     - name: Read Xcode version
       id: xcode-version
@@ -37,20 +39,24 @@ jobs:
       run: swift package resolve
 
     - name: Build
+      env:
+        NSUnbufferedIO: YES
       run: swift build --build-tests
 
     - name: Test
+      env:
+        NSUnbufferedIO: YES
       run: swift test --skip-build
 
     # Verify CLI tool functionality by parsing test xcresult file
     - name: Parse xcresult (text format)
-      run: swift run peekie text --xcresult-path Tests/PeekieTests/Resources/Peekie-26.1.1.xcresult
+      run: swift run peekie text --xcresult-path Tests/PeekieTests/Resources/SPM-26.1.1-iOS.xcresult
 
     - name: Parse xcresult (sonar format)
-      run: swift run peekie sonar --xcresult-path Tests/PeekieTests/Resources/Peekie-26.1.1.xcresult --tests-path Tests/PeekieTests
+      run: swift run peekie sonar --xcresult-path Tests/PeekieTests/Resources/SPM-26.1.1-iOS.xcresult --tests-path swift-tests-example/SPM/Tests/ExamplesTests
 
     - name: Install mise
       uses: jdx/mise-action@v3
 
     - name: Scan for unused code with Periphery
-      run: periphery scan --skip-build
+      run: periphery scan --skip-build --strict

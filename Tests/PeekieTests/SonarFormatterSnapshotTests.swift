@@ -1,4 +1,5 @@
 import Foundation
+import PeekieTestHelpers
 import SnapshotTesting
 import Testing
 
@@ -9,7 +10,7 @@ struct SonarFormatterSnapshotTests {
     let formatter = SonarFormatter()
 
     @Test(arguments: Constants.testsReportFileNames)
-    func test_sonarFormat_allStatuses(fileName: String) async throws {
+    func sonarFormat_allStatuses(_ fileName: String) async throws {
         let originalPath = try Constants.url(for: fileName)
         let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
         defer {
@@ -31,7 +32,7 @@ struct SonarFormatterSnapshotTests {
         assertSnapshot(
             of: normalized,
             as: .lines,
-            named: "\(fileName)_sonar"
+            named: "\(snapshotName(from: fileName))_sonar"
         )
     }
 
@@ -49,12 +50,24 @@ struct SonarFormatterSnapshotTests {
         try FileManager.default.createDirectory(at: testDir, withIntermediateDirectories: true)
 
         // Generate mock Swift test files based on test suite names from the report
-        let testSuites = Set(report.modules.flatMap { $0.files.map { $0.name } })
+        // Only include files that have tests (skip coverage-only files)
+        let testSuites = Set(
+            report.modules.flatMap {
+                $0.files.filter { !$0.repeatableTests.isEmpty }.map { $0.name }
+            })
 
         for testSuiteName in testSuites {
             // Create a simple Swift file with the test suite class/struct
-            let fileName = "\(testSuiteName).swift"
+            // Check if name already has .swift extension
+            let fileName =
+                testSuiteName.hasSuffix(".swift") ? testSuiteName : "\(testSuiteName).swift"
             let filePath = testDir.appendingPathComponent(fileName)
+
+            // Remove .swift extension for struct name
+            let structName =
+                testSuiteName.hasSuffix(".swift")
+                ? String(testSuiteName.dropLast(6))
+                : testSuiteName
 
             // Generate minimal Swift test file content
             let fileContent = """
@@ -62,7 +75,7 @@ struct SonarFormatterSnapshotTests {
                 import Testing
 
                 @Suite
-                struct \(testSuiteName) {
+                struct \(structName) {
                     // Mock test suite for snapshot testing
                 }
                 """

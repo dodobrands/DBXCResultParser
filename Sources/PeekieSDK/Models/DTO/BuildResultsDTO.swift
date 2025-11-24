@@ -1,12 +1,21 @@
 import Foundation
 
-struct BuildResultsDTO: Decodable {
+struct BuildResultsDTO: Decodable, Sendable {
     let warnings: [Issue]
 
-    struct Issue: Decodable {
+    struct Issue: Decodable, Sendable {
         let issueType: String
         let message: String
         let sourceURL: String?
-        let className: String?
+    }
+}
+
+extension BuildResultsDTO.Issue {
+    var fileName: String? {
+        guard let sourceURL else { return nil }
+        let url = URL(string: sourceURL) ?? URL(fileURLWithPath: sourceURL)
+        let fragmentTrimmed = URL(
+            string: url.absoluteString.components(separatedBy: "#").first ?? url.absoluteString)
+        return (fragmentTrimmed ?? url).lastPathComponent
     }
 }

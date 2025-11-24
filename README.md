@@ -18,6 +18,7 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
     - [TextFormatter](#textformatter)
     - [SonarFormatter](#sonarformatter)
   - [Command-Line Tool](#command-line-tool)
+- [Updating Test Resources](#updating-test-resources)
 - [License](#license)
 
 ## Features
@@ -25,9 +26,9 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
 - Supports **XCTest** and **Swift Testing** frameworks.
 - Parses modern `.xcresult` format (uses `xcresulttool` without `--legacy` flag).
 - Parses `.xcresult` files to create a typed model of the test results and code coverage.
+- **Parses build warnings** from `.xcresult` files and associates them with source files.
 - Filters out coverage data related to test helpers and test cases.
 - Provides a detailed breakdown of modules, files, and repeatable tests.
-- Extracts build warnings from `.xcresult` files (Swift Compiler Warnings only).
 - Calculates total and average test durations, as well as combined test statuses.
 - Supports identifying slow tests based on average duration.
 - Includes utility functions for filtering tests based on status.
@@ -68,20 +69,21 @@ let reportModel = try await Report(xcresultPath: xcresultPath)
 // Access different parts of the report:
 let modules = reportModel.modules
 let coverage = reportModel.coverage // Coverage value from 0.0 to 1.0
-let warnings = reportModel.warnings // Array of build warnings
-
-// Access warnings:
-for warning in warnings {
-    print("Warning: \(warning.message)")
-    print("  Location: \(warning.sourceURL)")
-    print("  Class: \(warning.className)")
-}
 
 // Iterate over modules, files, and tests:
 for module in modules {
     print("Module: \(module.name)")
     for file in module.files {
         print("  File: \(file.name)")
+        
+        // Access warnings for this file
+        if !file.warnings.isEmpty {
+            print("    Warnings:")
+            for warning in file.warnings {
+                print("      - \(warning.message)")
+            }
+        }
+        
         for repeatableTest in file.repeatableTests {
             print("    Repeatable Test: \(repeatableTest.name)")
             for test in repeatableTest.tests {
@@ -338,6 +340,10 @@ swift run peekie sonar --xcresult-path path/to/tests.xcresult --tests-path Tests
 **Available options for `sonar` subcommand:**
 - `--xcresult-path`: Specifies the path to the `.xcresult` file (required).
 - `--tests-path`: Specifies the path to the directory containing test source files (required). This must be a directory path (not a `.xcresult` file) containing your test source code (`.swift` files). This is used to map test suite names to file paths.
+
+## Updating Test Resources
+
+To ensure compatibility with new Xcode versions, this project uses test resources from the [swift-tests-example](https://github.com/dodobrands/swift-tests-example) repository. This repository contains a comprehensive test suite that generates `.xcresult` files for all supported Apple platforms and test scenarios. See the repository's README for detailed instructions on generating updated `.xcresult` files.
 
 ## License
 
