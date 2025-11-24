@@ -20,6 +20,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
+      with:
+        submodules: true
 
     - name: Read Xcode version
       id: xcode-version
@@ -47,7 +49,7 @@ jobs:
       run: swift run peekie text --xcresult-path Tests/PeekieTests/Resources/SPM-26.1.1-iOS.xcresult
 
     - name: Parse xcresult (sonar format)
-      run: swift run peekie sonar --xcresult-path Tests/PeekieTests/Resources/SPM-26.1.1-iOS.xcresult --tests-path Tests/PeekieTests
+      run: swift run peekie sonar --xcresult-path Tests/PeekieTests/Resources/SPM-26.1.1-iOS.xcresult --tests-path swift-tests-example/SPM/Tests/ExamplesTests
 
     - name: Install mise
       uses: jdx/mise-action@v3
