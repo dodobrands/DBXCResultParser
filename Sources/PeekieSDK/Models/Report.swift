@@ -79,11 +79,11 @@ extension Report.Module {
 }
 
 extension Report.Module.File {
-    public struct Issue: Equatable {
+    public struct Issue: Equatable, Sendable {
         public let type: IssueType
         public let message: String
 
-        public enum IssueType: String, Equatable {
+        public enum IssueType: String, Equatable, Sendable {
             case buildWarning = "Swift Compiler Warning"
         }
     }

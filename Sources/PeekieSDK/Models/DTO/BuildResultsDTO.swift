@@ -1,9 +1,9 @@
 import Foundation
 
-struct BuildResultsDTO: Decodable {
+struct BuildResultsDTO: Decodable, Sendable {
     let warnings: [Issue]
 
-    struct Issue: Decodable {
+    struct Issue: Decodable, Sendable {
         let issueType: String
         let message: String
         let sourceURL: String?

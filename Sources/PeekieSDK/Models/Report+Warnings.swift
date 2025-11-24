@@ -12,29 +12,31 @@ extension Report {
     /// Parses warnings from BuildResultsDTO and returns a map of file names to their issues
     static func parseWarnings(
         from buildResultsDTO: BuildResultsDTO
-    ) -> [String: [Module.File.Issue]] {
-        buildResultsDTO.warnings
-            .compactMap { warning -> (String, Module.File.Issue)? in
-                guard
-                    let issueType = Module.File.Issue.IssueType(rawValue: warning.issueType),
-                    let fileName = warning.fileName
-                else { return nil }
+    ) async -> [String: [Module.File.Issue]] {
+        let parsed = await buildResultsDTO.warnings.concurrentCompactMap {
+            warning -> (String, Module.File.Issue)? in
+            guard
+                let issueType = Module.File.Issue.IssueType(rawValue: warning.issueType),
+                let fileName = warning.fileName
+            else { return nil }
 
-                let normalized = normalizeWarningMessage(warning.message)
-                guard !normalized.isEmpty else { return nil }
+            let normalized = normalizeWarningMessage(warning.message)
+            guard !normalized.isEmpty else { return nil }
 
-                return (
-                    fileName,
-                    Module.File.Issue(type: issueType, message: normalized)
-                )
+            return (
+                fileName,
+                Module.File.Issue(type: issueType, message: normalized)
+            )
+        }
+
+        let grouped = Dictionary(grouping: parsed, by: { $0.0 })
+        return grouped.mapValues { pairs in
+            var seen = Set<String>()
+            return pairs.compactMap { _, issue in
+                guard seen.insert(issue.message).inserted else { return nil }
+                return issue
             }
-            .reduce(into: [:] as [String: [Module.File.Issue]]) { acc, pair in
-                let (file, issue) = pair
-                var seen = Set(acc[file, default: []].map(\.message))
-                if seen.insert(issue.message).inserted {
-                    acc[file, default: []].append(issue)
-                }
-            }
+        }
     }
 
     /// Normalizes a warning message by removing duplicate patterns and cleaning up formatting

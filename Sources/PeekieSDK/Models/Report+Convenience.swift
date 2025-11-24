@@ -33,7 +33,7 @@ extension Report {
         }
 
         // Parse warnings from build results
-        let warningsByFileName = Self.parseWarnings(from: buildResultsDTO)
+        let warningsByFileName = await Self.parseWarnings(from: buildResultsDTO)
 
         // Try to get total coverage from xcresult file
         let totalCoverageDTO = try await TotalCoverageDTO(from: xcresultPath)
