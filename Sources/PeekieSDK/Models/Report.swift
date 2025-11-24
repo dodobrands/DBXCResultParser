@@ -3,13 +3,6 @@ import Foundation
 public struct Report {
     public let modules: Set<Module>
     public let coverage: Double?
-    public let warnings: [Warning]
-
-    public struct Warning {
-        public let message: String
-        public let sourceURL: String
-        public let className: String
-    }
 }
 
 extension Report {
@@ -26,29 +19,41 @@ extension Report {
             lhs.name == rhs.name
         }
     }
-}
 
-extension Report.Module {
     public struct Coverage: Equatable {
-        public let name: String
         public let coveredLines: Int
         public let totalLines: Int
         public let coverage: Double
 
         init(
-            name: String,
             coveredLines: Int,
             totalLines: Int,
             coverage: Double
         ) {
-            self.name = name
+            self.coveredLines = coveredLines
+            self.totalLines = totalLines
+            self.coverage = coverage
+        }
+    }
+}
+
+extension Report.Module.File {
+    public struct Coverage: Equatable {
+        public let coveredLines: Int
+        public let totalLines: Int
+        public let coverage: Double
+
+        init(
+            coveredLines: Int,
+            totalLines: Int,
+            coverage: Double
+        ) {
             self.coveredLines = coveredLines
             self.totalLines = totalLines
             self.coverage = coverage
         }
 
-        init(from dto: CoverageDTO) {
-            self.name = dto.name
+        init(from dto: FileCoverageDTO) {
             self.coveredLines = dto.coveredLines
             self.totalLines = dto.executableLines
             self.coverage = dto.lineCoverage
@@ -60,6 +65,7 @@ extension Report.Module {
     public struct File: Hashable {
         public let name: String
         public internal(set) var repeatableTests: Set<RepeatableTest>
+        public let coverage: Coverage?
 
         public func hash(into hasher: inout Hasher) {
             hasher.combine(name)
@@ -278,15 +284,6 @@ extension Array where Element == Report.Module.File.RepeatableTest {
             first?.totalDuration.unit
             ?? Report.Module.File.RepeatableTest.Test.defaultDurationUnit
         return .init(value: value, unit: unit)
-    }
-}
-
-extension Array where Element == Report.Module.Coverage {
-    func forModule(named name: String) -> Element? {
-        first {
-            guard let prefix = $0.name.split(separator: ".").first else { return false }
-            return prefix + "Tests" == name
-        }
     }
 }
 

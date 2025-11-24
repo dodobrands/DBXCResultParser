@@ -111,79 +111,11 @@ enum TestError: Error {
     case couldNotReadResourcesDirectory
     case couldNotFindXcresultFile(fileName: String)
     case unknownXcresultFileForExpectedValues(fileName: String)
-    case unknownXcresultFileForExpectedWarnings(fileName: String)
 }
 
 // Expected coverage values per xcresult file
 struct ExpectedReportValues {
     let coveredLines: Int
     let coveragePercentage: Double
-    let moduleCoverages: [String: Double]  // Module name -> coverage value
-}
-
-// Expected warnings per xcresult file
-struct ExpectedWarningsValues {
-    let warningCount: Int
-    let warnings: [ExpectedWarning]
-
-    struct ExpectedWarning {
-        let message: String
-        let sourceURL: String
-        let className: String
-    }
-}
-
-extension Constants {
-    /// Returns expected coverage values for a given xcresult file name
-    /// - Parameter fileName: Name of the xcresult file (read dynamically from file system)
-    /// - Returns: Expected coverage values
-    /// - Throws: TestError if the file name is unknown
-    static func expectedReportValues(for fileName: String) throws -> ExpectedReportValues {
-        switch fileName {
-        case "Peekie-15.0.xcresult":
-            return ExpectedReportValues(
-                coveredLines: 1054,
-                coveragePercentage: 0.92039586919104988,
-                moduleCoverages: [
-                    "DBXCResultParserTests": 0.89906542056074767,
-                    "DBXCResultParser-TextFormatterTests": 0.91242038216560506,
-                ]
-            )
-        case "Peekie-26.1.1.xcresult":
-            return ExpectedReportValues(
-                coveredLines: 567,
-                coveragePercentage: 0.8055555555555556,
-                moduleCoverages: [
-                    "PeekieSDKTests": 0.7672530446549392
-                ]
-            )
-        default:
-            throw TestError.unknownXcresultFileForExpectedValues(fileName: fileName)
-        }
-    }
-
-    /// Returns expected warnings count for a given xcresult file name
-    /// - Parameter fileName: Name of the xcresult file (read dynamically from file system)
-    /// - Returns: Expected warnings count
-    /// - Throws: TestError if the file name is unknown
-    static func expectedWarningsValues(for fileName: String) throws -> ExpectedWarningsValues {
-        switch fileName {
-        case "Peekie-15.0.xcresult":
-            return ExpectedWarningsValues(warningCount: 0, warnings: [])
-        case "Peekie-26.1.1.xcresult":
-            return ExpectedWarningsValues(
-                warningCount: 1,
-                warnings: [
-                    ExpectedWarningsValues.ExpectedWarning(
-                        message: "Some warning to appear in xcresult",
-                        sourceURL:
-                            "file:///Users/alldmeat/Developer/DBXCResultParser/Tests/PeekieTests/GenerateXCResultTests.swift",
-                        className: "DVTTextDocumentLocation"
-                    )
-                ]
-            )
-        default:
-            throw TestError.unknownXcresultFileForExpectedWarnings(fileName: fileName)
-        }
-    }
+    let fileCoverages: [String: Double]  // File name -> coverage value
 }

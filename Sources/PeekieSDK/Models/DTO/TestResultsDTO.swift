@@ -15,15 +15,60 @@ extension TestResultsDTO {
 }
 
 extension TestResultsDTO.TestNode {
-    enum NodeType: String, Decodable {
-        case testCase = "Test Case"
-        case testSuite = "Test Suite"
-        case unitTestBundle = "Unit test bundle"
-        case repetition = "Repetition"
-        case failureMessage = "Failure Message"
-        case testPlan = "Test Plan"
-        case arguments = "Arguments"
-        case runtimeWarning = "Runtime Warning"
+    enum NodeType: Decodable, Equatable {
+        case testCase
+        case testSuite
+        case unitTestBundle
+        case repetition
+        case failureMessage
+        case testPlan
+        case arguments
+        case runtimeWarning
+        case unknown(String)
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            let rawValue = try container.decode(String.self)
+
+            switch rawValue {
+            case "Test Case":
+                self = .testCase
+            case "Test Suite":
+                self = .testSuite
+            case "Unit test bundle":
+                self = .unitTestBundle
+            case "Repetition":
+                self = .repetition
+            case "Failure Message":
+                self = .failureMessage
+            case "Test Plan":
+                self = .testPlan
+            case "Arguments":
+                self = .arguments
+            case "Runtime Warning":
+                self = .runtimeWarning
+            default:
+                self = .unknown(rawValue)
+            }
+        }
+
+        static func == (lhs: NodeType, rhs: NodeType) -> Bool {
+            switch (lhs, rhs) {
+            case (.testCase, .testCase),
+                (.testSuite, .testSuite),
+                (.unitTestBundle, .unitTestBundle),
+                (.repetition, .repetition),
+                (.failureMessage, .failureMessage),
+                (.testPlan, .testPlan),
+                (.arguments, .arguments),
+                (.runtimeWarning, .runtimeWarning):
+                return true
+            case (.unknown(let lhsValue), .unknown(let rhsValue)):
+                return lhsValue == rhsValue
+            default:
+                return false
+            }
+        }
     }
 
     enum Result: String, Decodable {

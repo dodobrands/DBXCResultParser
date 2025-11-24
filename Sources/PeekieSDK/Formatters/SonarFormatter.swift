@@ -14,8 +14,18 @@ public class SonarFormatter {
         var filesByPath: [String: [TestExecutions.File.TestCase]] = [:]
 
         for file in report.modules.flatMap({ $0.files }).sorted(by: { $0.name < $1.name }) {
+            // Skip files that don't have any tests (coverage-only files)
+            guard !file.repeatableTests.isEmpty else {
+                continue
+            }
+
             // Skip files that are not found in the index (e.g., DTO test files that don't exist)
-            guard let path = fsIndex.classes[file.name] else {
+            // Remove .swift extension for lookup since fsIndex uses class names without extension
+            let lookupName =
+                file.name.hasSuffix(".swift")
+                ? String(file.name.dropLast(6))
+                : file.name
+            guard let path = fsIndex.classes[lookupName] else {
                 continue
             }
 

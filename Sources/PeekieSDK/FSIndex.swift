@@ -41,6 +41,11 @@ extension FSIndex {
                 continue
             }
 
+            // Skip if file doesn't exist (may have been deleted or not created yet)
+            guard FileManager.default.fileExists(atPath: element.path) else {
+                continue
+            }
+
             let fileContent = try String(contentsOf: element, encoding: .utf8)
 
             // Search for class definitions

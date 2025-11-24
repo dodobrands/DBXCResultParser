@@ -5,18 +5,17 @@ import Foundation
 extension Report {
     public static func testMake(
         modules: Set<Module> = [],
-        coverage: Double? = nil,
-        warnings: [Warning] = []
+        coverage: Double? = nil
     ) -> Self {
-        // Calculate coverage from modules if not provided
+        // Calculate coverage from files if not provided
         let calculatedCoverage: Double?
         if let coverage = coverage {
             calculatedCoverage = coverage
         } else {
-            let moduleCoverages = modules.map { $0.coverage }.compactMap { $0 }
-            if moduleCoverages.count > 0 {
-                let totalLines = moduleCoverages.reduce(into: 0) { $0 += $1.totalLines }
-                let totalCoveredLines = moduleCoverages.reduce(into: 0) { $0 += $1.coveredLines }
+            let fileCoverages = modules.flatMap { $0.files }.compactMap { $0.coverage }
+            if fileCoverages.count > 0 {
+                let totalLines = fileCoverages.reduce(into: 0) { $0 += $1.totalLines }
+                let totalCoveredLines = fileCoverages.reduce(into: 0) { $0 += $1.coveredLines }
                 if totalLines != 0 {
                     calculatedCoverage = Double(totalCoveredLines) / Double(totalLines)
                 } else {
@@ -28,8 +27,7 @@ extension Report {
         }
         return .init(
             modules: modules,
-            coverage: calculatedCoverage,
-            warnings: warnings
+            coverage: calculatedCoverage
         )
     }
 }
@@ -38,21 +36,19 @@ extension Report.Module {
     public static func testMake(
         name: String = "",
         files: Set<File> = [],
-        coverage: Coverage = .testMake()
+        coverage: Report.Coverage? = nil
     ) -> Self {
         .init(name: name, files: files, coverage: coverage)
     }
 }
 
-extension Report.Module.Coverage {
+extension Report.Module.File.Coverage {
     public static func testMake(
-        name: String = "",
         coveredLines: Int = 0,
         totalLines: Int = 0,
         coverage: Double = 0.0
     ) -> Self {
         Self(
-            name: name,
             coveredLines: coveredLines,
             totalLines: totalLines,
             coverage: coverage)
@@ -62,9 +58,10 @@ extension Report.Module.Coverage {
 extension Report.Module.File {
     public static func testMake(
         name: String = "",
-        repeatableTests: Set<RepeatableTest> = []
+        repeatableTests: Set<RepeatableTest> = [],
+        coverage: Coverage? = nil
     ) -> Self {
-        .init(name: name, repeatableTests: repeatableTests)
+        .init(name: name, repeatableTests: repeatableTests, coverage: coverage)
     }
 }
 

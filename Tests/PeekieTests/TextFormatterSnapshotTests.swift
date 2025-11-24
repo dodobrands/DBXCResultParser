@@ -9,8 +9,12 @@ struct TextFormatterSnapshotTests {
     let locale = Locale(identifier: "en-US")
     let formatter = TextFormatter()
 
+    private func snapshotName(from fileName: String) -> String {
+        fileName.replacingOccurrences(of: ".xcresult", with: "")
+    }
+
     @Test(arguments: Constants.testsReportFileNames)
-    func test_listFormat_allStatuses(fileName: String) async throws {
+    func listFormat_allStatuses(_ fileName: String) async throws {
         let originalPath = try Constants.url(for: fileName)
         let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
         defer {
@@ -22,12 +26,12 @@ struct TextFormatterSnapshotTests {
         assertSnapshot(
             of: formatted,
             as: .lines,
-            named: "\(fileName)_list_all"
+            named: "\(snapshotName(from: fileName))_list_all"
         )
     }
 
     @Test(arguments: Constants.testsReportFileNames)
-    func test_listFormat_successOnly(fileName: String) async throws {
+    func listFormat_successOnly(_ fileName: String) async throws {
         let originalPath = try Constants.url(for: fileName)
         let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
         defer {
@@ -44,12 +48,12 @@ struct TextFormatterSnapshotTests {
         assertSnapshot(
             of: formatted,
             as: .lines,
-            named: "\(fileName)_list_success"
+            named: "\(snapshotName(from: fileName))_list_success"
         )
     }
 
     @Test(arguments: Constants.testsReportFileNames)
-    func test_listFormat_failureOnly(fileName: String) async throws {
+    func listFormat_failureOnly(_ fileName: String) async throws {
         let originalPath = try Constants.url(for: fileName)
         let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
         defer {
@@ -66,12 +70,12 @@ struct TextFormatterSnapshotTests {
         assertSnapshot(
             of: formatted,
             as: .lines,
-            named: "\(fileName)_list_failure"
+            named: "\(snapshotName(from: fileName))_list_failure"
         )
     }
 
     @Test(arguments: Constants.testsReportFileNames)
-    func test_listFormat_skippedOnly(fileName: String) async throws {
+    func listFormat_skippedOnly(_ fileName: String) async throws {
         let originalPath = try Constants.url(for: fileName)
         let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
         defer {
@@ -88,12 +92,12 @@ struct TextFormatterSnapshotTests {
         assertSnapshot(
             of: formatted,
             as: .lines,
-            named: "\(fileName)_list_skipped"
+            named: "\(snapshotName(from: fileName))_list_skipped"
         )
     }
 
     @Test(arguments: Constants.testsReportFileNames)
-    func test_countFormat_allStatuses(fileName: String) async throws {
+    func countFormat_allStatuses(_ fileName: String) async throws {
         let originalPath = try Constants.url(for: fileName)
         let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
         defer {
@@ -105,12 +109,12 @@ struct TextFormatterSnapshotTests {
         assertSnapshot(
             of: formatted,
             as: .lines,
-            named: "\(fileName)_count_all"
+            named: "\(snapshotName(from: fileName))_count_all"
         )
     }
 
     @Test(arguments: Constants.testsReportFileNames)
-    func test_countFormat_failureOnly(fileName: String) async throws {
+    func countFormat_failureOnly(_ fileName: String) async throws {
         let originalPath = try Constants.url(for: fileName)
         let reportPath = try Constants.copyXcresultToTemporaryDirectory(originalPath)
         defer {
@@ -127,7 +131,7 @@ struct TextFormatterSnapshotTests {
         assertSnapshot(
             of: formatted,
             as: .lines,
-            named: "\(fileName)_count_failure"
+            named: "\(snapshotName(from: fileName))_count_failure"
         )
     }
 
