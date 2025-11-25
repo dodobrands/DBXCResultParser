@@ -105,10 +105,36 @@ extension Report.Module.File {
 }
 
 extension Report.Module.File.RepeatableTest {
+    public struct PathNode: Equatable, Hashable {
+        public let name: String
+        public let type: NodeType
+
+        public enum NodeType: Equatable, Hashable {
+            case device
+            case arguments
+            case repetition
+
+            init(from dtoNodeType: TestResultsDTO.TestNode.NodeType) {
+                switch dtoNodeType {
+                case .device:
+                    self = .device
+                case .arguments:
+                    self = .arguments
+                case .repetition:
+                    self = .repetition
+                default:
+                    // This should not happen in normal flow, but handle gracefully
+                    fatalError("Cannot convert \(dtoNodeType) to PathNode.NodeType")
+                }
+            }
+        }
+    }
+
     public struct Test {
         public let status: Status
         public let duration: Measurement<UnitDuration>
         public let message: String?
+        public let path: [PathNode]
     }
 
     public var combinedStatus: Test.Status {
@@ -229,13 +255,15 @@ extension Set where Element == Report.Module.File.RepeatableTest {
 }
 
 extension Report.Module.File.RepeatableTest.Test {
-    /// Initializes from TestResultsDTO.TestNode (Repetition node)
-    init(from repetitionNode: TestResultsDTO.TestNode) throws {
-        guard repetitionNode.nodeType == .repetition else {
+    /// Initializes from TestResultsDTO.TestNode (Repetition node) with path
+    init(from node: TestResultsDTO.TestNode, path: [Report.Module.File.RepeatableTest.PathNode])
+        throws
+    {
+        guard node.nodeType == .repetition else {
             throw Error.invalidNodeType
         }
 
-        guard let result = repetitionNode.result else {
+        guard let result = node.result else {
             throw Error.missingResult
         }
 
@@ -250,11 +278,119 @@ extension Report.Module.File.RepeatableTest.Test {
             status = .expectedFailure
         }
 
-        let durationSeconds = repetitionNode.durationInSeconds ?? 0.0
+        let durationSeconds = node.durationInSeconds ?? 0.0
         self.duration = .init(value: durationSeconds * 1000, unit: Self.defaultDurationUnit)
 
         // Extract message from failure message children
-        self.message = repetitionNode.failureMessage ?? repetitionNode.skipMessage
+        self.message = node.failureMessage ?? node.skipMessage
+
+        self.path = path
+    }
+
+    /// Initializes from TestResultsDTO.TestNode (Arguments node) with path
+    init(
+        from node: TestResultsDTO.TestNode, path: [Report.Module.File.RepeatableTest.PathNode],
+        testCase: TestResultsDTO.TestNode
+    ) {
+        let status: Status
+        if let result = node.result {
+            switch result {
+            case .passed:
+                status = .success
+            case .failed:
+                status = .failure
+            case .skipped:
+                status = .skipped
+            case .expectedFailure:
+                status = .expectedFailure
+            }
+        } else {
+            // Fallback to test case result
+            guard let testCaseResult = testCase.result else {
+                status = .unknown
+                self.status = status
+                self.duration = .init(value: 0, unit: Self.defaultDurationUnit)
+                self.message = nil
+                self.path = path
+                return
+            }
+            switch testCaseResult {
+            case .passed:
+                status = .success
+            case .failed:
+                status = .failure
+            case .skipped:
+                status = .skipped
+            case .expectedFailure:
+                status = .expectedFailure
+            }
+        }
+
+        self.status = status
+
+        let durationSeconds = node.durationInSeconds ?? testCase.durationInSeconds ?? 0.0
+        self.duration = .init(value: durationSeconds * 1000, unit: Self.defaultDurationUnit)
+
+        // Extract message based on test status
+        let message: String?
+        switch status {
+        case .skipped:
+            message = testCase.skipMessage ?? node.name.trimmingQuotes
+        case .failure:
+            message = testCase.failureMessage ?? node.name.trimmingQuotes
+        case .expectedFailure:
+            message = testCase.failureMessage ?? node.name.trimmingQuotes
+        default:
+            message = node.name.trimmingQuotes
+        }
+        self.message = message
+
+        self.path = path
+    }
+
+    /// Initializes from TestResultsDTO.TestNode (Test Case node) with empty path
+    init(from testCase: TestResultsDTO.TestNode) {
+        guard let result = testCase.result else {
+            self.status = .unknown
+            self.duration = .init(value: 0, unit: Self.defaultDurationUnit)
+            self.message = nil
+            self.path = []
+            return
+        }
+
+        switch result {
+        case .passed:
+            status = .success
+        case .failed:
+            status = .failure
+        case .skipped:
+            status = .skipped
+        case .expectedFailure:
+            status = .expectedFailure
+        }
+
+        let durationSeconds = testCase.durationInSeconds ?? 0.0
+        self.duration = .init(value: durationSeconds * 1000, unit: Self.defaultDurationUnit)
+
+        // Extract message based on test status
+        let message: String?
+        switch status {
+        case .skipped:
+            message = testCase.skipMessage
+        case .failure:
+            message = testCase.failureMessage
+        case .expectedFailure:
+            message = testCase.failureMessage
+        default:
+            // Fallback to first non-metadata child name
+            message =
+                testCase.children?
+                .first(where: { $0.nodeType != .runtimeWarning })?
+                .name
+        }
+        self.message = message
+
+        self.path = []
     }
 
     enum Error: Swift.Error {

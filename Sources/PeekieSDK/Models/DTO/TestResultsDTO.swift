@@ -12,6 +12,83 @@ extension TestResultsDTO {
         let nodeType: NodeType
         let result: Result?
     }
+
+    /// Extracts all test paths from test case children
+    /// Returns an array of paths, where each path represents a route through the tree to a Repetition or Arguments node
+    /// - Parameter children: Array of child nodes from a test case
+    /// - Returns: Array of paths (arrays of PathNode) representing all paths through the tree
+    static func extractPaths(from children: [TestNode]) -> [[Report.Module.File.RepeatableTest
+        .PathNode]]
+    {
+        var result: [[Report.Module.File.RepeatableTest.PathNode]] = []
+
+        func processNode(
+            _ node: TestNode,
+            path: [Report.Module.File.RepeatableTest.PathNode]
+        ) {
+            // Check if this node should be added to path
+            let pathNode: Report.Module.File.RepeatableTest.PathNode?
+            switch node.nodeType {
+            case .device, .arguments, .repetition:
+                pathNode = Report.Module.File.RepeatableTest.PathNode(
+                    name: node.name,
+                    type: .init(from: node.nodeType)
+                )
+            default:
+                pathNode = nil
+            }
+
+            var newPath = path
+            if let pathNode = pathNode {
+                newPath.append(pathNode)
+            }
+
+            // If this is a repetition node, add to result and stop recursion
+            if node.nodeType == .repetition {
+                result.append(newPath)
+                return
+            }
+
+            guard let nodeChildren = node.children else {
+                // Leaf node - add to result if it's an arguments node without children
+                if node.nodeType == .arguments {
+                    result.append(newPath)
+                }
+                return
+            }
+
+            // If this is an arguments node, check if it has repetitions
+            if node.nodeType == .arguments {
+                let hasRepetitions = nodeChildren.contains { $0.nodeType == .repetition }
+                if !hasRepetitions {
+                    // Arguments without repetitions - add to result and stop recursion
+                    result.append(newPath)
+                    return
+                }
+                // Arguments with repetitions - continue recursion to process repetitions
+            }
+
+            // Recursively process children
+            for child in nodeChildren {
+                // Skip metadata nodes
+                if child.nodeType == .failureMessage || child.nodeType == .runtimeWarning {
+                    continue
+                }
+                processNode(child, path: newPath)
+            }
+        }
+
+        // Process all children
+        for child in children {
+            // Skip metadata nodes
+            if child.nodeType == .failureMessage || child.nodeType == .runtimeWarning {
+                continue
+            }
+            processNode(child, path: [])
+        }
+
+        return result
+    }
 }
 
 extension TestResultsDTO.TestNode {
@@ -23,6 +100,7 @@ extension TestResultsDTO.TestNode {
         case failureMessage
         case testPlan
         case arguments
+        case device
         case runtimeWarning
         case unknown(String)
 
@@ -45,6 +123,8 @@ extension TestResultsDTO.TestNode {
                 self = .testPlan
             case "Arguments":
                 self = .arguments
+            case "Device":
+                self = .device
             case "Runtime Warning":
                 self = .runtimeWarning
             default:
@@ -61,6 +141,7 @@ extension TestResultsDTO.TestNode {
                 (.failureMessage, .failureMessage),
                 (.testPlan, .testPlan),
                 (.arguments, .arguments),
+                (.device, .device),
                 (.runtimeWarning, .runtimeWarning):
                 return true
             case (.unknown(let lhsValue), .unknown(let rhsValue)):

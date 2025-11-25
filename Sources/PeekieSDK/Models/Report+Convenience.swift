@@ -213,131 +213,99 @@ extension Report {
                                 tests: []
                             )
 
-                        // Process repetitions (individual test runs)
-                        // Check if children are repetitions or direct messages (for skipped/expectedFailure)
-                        let repetitions =
-                            testCase.children?.filter { $0.nodeType == .repetition } ?? []
-
-                        if !repetitions.isEmpty {
-                            // Has repetitions (multiple runs)
-                            for repetition in repetitions {
-                                let test = try Report.Module.File.RepeatableTest.Test(
-                                    from: repetition)
-                                repeatableTest.tests.append(test)
+                        // Process test case children and create Test objects with paths
+                        func processNode(
+                            _ node: TestResultsDTO.TestNode,
+                            path: [Report.Module.File.RepeatableTest.PathNode],
+                            testCase: TestResultsDTO.TestNode
+                        ) throws {
+                            // Check if this node should be added to path
+                            let pathNode: Report.Module.File.RepeatableTest.PathNode?
+                            switch node.nodeType {
+                            case .device, .arguments, .repetition:
+                                pathNode = Report.Module.File.RepeatableTest.PathNode(
+                                    name: node.name,
+                                    type: .init(from: node.nodeType)
+                                )
+                            default:
+                                pathNode = nil
                             }
-                        } else {
-                            // No repetitions, check if we have Arguments nodes
-                            // Extract all Arguments nodes
-                            let arguments =
-                                testCase.children?
-                                .filter { $0.nodeType == .arguments }
-                                .map { ($0.name, $0.result) } ?? []
 
-                            if !arguments.isEmpty {
-                                // Create separate test for each argument with its own status
-                                let baseDurationSeconds = testCase.durationInSeconds ?? 0.0
-                                for (argumentName, argumentResult) in arguments {
-                                    let status: Report.Module.File.RepeatableTest.Test.Status
-                                    if let result = argumentResult {
-                                        switch result {
-                                        case .passed:
-                                            status = .success
-                                        case .failed:
-                                            status = .failure
-                                        case .skipped:
-                                            status = .skipped
-                                        case .expectedFailure:
-                                            status = .expectedFailure
-                                        }
-                                    } else {
-                                        // Fallback to test case result if argument doesn't have result
-                                        guard let testCaseResult = testCase.result else { continue }
-                                        switch testCaseResult {
-                                        case .passed:
-                                            status = .success
-                                        case .failed:
-                                            status = .failure
-                                        case .skipped:
-                                            status = .skipped
-                                        case .expectedFailure:
-                                            status = .expectedFailure
-                                        }
-                                    }
+                            var newPath = path
+                            if let pathNode = pathNode {
+                                newPath.append(pathNode)
+                            }
 
-                                    // Extract message based on test status
-                                    let message: String?
-                                    switch status {
-                                    case .skipped:
-                                        message =
-                                            testCase.skipMessage ?? argumentName.trimmingQuotes
-                                    case .failure:
-                                        message =
-                                            testCase.failureMessage ?? argumentName.trimmingQuotes
-                                    case .expectedFailure:
-                                        message =
-                                            testCase.failureMessage ?? argumentName.trimmingQuotes
-                                    default:
-                                        message = argumentName.trimmingQuotes
-                                    }
+                            // If this is a repetition node, create test and stop recursion
+                            if node.nodeType == .repetition {
+                                let test = try Report.Module.File.RepeatableTest.Test(
+                                    from: node,
+                                    path: newPath
+                                )
+                                repeatableTest.tests.append(test)
+                                return
+                            }
 
-                                    let duration = Measurement<UnitDuration>(
-                                        value: baseDurationSeconds * 1000,
-                                        unit: Report.Module.File.RepeatableTest.Test
-                                            .defaultDurationUnit
-                                    )
-
+                            guard let nodeChildren = node.children else {
+                                // Leaf node - create test if it's an arguments node without children
+                                if node.nodeType == .arguments {
                                     let test = Report.Module.File.RepeatableTest.Test(
-                                        status: status,
-                                        duration: duration,
-                                        message: message
+                                        from: node,
+                                        path: newPath,
+                                        testCase: testCase
                                     )
                                     repeatableTest.tests.append(test)
                                 }
-                            } else {
-                                // No arguments, treat test case as single test
-                                guard let result = testCase.result else { continue }
-                                let status: Report.Module.File.RepeatableTest.Test.Status
-                                switch result {
-                                case .passed:
-                                    status = .success
-                                case .failed:
-                                    status = .failure
-                                case .skipped:
-                                    status = .skipped
-                                case .expectedFailure:
-                                    status = .expectedFailure
-                                }
-                                let durationSeconds = testCase.durationInSeconds ?? 0.0
-                                let duration = Measurement<UnitDuration>(
-                                    value: durationSeconds * 1000,
-                                    unit: Report.Module.File.RepeatableTest.Test
-                                        .defaultDurationUnit
-                                )
-                                // Extract message based on test status
-                                let message: String?
-                                switch status {
-                                case .skipped:
-                                    message = testCase.skipMessage
-                                case .failure:
-                                    message = testCase.failureMessage
-                                case .expectedFailure:
-                                    message = testCase.failureMessage
-                                default:
-                                    // Fallback to first non-metadata child name
-                                    message =
-                                        testCase.children?
-                                        .first(where: {
-                                            $0.nodeType != .runtimeWarning
-                                        })?
-                                        .name
-                                }
-                                let test = Report.Module.File.RepeatableTest.Test(
-                                    status: status,
-                                    duration: duration,
-                                    message: message
-                                )
-                                repeatableTest.tests.append(test)
+                                return
                             }
+
+                            // If this is an arguments node, check if it has repetitions
+                            if node.nodeType == .arguments {
+                                let hasRepetitions = nodeChildren.contains {
+                                    $0.nodeType == .repetition
+                                }
+                                if !hasRepetitions {
+                                    // Arguments without repetitions - create test and stop recursion
+                                    let test = Report.Module.File.RepeatableTest.Test(
+                                        from: node,
+                                        path: newPath,
+                                        testCase: testCase
+                                    )
+                                    repeatableTest.tests.append(test)
+                                    return
+                                }
+                                // Arguments with repetitions - continue recursion to process repetitions
+                            }
+
+                            // Recursively process children
+                            for child in nodeChildren {
+                                // Skip metadata nodes
+                                if child.nodeType == .failureMessage
+                                    || child.nodeType == .runtimeWarning
+                                {
+                                    continue
+                                }
+                                try processNode(child, path: newPath, testCase: testCase)
+                            }
+                        }
+
+                        // Start processing from test case children
+                        if let testCaseChildren = testCase.children {
+                            for child in testCaseChildren {
+                                // Skip metadata nodes
+                                if child.nodeType == .failureMessage
+                                    || child.nodeType == .runtimeWarning
+                                {
+                                    continue
+                                }
+                                try processNode(child, path: [], testCase: testCase)
+                            }
+                        }
+
+                        // If no tests were created (no children or only metadata), create test from test case itself
+                        if repeatableTest.tests.isEmpty {
+                            let test = Report.Module.File.RepeatableTest.Test(from: testCase)
+                            repeatableTest.tests.append(test)
                         }
 
                         file.repeatableTests.update(with: repeatableTest)

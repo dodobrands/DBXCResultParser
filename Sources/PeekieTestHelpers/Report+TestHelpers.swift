@@ -128,12 +128,14 @@ extension Report.Module.File.RepeatableTest.Test {
     public static func testMake(
         status: Status = .success,
         duration: Measurement<UnitDuration> = .testMake(),
-        message: String? = nil
+        message: String? = nil,
+        path: [Report.Module.File.RepeatableTest.PathNode] = []
     ) -> Self {
         .init(
             status: status,
             duration: duration,
-            message: message
+            message: message,
+            path: path
         )
     }
 }
