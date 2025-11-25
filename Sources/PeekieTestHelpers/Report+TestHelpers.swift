@@ -81,8 +81,7 @@ extension Report.Module.File.RepeatableTest {
 
     public static func failed(
         named name: String,
-        times: Int = 1,
-        message: String? = nil
+        times: Int = 1
     ) -> Self {
         let tests = Array(
             repeating: Report.Module.File.RepeatableTest.Test.testMake(
@@ -100,15 +99,13 @@ extension Report.Module.File.RepeatableTest {
     }
 
     public static func skipped(
-        named name: String,
-        message: String? = nil
+        named name: String
     ) -> Self {
         .testMake(name: name, tests: [.testMake(name: name, status: .skipped)])
     }
 
     public static func expectedFailed(
-        named name: String,
-        message: String? = nil
+        named name: String
     ) -> Self {
         .testMake(name: name, tests: [.testMake(name: name, status: .expectedFailure)])
     }

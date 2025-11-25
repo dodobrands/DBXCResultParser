@@ -73,9 +73,3 @@ extension Report.Module.File.RepeatableTest.Test {
         .joined(separator: " ")
     }
 }
-
-extension String {
-    var wrappedInBrackets: Self {
-        "(" + self + ")"
-    }
-}

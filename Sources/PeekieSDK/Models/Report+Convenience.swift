@@ -470,19 +470,3 @@ extension Report {
         self.coverage = totalCoverage
     }
 }
-
-extension String {
-    /// Removes surrounding quotes if present (both single and double quotes)
-    var trimmingQuotes: String {
-        var result = self
-        // Remove double quotes
-        if result.hasPrefix("\"") && result.hasSuffix("\"") {
-            result = String(result.dropFirst().dropLast())
-        }
-        // Remove single quotes
-        if result.hasPrefix("'") && result.hasSuffix("'") {
-            result = String(result.dropFirst().dropLast())
-        }
-        return result
-    }
-}
