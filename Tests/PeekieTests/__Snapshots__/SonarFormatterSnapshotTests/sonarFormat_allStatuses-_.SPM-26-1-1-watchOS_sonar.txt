@@ -5,15 +5,11 @@
             <testCase name="disabled()" duration="0">
                 <skipped message="Test &apos;disabled()&apos; skipped: Disabled reason" />
             </testCase>
-            <testCase name="expectedFailure()" duration="0">
-                <failure message="Failure is expected" />
-            </testCase>
+            <testCase name="expectedFailure()" duration="0" />
             <testCase name="failure()" duration="0">
                 <failure message="Expected 5.0 but got 6.0" />
             </testCase>
-            <testCase name="flacky()" duration="0">
-                <failure message="Flacky failure message: result was 2.0" />
-            </testCase>
+            <testCase name="flacky()" duration="0" />
             <testCase name="flackyParameterized(value:) [false]" duration="0">
                 <failure message="SwiftTestingTests.swift:66: Expectation failed: (result → 4.0) == 5.0" />
             </testCase>
@@ -27,15 +23,11 @@
         <file path="{TEMP_DIR}/sonarFormat_allStatuses(_:)/XCTestTests.swift">
             <testCase name="test_async()" duration="15" />
             <testCase name="test_asyncWithExpectation()" duration="13" />
-            <testCase name="test_expectedFailure()" duration="287">
-                <failure message="Failure is expected" />
-            </testCase>
+            <testCase name="test_expectedFailure()" duration="287" />
             <testCase name="test_failure()" duration="1">
                 <failure message="Expected 5.0 but got 6.0" />
             </testCase>
-            <testCase name="test_flacky()" duration="4">
-                <failure message="Flacky failure message: result was 2.0" />
-            </testCase>
+            <testCase name="test_flacky()" duration="4" />
             <testCase name="test_performance()" duration="259" />
             <testCase name="test_skip()" duration="4">
                 <skipped message="Skip message" />

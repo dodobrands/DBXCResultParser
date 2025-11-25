@@ -18,15 +18,11 @@
             <testCase name="test()" duration="707">
                 <failure message="DBXCReportModelTests.swift:40: XCTAssertEqual failed: (&quot;1&quot;) is not equal to (&quot;2&quot;)" />
             </testCase>
-            <testCase name="test_expectedFailure()" duration="362">
-                <failure message="Failure is expected" />
-            </testCase>
+            <testCase name="test_expectedFailure()" duration="362" />
             <testCase name="test_failure()" duration="0">
                 <failure message="Failure message" />
             </testCase>
-            <testCase name="test_flacky()" duration="0">
-                <failure message="Flacky failure message" />
-            </testCase>
+            <testCase name="test_flacky()" duration="0" />
             <testCase name="test_skip()" duration="0">
                 <skipped message="Skip message" />
             </testCase>

@@ -167,8 +167,7 @@ extension TestExecutions.File.TestCase {
             name: test.name,
             duration: Int(test.duration.converted(to: .milliseconds).value),
             skipped: test.status == .skipped ? test.message.map { .init(message: $0) } : nil,
-            failure: [.failure, .expectedFailure, .mixed].contains(test.status)
-                ? test.message.map { .init(message: $0) } : nil
+            failure: test.status == .failure ? test.message.map { .init(message: $0) } : nil
         )
     }
 }
