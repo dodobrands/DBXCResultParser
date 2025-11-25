@@ -10,10 +10,10 @@
                 <failure message="Expected 5.0 but got 6.0" />
             </testCase>
             <testCase name="flacky()" duration="0" />
-            <testCase name="flackyParameterized(value:) (false)" duration="0">
-                <failure message="false" />
+            <testCase name="flackyParameterized(value:) [false]" duration="0">
+                <failure message="SwiftTestingTests.swift:66: Expectation failed: (result → 4.0) == 5.0" />
             </testCase>
-            <testCase name="flackyParameterized(value:) (true)" duration="0" />
+            <testCase name="flackyParameterized(value:) [true]" duration="0" />
             <testCase name="success()" duration="0" />
             <testCase name="throwing()" duration="0">
                 <failure message="SwiftTestingTests.swift:85: Caught error: .divisionByZero" />

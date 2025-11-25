@@ -81,12 +81,12 @@ extension Report.Module.File.RepeatableTest {
 
     public static func failed(
         named name: String,
-        times: Int = 1,
-        message: String? = nil
+        times: Int = 1
     ) -> Self {
         let tests = Array(
             repeating: Report.Module.File.RepeatableTest.Test.testMake(
-                status: .failure, message: message),
+                name: name,
+                status: .failure),
             count: times
         )
         return .testMake(name: name, tests: tests)
@@ -95,21 +95,19 @@ extension Report.Module.File.RepeatableTest {
     public static func succeeded(
         named name: String
     ) -> Self {
-        .testMake(name: name, tests: [.testMake(status: .success)])
+        .testMake(name: name, tests: [.testMake(name: name, status: .success)])
     }
 
     public static func skipped(
-        named name: String,
-        message: String? = nil
+        named name: String
     ) -> Self {
-        .testMake(name: name, tests: [.testMake(status: .skipped, message: message)])
+        .testMake(name: name, tests: [.testMake(name: name, status: .skipped)])
     }
 
     public static func expectedFailed(
-        named name: String,
-        message: String? = nil
+        named name: String
     ) -> Self {
-        .testMake(name: name, tests: [.testMake(status: .expectedFailure, message: message)])
+        .testMake(name: name, tests: [.testMake(name: name, status: .expectedFailure)])
     }
 
     public static func mixedFailedSucceeded(
@@ -117,23 +115,30 @@ extension Report.Module.File.RepeatableTest {
         failedTimes: Int = 1
     ) -> Self {
         let failedTests = Array(
-            repeating: Report.Module.File.RepeatableTest.Test.testMake(status: .failure),
+            repeating: Report.Module.File.RepeatableTest.Test.testMake(
+                name: name, status: .failure),
             count: failedTimes
         )
-        return .testMake(name: name, tests: failedTests + [.testMake(status: .success)])
+        return .testMake(name: name, tests: failedTests + [.testMake(name: name, status: .success)])
     }
 }
 
 extension Report.Module.File.RepeatableTest.Test {
     public static func testMake(
+        name: String = "",
         status: Status = .success,
         duration: Measurement<UnitDuration> = .testMake(),
-        message: String? = nil
+        path: [Report.Module.File.RepeatableTest.PathNode] = [],
+        failureMessage: String? = nil,
+        skipMessage: String? = nil
     ) -> Self {
         .init(
+            name: name,
             status: status,
             duration: duration,
-            message: message
+            path: path,
+            failureMessage: failureMessage,
+            skipMessage: skipMessage
         )
     }
 }

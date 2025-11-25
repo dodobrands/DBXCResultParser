@@ -1,11 +1,11 @@
 ExampleSUITests
 ✅ async()
 ⏭️ disabled() (Test 'disabled()' skipped: Disabled reason)
-🤡 expectedFailure()
+🤡 expectedFailure() (Failure is expected)
 ❌ failure() (Expected 5.0 but got 6.0)
 ⚠️ flacky() (Flacky failure message: result was 2.0)
-❌ flackyParameterized(value:) (false)
-✅ flackyParameterized(value:) (true)
+❌ flackyParameterized(value:) [false] (SwiftTestingTests.swift:66: Expectation failed: (result → 4.0) == 5.0)
+✅ flackyParameterized(value:) [true]
 ✅ success()
 ❌ throwing() (Calculator.swift:26: Caught error: .divisionByZero)
 ✅ withAttachment()

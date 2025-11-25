@@ -162,33 +162,12 @@ private struct TestExecutions: Encodable, DynamicNodeEncoding {
 }
 
 extension TestExecutions.File.TestCase {
-    init(_ test: Report.Module.File.RepeatableTest) {
+    init(_ test: Report.Module.File.RepeatableTest.Test) {
         self.init(
             name: test.name,
-            duration: Int(test.totalDuration.converted(to: .milliseconds).value),
-            skipped: test.combinedStatus == .skipped
-                ? .init(message: test.message ?? "Test message missing") : nil,
-            failure: test.combinedStatus == .failure
-                ? .init(message: test.message ?? "Test message missing") : nil
-        )
-    }
-
-    init(_ test: Report.Module.File.RepeatableTest.Test, repeatableTestName: String) {
-        // For parameterized tests, include the message (which contains arguments) in the name
-        let name: String
-        if let message = test.message {
-            name = "\(repeatableTestName) (\(message))"
-        } else {
-            name = repeatableTestName
-        }
-
-        self.init(
-            name: name,
             duration: Int(test.duration.converted(to: .milliseconds).value),
-            skipped: test.status == .skipped
-                ? .init(message: test.message ?? "Test message missing") : nil,
-            failure: test.status == .failure
-                ? .init(message: test.message ?? "Test message missing") : nil
+            skipped: test.status == .skipped ? test.message.map { .init(message: $0) } : nil,
+            failure: test.status == .failure ? test.message.map { .init(message: $0) } : nil
         )
     }
 }
@@ -200,23 +179,12 @@ extension TestExecutions.File {
         var testCases: [TestExecutions.File.TestCase] = []
 
         for repeatableTest in file.repeatableTests.sorted(by: { $0.name < $1.name }) {
-            // Check if tests have different messages, which indicates they're parameterized
-            let hasDifferentMessages =
-                repeatableTest.tests.count > 1
-                && Set(repeatableTest.tests.compactMap { $0.message }).count
-                    == repeatableTest.tests.count
+            // Use merged tests which already handle repetitions and optionally devices
+            let mergedTests = repeatableTest.mergedTests(filterDevice: false)
 
-            if hasDifferentMessages {
-                // Output each test separately (parameterized case)
-                for test in repeatableTest.tests {
-                    testCases.append(
-                        TestExecutions.File.TestCase.init(
-                            test, repeatableTestName: repeatableTest.name)
-                    )
-                }
-            } else {
-                // Single test or multiple tests with same message (repetitions/mixed), use original format
-                testCases.append(TestExecutions.File.TestCase.init(repeatableTest))
+            // Output each merged test separately
+            for test in mergedTests {
+                testCases.append(TestExecutions.File.TestCase.init(test))
             }
         }
 

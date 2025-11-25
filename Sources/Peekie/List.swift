@@ -24,6 +24,9 @@ public struct List: AsyncParsableCommand {
     @Option(help: "Whether to parse and include build warnings")
     public var includeWarnings: Bool = true
 
+    @Option(help: "Include device information in test names")
+    public var includeDeviceDetails: Bool = false
+
     public func run() async throws {
         let xcresultPath = URL(fileURLWithPath: xcresultPath)
 
@@ -42,7 +45,8 @@ public struct List: AsyncParsableCommand {
 
         let result = formatter.format(
             report,
-            include: include
+            include: include,
+            includeDeviceDetails: includeDeviceDetails
         )
 
         print(result)
