@@ -278,7 +278,8 @@ extension Report {
                             if node.nodeType == .repetition {
                                 let test = try Report.Module.File.RepeatableTest.Test(
                                     from: node,
-                                    path: newPath
+                                    path: newPath,
+                                    testCaseName: testCase.name
                                 )
                                 repeatableTest.tests.append(test)
                                 return

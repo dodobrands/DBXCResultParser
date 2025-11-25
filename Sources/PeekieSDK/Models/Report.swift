@@ -148,9 +148,22 @@ extension Report.Module.File.RepeatableTest {
     }
 
     public struct Test: Equatable {
+        public let name: String
         public let status: Status
         public let duration: Measurement<UnitDuration>
         public let path: [PathNode]
+
+        public init(
+            name: String,
+            status: Status,
+            duration: Measurement<UnitDuration>,
+            path: [PathNode]
+        ) {
+            self.name = name
+            self.status = status
+            self.duration = duration
+            self.path = path
+        }
     }
 
     public var combinedStatus: Test.Status {
@@ -222,6 +235,7 @@ extension Report.Module.File.RepeatableTest {
 
                     mergedResults.append(
                         Test(
+                            name: self.name,
                             status: status,
                             duration: duration,
                             path: pathWithoutRepetition
@@ -258,6 +272,7 @@ extension Report.Module.File.RepeatableTest {
 
                     mergedResults.append(
                         Test(
+                            name: self.name,
                             status: status,
                             duration: duration,
                             path: pathWithoutRepetition
@@ -370,9 +385,11 @@ extension Set where Element == Report.Module.File.RepeatableTest {
 
 extension Report.Module.File.RepeatableTest.Test {
     /// Initializes from TestResultsDTO.TestNode (Repetition node) with path
-    init(from node: TestResultsDTO.TestNode, path: [Report.Module.File.RepeatableTest.PathNode])
-        throws
-    {
+    init(
+        from node: TestResultsDTO.TestNode,
+        path: [Report.Module.File.RepeatableTest.PathNode],
+        testCaseName: String
+    ) throws {
         guard node.nodeType == .repetition else {
             throw Error.invalidNodeType
         }
@@ -380,6 +397,8 @@ extension Report.Module.File.RepeatableTest.Test {
         guard let result = node.result else {
             throw Error.missingResult
         }
+
+        self.name = testCaseName
 
         switch result {
         case .passed:
@@ -400,9 +419,12 @@ extension Report.Module.File.RepeatableTest.Test {
 
     /// Initializes from TestResultsDTO.TestNode (Arguments node) with path
     init(
-        from node: TestResultsDTO.TestNode, path: [Report.Module.File.RepeatableTest.PathNode],
+        from node: TestResultsDTO.TestNode,
+        path: [Report.Module.File.RepeatableTest.PathNode],
         testCase: TestResultsDTO.TestNode
     ) {
+        self.name = testCase.name
+
         let status: Status
         if let result = node.result {
             switch result {
@@ -446,6 +468,8 @@ extension Report.Module.File.RepeatableTest.Test {
 
     /// Initializes from TestResultsDTO.TestNode (Test Case node) with empty path
     init(from testCase: TestResultsDTO.TestNode) {
+        self.name = testCase.name
+
         guard let result = testCase.result else {
             self.status = .unknown
             self.duration = .init(value: 0, unit: Self.defaultDurationUnit)

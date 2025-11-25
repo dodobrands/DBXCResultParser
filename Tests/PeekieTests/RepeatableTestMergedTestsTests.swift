@@ -39,18 +39,21 @@ struct RepeatableTestMergedTestsTests {
         )
 
         let test1 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .success,
             duration: Measurement(value: 100, unit: .milliseconds),
             path: [device, repetition1]
         )
 
         let test2 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .success,
             duration: Measurement(value: 50, unit: .milliseconds),
             path: [device, repetition2]
         )
 
         let test3 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .success,
             duration: Measurement(value: 30, unit: .milliseconds),
             path: [device, repetition3]
@@ -66,6 +69,7 @@ struct RepeatableTestMergedTestsTests {
         #expect(
             merged == [
                 Report.Module.File.RepeatableTest.Test(
+                    name: "testExample()",
                     status: .success,
                     duration: Measurement(value: 200, unit: .milliseconds),
                     path: [
@@ -113,12 +117,14 @@ struct RepeatableTestMergedTestsTests {
         )
 
         let test1 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .failure,
             duration: Measurement(value: 100, unit: .milliseconds),
             path: [device, arguments, repetition1]
         )
 
         let test2 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .failure,
             duration: Measurement(value: 50, unit: .milliseconds),
             path: [device, arguments, repetition2]
@@ -134,6 +140,7 @@ struct RepeatableTestMergedTestsTests {
         #expect(
             merged == [
                 Report.Module.File.RepeatableTest.Test(
+                    name: "testExample()",
                     status: .failure,
                     duration: Measurement(value: 200, unit: .milliseconds),
                     path: [
@@ -190,12 +197,14 @@ struct RepeatableTestMergedTestsTests {
         )
 
         let test1 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .success,
             duration: Measurement(value: 100, unit: .milliseconds),
             path: [device, argumentsFalse, repetition1]
         )
 
         let test2 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .success,
             duration: Measurement(value: 80, unit: .milliseconds),
             path: [device, argumentsTrue, repetition2]
@@ -211,6 +220,7 @@ struct RepeatableTestMergedTestsTests {
         #expect(
             merged == [
                 Report.Module.File.RepeatableTest.Test(
+                    name: "testExample()",
                     status: .failure,  // Status from argumentsFalse
                     duration: Measurement(value: 200, unit: .milliseconds),
                     // Message from repeatableTest (tests.first?.message)
@@ -224,6 +234,7 @@ struct RepeatableTestMergedTestsTests {
                             message: "False argument failed"),
                     ]),
                 Report.Module.File.RepeatableTest.Test(
+                    name: "testExample()",
                     status: .success,  // Status from argumentsTrue
                     duration: Measurement(value: 150, unit: .milliseconds),
                     // Message from repeatableTest (tests.first?.message)
@@ -265,12 +276,14 @@ struct RepeatableTestMergedTestsTests {
         )
 
         let test1 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .success,
             duration: Measurement(value: 100, unit: .milliseconds),
             path: [arguments, repetition1]
         )
 
         let test2 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .success,
             duration: Measurement(value: 50, unit: .milliseconds),
             path: [arguments, repetition2]
@@ -286,6 +299,7 @@ struct RepeatableTestMergedTestsTests {
         #expect(
             merged == [
                 Report.Module.File.RepeatableTest.Test(
+                    name: "testExample()",
                     status: .success,
                     duration: Measurement(value: 200, unit: .milliseconds),
                     path: [
@@ -323,12 +337,14 @@ struct RepeatableTestMergedTestsTests {
         )
 
         let test1 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .success,
             duration: Measurement(value: 100, unit: .milliseconds),
             path: [device, repetition1]
         )
 
         let test2 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .failure,
             duration: Measurement(value: 50, unit: .milliseconds),
             path: [device, repetition2]
@@ -344,6 +360,7 @@ struct RepeatableTestMergedTestsTests {
         #expect(
             merged == [
                 Report.Module.File.RepeatableTest.Test(
+                    name: "testExample()",
                     status: .mixed,
                     duration: Measurement(value: 200, unit: .milliseconds),
                     path: [
@@ -373,12 +390,14 @@ struct RepeatableTestMergedTestsTests {
         )
 
         let test1 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .success,
             duration: Measurement(value: 200, unit: .milliseconds),
             path: [device]
         )
 
         let test2 = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .success,
             duration: Measurement(value: 100, unit: .milliseconds),
             path: [device, arguments]
@@ -394,6 +413,7 @@ struct RepeatableTestMergedTestsTests {
         #expect(
             merged == [
                 Report.Module.File.RepeatableTest.Test(
+                    name: "testExample()",
                     status: .success,
                     duration: Measurement(value: 200, unit: .milliseconds),
                     path: [
@@ -403,6 +423,7 @@ struct RepeatableTestMergedTestsTests {
                         )
                     ]),
                 Report.Module.File.RepeatableTest.Test(
+                    name: "testExample()",
                     status: .success,
                     duration: Measurement(value: 100, unit: .milliseconds),
                     path: [
@@ -436,6 +457,7 @@ struct RepeatableTestMergedTestsTests {
         )
 
         let test = Report.Module.File.RepeatableTest.Test(
+            name: "testExample()",
             status: .success,
             duration: Measurement(value: 100, unit: .milliseconds),
             path: [device, repetition]
@@ -451,6 +473,7 @@ struct RepeatableTestMergedTestsTests {
         #expect(
             merged == [
                 Report.Module.File.RepeatableTest.Test(
+                    name: "testExample()",
                     status: .success,
                     duration: Measurement(value: 200, unit: .milliseconds),
                     path: [
