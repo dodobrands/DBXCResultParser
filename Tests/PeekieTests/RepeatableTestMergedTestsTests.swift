@@ -71,13 +71,8 @@ struct RepeatableTestMergedTestsTests {
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample()",
                     status: .success,
-                    duration: Measurement(value: 200, unit: .milliseconds),
-                    path: [
-                        Report.Module.File.RepeatableTest.PathNode(
-                            name: "iPhone 13", type: .device, result: .success,
-                            duration: Measurement(value: 200, unit: .milliseconds),
-                        )
-                    ])
+                    duration: Measurement(value: 100, unit: .milliseconds),
+                    path: [])
             ])
     }
 
@@ -145,12 +140,9 @@ struct RepeatableTestMergedTestsTests {
                     duration: Measurement(value: 200, unit: .milliseconds),
                     path: [
                         Report.Module.File.RepeatableTest.PathNode(
-                            name: "iPhone 13", type: .device, result: nil,
-                            duration: nil, message: nil),
-                        Report.Module.File.RepeatableTest.PathNode(
                             name: "false", type: .arguments, result: .failure,
                             duration: Measurement(value: 200, unit: .milliseconds),
-                            message: "Argument test failed"),
+                            message: "Argument test failed")
                     ])
             ])
     }
@@ -226,12 +218,9 @@ struct RepeatableTestMergedTestsTests {
                     // Message from repeatableTest (tests.first?.message)
                     path: [
                         Report.Module.File.RepeatableTest.PathNode(
-                            name: "iPhone 13", type: .device, result: nil,
-                            duration: nil, message: nil),
-                        Report.Module.File.RepeatableTest.PathNode(
                             name: "false", type: .arguments, result: .failure,
                             duration: Measurement(value: 200, unit: .milliseconds),
-                            message: "False argument failed"),
+                            message: "False argument failed")
                     ]),
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample()",
@@ -240,12 +229,9 @@ struct RepeatableTestMergedTestsTests {
                     // Message from repeatableTest (tests.first?.message)
                     path: [
                         Report.Module.File.RepeatableTest.PathNode(
-                            name: "iPhone 13", type: .device, result: nil,
-                            duration: nil, message: nil),
-                        Report.Module.File.RepeatableTest.PathNode(
                             name: "true", type: .arguments, result: .success,
                             duration: Measurement(value: 150, unit: .milliseconds),
-                        ),
+                        )
                     ]),
             ])
     }
@@ -362,13 +348,8 @@ struct RepeatableTestMergedTestsTests {
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample()",
                     status: .mixed,
-                    duration: Measurement(value: 200, unit: .milliseconds),
-                    path: [
-                        Report.Module.File.RepeatableTest.PathNode(
-                            name: "iPhone 13", type: .device, result: .success,
-                            duration: Measurement(value: 200, unit: .milliseconds),
-                        )
-                    ])
+                    duration: Measurement(value: 100, unit: .milliseconds),
+                    path: [])
             ])
     }
 
@@ -416,25 +397,16 @@ struct RepeatableTestMergedTestsTests {
                     name: "testExample()",
                     status: .success,
                     duration: Measurement(value: 200, unit: .milliseconds),
-                    path: [
-                        Report.Module.File.RepeatableTest.PathNode(
-                            name: "iPhone 13", type: .device, result: .success,
-                            duration: Measurement(value: 200, unit: .milliseconds),
-                        )
-                    ]),
+                    path: []),
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample()",
                     status: .success,
                     duration: Measurement(value: 100, unit: .milliseconds),
                     path: [
                         Report.Module.File.RepeatableTest.PathNode(
-                            name: "iPhone 13", type: .device, result: .success,
-                            duration: Measurement(value: 200, unit: .milliseconds),
-                        ),
-                        Report.Module.File.RepeatableTest.PathNode(
                             name: "false", type: .arguments, result: .success,
                             duration: Measurement(value: 100, unit: .milliseconds),
-                        ),
+                        )
                     ]),
             ])
     }
@@ -475,13 +447,8 @@ struct RepeatableTestMergedTestsTests {
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample()",
                     status: .success,
-                    duration: Measurement(value: 200, unit: .milliseconds),
-                    path: [
-                        Report.Module.File.RepeatableTest.PathNode(
-                            name: "iPhone 13", type: .device, result: .success,
-                            duration: Measurement(value: 200, unit: .milliseconds),
-                        )
-                    ])
+                    duration: Measurement(value: 100, unit: .milliseconds),
+                    path: [])
             ])
     }
 

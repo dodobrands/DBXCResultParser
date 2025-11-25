@@ -198,18 +198,15 @@ extension Report.Module.File.RepeatableTest {
     public var mergedTests: [Test] {
         guard !tests.isEmpty else { return [] }
 
-        // Group tests by path without last repetition element
+        // Group tests by path without repetition and device elements
         var pathToTests: [String: [Test]] = [:]
 
         for test in tests {
-            let pathKey: String
-            if test.path.last?.type == .repetition {
-                // Remove last repetition element for grouping
-                let pathWithoutRepetition = Array(test.path.dropLast())
-                pathKey = self.pathKey(from: pathWithoutRepetition)
-            } else {
-                pathKey = self.pathKey(from: test.path)
+            // Remove repetition and device nodes for grouping
+            let pathWithoutRepetitionAndDevice = test.path.filter {
+                $0.type != .repetition && $0.type != .device
             }
+            let pathKey = self.pathKey(from: pathWithoutRepetitionAndDevice)
 
             if pathToTests[pathKey] == nil {
                 pathToTests[pathKey] = []
@@ -223,65 +220,35 @@ extension Report.Module.File.RepeatableTest {
         let sortedKeys = pathToTests.keys.sorted()
         for key in sortedKeys {
             guard let groupTests = pathToTests[key] else { continue }
-            if groupTests.count == 1 {
-                // Single test - check if it ends with repetition
-                let test = groupTests[0]
-                if test.path.last?.type == .repetition {
-                    // Merge: remove repetition, use parent status
-                    let pathWithoutRepetition = Array(test.path.dropLast())
-                    let parentNode = pathWithoutRepetition.last
-                    let status = parentNode?.result ?? test.status
-                    let duration = parentNode?.duration ?? test.duration
-
-                    mergedResults.append(
-                        Test(
-                            name: self.name,
-                            status: status,
-                            duration: duration,
-                            path: pathWithoutRepetition
-                        ))
-                } else {
-                    // No repetition, keep as is
-                    mergedResults.append(test)
-                }
-            } else {
-                // Multiple tests - check if all end with repetition
-                let allEndWithRepetition = groupTests.allSatisfy {
-                    $0.path.last?.type == .repetition
-                }
-                if allEndWithRepetition {
-                    // Merge repetitions
-                    let firstTest = groupTests[0]
-                    let pathWithoutRepetition = Array(firstTest.path.dropLast())
-
-                    // Check if statuses differ
-                    let statuses = groupTests.map { $0.status }
-                    let statusesDiffer = !statuses.elementsAreEqual
-
-                    let parentNode = pathWithoutRepetition.last
-                    let status: Test.Status
-                    if statusesDiffer {
-                        status = .mixed
-                    } else {
-                        status = parentNode?.result ?? statuses.first ?? .unknown
-                    }
-
-                    let duration =
-                        parentNode?.duration ?? groupTests.first?.duration
-                        ?? Measurement(value: 0, unit: Test.defaultDurationUnit)
-
-                    mergedResults.append(
-                        Test(
-                            name: self.name,
-                            status: status,
-                            duration: duration,
-                            path: pathWithoutRepetition
-                        ))
-                } else {
-                    // Not all end with repetition, keep all as is
-                    mergedResults.append(contentsOf: groupTests)
-                }
+            // Remove repetition and device nodes from path
+            let firstTest = groupTests[0]
+            let pathWithoutRepetitionAndDevice = firstTest.path.filter {
+                $0.type != .repetition && $0.type != .device
             }
+
+            // Check if statuses differ
+            let statuses = groupTests.map { $0.status }
+            let statusesDiffer = !statuses.elementsAreEqual
+
+            let parentNode = pathWithoutRepetitionAndDevice.last
+            let status: Test.Status
+            if statusesDiffer {
+                status = .mixed
+            } else {
+                status = parentNode?.result ?? statuses.first ?? .unknown
+            }
+
+            let duration =
+                parentNode?.duration ?? groupTests.first?.duration
+                ?? Measurement(value: 0, unit: Test.defaultDurationUnit)
+
+            mergedResults.append(
+                Test(
+                    name: self.name,
+                    status: status,
+                    duration: duration,
+                    path: pathWithoutRepetitionAndDevice
+                ))
         }
 
         // Sort results by path for consistent ordering
