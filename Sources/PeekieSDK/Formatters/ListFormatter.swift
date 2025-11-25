@@ -64,6 +64,7 @@ extension Report.Module.File.RepeatableTest.Test {
         [
             status.icon,
             name,
+            message.map { "(\($0))" },
         ]
         .compactMap { $0 }
         .joined(separator: " ")

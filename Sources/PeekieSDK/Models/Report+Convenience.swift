@@ -279,7 +279,8 @@ extension Report {
                                 let test = try Report.Module.File.RepeatableTest.Test(
                                     from: node,
                                     path: newPath,
-                                    testCaseName: testCase.name
+                                    testCaseName: testCase.name,
+                                    testCase: testCase
                                 )
                                 repeatableTest.tests.append(test)
                                 return

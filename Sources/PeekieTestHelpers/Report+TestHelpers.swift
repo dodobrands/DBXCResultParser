@@ -131,13 +131,17 @@ extension Report.Module.File.RepeatableTest.Test {
         name: String = "",
         status: Status = .success,
         duration: Measurement<UnitDuration> = .testMake(),
-        path: [Report.Module.File.RepeatableTest.PathNode] = []
+        path: [Report.Module.File.RepeatableTest.PathNode] = [],
+        failureMessage: String? = nil,
+        skipMessage: String? = nil
     ) -> Self {
         .init(
             name: name,
             status: status,
             duration: duration,
-            path: path
+            path: path,
+            failureMessage: failureMessage,
+            skipMessage: skipMessage
         )
     }
 }

@@ -53,6 +53,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "async()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -65,11 +66,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "async()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -82,11 +85,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "async()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -99,6 +104,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "disabled()"
@@ -107,6 +113,8 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Test \'disabled()\' skipped: Disabled reason"
                   - name: "disabled()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -120,11 +128,15 @@
                       ▿ result: Optional<Status>
                         - some: Status.skipped
                       - type: NodeType.repetition
+                  ▿ skipMessage: Optional<String>
+                    - some: "Test \'disabled()\' skipped: Disabled reason"
                   - status: Status.skipped
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Test \'disabled()\' skipped: Disabled reason"
                   - name: "disabled()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -138,11 +150,15 @@
                       ▿ result: Optional<Status>
                         - some: Status.skipped
                       - type: NodeType.repetition
+                  ▿ skipMessage: Optional<String>
+                    - some: "Test \'disabled()\' skipped: Disabled reason"
                   - status: Status.skipped
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Test \'disabled()\' skipped: Disabled reason"
                   - name: "disabled()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -156,6 +172,8 @@
                       ▿ result: Optional<Status>
                         - some: Status.skipped
                       - type: NodeType.repetition
+                  ▿ skipMessage: Optional<String>
+                    - some: "Test \'disabled()\' skipped: Disabled reason"
                   - status: Status.skipped
             ▿ RepeatableTest
               - name: "expectedFailure()"
@@ -164,6 +182,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "expectedFailure()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -176,11 +195,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.expectedFailure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.expectedFailure
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "expectedFailure()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -193,11 +214,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.expectedFailure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.expectedFailure
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "expectedFailure()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -210,6 +233,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.expectedFailure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.expectedFailure
             ▿ RepeatableTest
               - name: "failure()"
@@ -218,6 +242,8 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Expected 5.0 but got 6.0"
                   - name: "failure()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -231,11 +257,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Expected 5.0 but got 6.0"
                   - name: "failure()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -249,11 +278,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Expected 5.0 but got 6.0"
                   - name: "failure()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -267,6 +299,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
             ▿ RepeatableTest
               - name: "flacky()"
@@ -275,6 +308,8 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Flacky failure message: result was 2.0"
                   - name: "flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -288,11 +323,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -305,11 +342,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -322,6 +361,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "flackyParameterized(value:)"
@@ -330,6 +370,8 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "SwiftTestingTests.swift:66: Expectation failed: (result → 4.0) == 5.0"
                   - name: "flackyParameterized(value:)"
                   ▿ path: 2 elements
                     ▿ PathNode
@@ -350,11 +392,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "SwiftTestingTests.swift:66: Expectation failed: (result → 4.0) == 5.0"
                   - name: "flackyParameterized(value:)"
                   ▿ path: 2 elements
                     ▿ PathNode
@@ -375,11 +420,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "SwiftTestingTests.swift:66: Expectation failed: (result → 4.0) == 5.0"
                   - name: "flackyParameterized(value:)"
                   ▿ path: 2 elements
                     ▿ PathNode
@@ -400,11 +448,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "flackyParameterized(value:)"
                   ▿ path: 2 elements
                     ▿ PathNode
@@ -424,11 +474,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "flackyParameterized(value:)"
                   ▿ path: 2 elements
                     ▿ PathNode
@@ -448,11 +500,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "flackyParameterized(value:)"
                   ▿ path: 2 elements
                     ▿ PathNode
@@ -472,6 +526,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "success()"
@@ -480,6 +535,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "success()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -492,11 +548,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "success()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -509,11 +567,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "success()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -526,6 +586,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "throwing()"
@@ -534,6 +595,8 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Calculator.swift:26: Caught error: .divisionByZero"
                   - name: "throwing()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -547,11 +610,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Calculator.swift:26: Caught error: .divisionByZero"
                   - name: "throwing()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -565,11 +631,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Calculator.swift:26: Caught error: .divisionByZero"
                   - name: "throwing()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -583,6 +652,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
             ▿ RepeatableTest
               - name: "withAttachment()"
@@ -591,6 +661,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "withAttachment()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -603,11 +674,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "withAttachment()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -620,11 +693,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
                 ▿ Test
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "withAttachment()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -637,6 +712,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
           - warnings: 0 elements
         ▿ File
@@ -687,8 +763,10 @@
                   ▿ duration: 15.267014503479004 ms
                     - value: 15.267014503479004
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_async()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_asyncWithExpectation()"
@@ -697,8 +775,10 @@
                   ▿ duration: 15.156984329223633 ms
                     - value: 15.156984329223633
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_asyncWithExpectation()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_expectedFailure()"
@@ -707,8 +787,11 @@
                   ▿ duration: 695.518970489502 ms
                     - value: 695.518970489502
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Failure is expected"
                   - name: "test_expectedFailure()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.expectedFailure
             ▿ RepeatableTest
               - name: "test_failure()"
@@ -717,6 +800,8 @@
                   ▿ duration: 5.626082420349121 ms
                     - value: 5.626082420349121
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Expected 5.0 but got 6.0"
                   - name: "test_failure()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -730,11 +815,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 1.3370513916015625 ms
                     - value: 1.3370513916015625
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Expected 5.0 but got 6.0"
                   - name: "test_failure()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -748,11 +836,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.8009672164916992 ms
                     - value: 0.8009672164916992
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Expected 5.0 but got 6.0"
                   - name: "test_failure()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -766,6 +857,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
             ▿ RepeatableTest
               - name: "test_flacky()"
@@ -774,6 +866,8 @@
                   ▿ duration: 4.892945289611816 ms
                     - value: 4.892945289611816
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Flacky failure message: result was 2.0"
                   - name: "test_flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -787,11 +881,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.31495094299316406 ms
                     - value: 0.31495094299316406
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -804,6 +900,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_performance()"
@@ -812,8 +909,10 @@
                   ▿ duration: 258.2279443740845 ms
                     - value: 258.2279443740845
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_performance()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_skip()"
@@ -822,8 +921,12 @@
                   ▿ duration: 7.330060005187988 ms
                     - value: 7.330060005187988
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Test skipped - Skip message"
                   - name: "test_skip()"
                   - path: 0 elements
+                  ▿ skipMessage: Optional<String>
+                    - some: "Skip message"
                   - status: Status.skipped
             ▿ RepeatableTest
               - name: "test_success()"
@@ -832,8 +935,10 @@
                   ▿ duration: 0.6361007690429688 ms
                     - value: 0.6361007690429688
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_success()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_throwing()"
@@ -842,6 +947,8 @@
                   ▿ duration: 10.376930236816406 ms
                     - value: 10.376930236816406
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Calculator.swift:26: failed: caught error: \"divisionByZero\""
                   - name: "test_throwing()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -855,11 +962,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 5.300045013427734 ms
                     - value: 5.300045013427734
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Calculator.swift:26: failed: caught error: \"divisionByZero\""
                   - name: "test_throwing()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -873,11 +983,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 2.777099609375 ms
                     - value: 2.777099609375
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Calculator.swift:26: failed: caught error: \"divisionByZero\""
                   - name: "test_throwing()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -891,6 +1004,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
             ▿ RepeatableTest
               - name: "test_withAttachment()"
@@ -899,8 +1013,10 @@
                   ▿ duration: 0.6949901580810547 ms
                     - value: 0.6949901580810547
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_withAttachment()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_withWarning()"
@@ -909,8 +1025,10 @@
                   ▿ duration: 0.7519721984863281 ms
                     - value: 0.7519721984863281
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_withWarning()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
           ▿ warnings: 1 element
             ▿ Issue

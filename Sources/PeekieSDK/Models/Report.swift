@@ -152,17 +152,44 @@ extension Report.Module.File.RepeatableTest {
         public let status: Status
         public let duration: Measurement<UnitDuration>
         public let path: [PathNode]
+        public let failureMessage: String?
+        public let skipMessage: String?
 
         public init(
             name: String,
             status: Status,
             duration: Measurement<UnitDuration>,
-            path: [PathNode]
+            path: [PathNode],
+            failureMessage: String? = nil,
+            skipMessage: String? = nil
         ) {
             self.name = name
             self.status = status
             self.duration = duration
             self.path = path
+            self.failureMessage = failureMessage
+            self.skipMessage = skipMessage
+        }
+
+        /// Returns the appropriate message based on test status
+        /// - For failures: returns failureMessage
+        /// - For expected failures: returns failureMessage or "Failure is expected"
+        /// - For skipped: returns skipMessage
+        /// - For mixed: returns failureMessage
+        /// - For other statuses: returns nil
+        public var message: String? {
+            switch status {
+            case .failure:
+                return failureMessage
+            case .expectedFailure:
+                return failureMessage ?? "Failure is expected"
+            case .skipped:
+                return skipMessage
+            case .mixed:
+                return failureMessage
+            default:
+                return nil
+            }
         }
     }
 
@@ -265,12 +292,33 @@ extension Report.Module.File.RepeatableTest {
                 parentNode?.duration ?? groupTests.first?.duration
                 ?? Measurement(value: 0, unit: Test.defaultDurationUnit)
 
+            // Extract messages from merged tests
+            // For failures, prefer message from failed test, otherwise use first available
+            let failureMessage: String? = {
+                if status == .failure || status == .mixed {
+                    return groupTests.first(where: { $0.status == .failure })?.failureMessage
+                        ?? groupTests.first?.failureMessage
+                }
+                return nil
+            }()
+
+            // For skipped, prefer message from skipped test
+            let skipMessage: String? = {
+                if status == .skipped {
+                    return groupTests.first(where: { $0.status == .skipped })?.skipMessage
+                        ?? groupTests.first?.skipMessage
+                }
+                return nil
+            }()
+
             mergedResults.append(
                 Test(
                     name: mergedName,
                     status: status,
                     duration: duration,
-                    path: pathForResult
+                    path: pathForResult,
+                    failureMessage: failureMessage,
+                    skipMessage: skipMessage
                 ))
         }
 
@@ -378,7 +426,8 @@ extension Report.Module.File.RepeatableTest.Test {
     init(
         from node: TestResultsDTO.TestNode,
         path: [Report.Module.File.RepeatableTest.PathNode],
-        testCaseName: String
+        testCaseName: String,
+        testCase: TestResultsDTO.TestNode? = nil
     ) throws {
         guard node.nodeType == .repetition else {
             throw Error.invalidNodeType
@@ -405,6 +454,11 @@ extension Report.Module.File.RepeatableTest.Test {
         self.duration = .init(value: durationSeconds * 1000, unit: Self.defaultDurationUnit)
 
         self.path = path
+
+        // Extract messages from repetition node itself (failure messages are in repetition children)
+        // Fallback to testCase if repetition doesn't have messages (e.g., for expected failures)
+        self.failureMessage = node.failureMessage ?? testCase?.failureMessage
+        self.skipMessage = node.skipMessage ?? testCase?.skipMessage
     }
 
     /// Initializes from TestResultsDTO.TestNode (Arguments node) with path
@@ -434,6 +488,8 @@ extension Report.Module.File.RepeatableTest.Test {
                 self.status = status
                 self.duration = .init(value: 0, unit: Self.defaultDurationUnit)
                 self.path = path
+                self.failureMessage = nil
+                self.skipMessage = nil
                 return
             }
             switch testCaseResult {
@@ -454,6 +510,10 @@ extension Report.Module.File.RepeatableTest.Test {
         self.duration = .init(value: durationSeconds * 1000, unit: Self.defaultDurationUnit)
 
         self.path = path
+
+        // Extract messages from testCase metadata
+        self.failureMessage = testCase.failureMessage
+        self.skipMessage = testCase.skipMessage
     }
 
     /// Initializes from TestResultsDTO.TestNode (Test Case node) with empty path
@@ -464,6 +524,8 @@ extension Report.Module.File.RepeatableTest.Test {
             self.status = .unknown
             self.duration = .init(value: 0, unit: Self.defaultDurationUnit)
             self.path = []
+            self.failureMessage = nil
+            self.skipMessage = nil
             return
         }
 
@@ -482,6 +544,10 @@ extension Report.Module.File.RepeatableTest.Test {
         self.duration = .init(value: durationSeconds * 1000, unit: Self.defaultDurationUnit)
 
         self.path = []
+
+        // Extract messages from testCase metadata
+        self.failureMessage = testCase.failureMessage
+        self.skipMessage = testCase.skipMessage
     }
 
     enum Error: Swift.Error {

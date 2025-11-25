@@ -166,10 +166,9 @@ extension TestExecutions.File.TestCase {
         self.init(
             name: test.name,
             duration: Int(test.duration.converted(to: .milliseconds).value),
-            skipped: test.status == .skipped
-                ? .init(message: "Test message missing") : nil,
-            failure: test.status == .failure
-                ? .init(message: "Test message missing") : nil
+            skipped: test.status == .skipped ? test.message.map { .init(message: $0) } : nil,
+            failure: [.failure, .expectedFailure, .mixed].contains(test.status)
+                ? test.message.map { .init(message: $0) } : nil
         )
     }
 }

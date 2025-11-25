@@ -113,8 +113,10 @@
                   ▿ duration: 20.159006118774414 ms
                     - value: 20.159006118774414
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
           - warnings: 0 elements
         ▿ File
@@ -159,8 +161,10 @@
                   ▿ duration: 5.232095718383789 ms
                     - value: 5.232095718383789
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
           - warnings: 0 elements
         ▿ File
@@ -187,8 +191,10 @@
                   ▿ duration: 47.76906967163086 ms
                     - value: 47.76906967163086
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_parseWithExplicitRefId()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_parseWithImplicitRefId()"
@@ -197,8 +203,10 @@
                   ▿ duration: 42.025089263916016 ms
                     - value: 42.025089263916016
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_parseWithImplicitRefId()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
           - warnings: 0 elements
         ▿ File
@@ -234,8 +242,10 @@
                   ▿ duration: 428.8959503173828 ms
                     - value: 428.8959503173828
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_coverageDtoData()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_coverageDtoParse()"
@@ -244,8 +254,10 @@
                   ▿ duration: 313.24899196624756 ms
                     - value: 313.24899196624756
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_coverageDtoParse()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
           - warnings: 0 elements
         ▿ File
@@ -299,6 +311,8 @@
                   ▿ duration: 707.8319787979126 ms
                     - value: 707.8319787979126
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "DBXCReportModelTests.swift:40: XCTAssertEqual failed: (\"1\") is not equal to (\"2\")"
                   - name: "test()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -312,11 +326,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 693.6450004577637 ms
                     - value: 693.6450004577637
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "DBXCReportModelTests.swift:40: XCTAssertEqual failed: (\"1\") is not equal to (\"2\")"
                   - name: "test()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -330,11 +347,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 686.1109733581543 ms
                     - value: 686.1109733581543
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "DBXCReportModelTests.swift:40: XCTAssertEqual failed: (\"1\") is not equal to (\"2\")"
                   - name: "test()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -348,6 +368,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
             ▿ RepeatableTest
               - name: "test_expectedFailure()"
@@ -356,8 +377,11 @@
                   ▿ duration: 362.97500133514404 ms
                     - value: 362.97500133514404
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Failure is expected"
                   - name: "test_expectedFailure()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.expectedFailure
             ▿ RepeatableTest
               - name: "test_failure()"
@@ -366,6 +390,8 @@
                   ▿ duration: 0.7870197296142578 ms
                     - value: 0.7870197296142578
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Failure message"
                   - name: "test_failure()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -379,11 +405,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.720977783203125 ms
                     - value: 0.720977783203125
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Failure message"
                   - name: "test_failure()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -397,11 +426,14 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 6.257057189941406 ms
                     - value: 6.257057189941406
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Failure message"
                   - name: "test_failure()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -415,6 +447,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
             ▿ RepeatableTest
               - name: "test_flacky()"
@@ -423,6 +456,8 @@
                   ▿ duration: 0.7339715957641602 ms
                     - value: 0.7339715957641602
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Flacky failure message"
                   - name: "test_flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -436,11 +471,13 @@
                       ▿ result: Optional<Status>
                         - some: Status.failure
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.3390312194824219 ms
                     - value: 0.3390312194824219
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
@@ -453,6 +490,7 @@
                       ▿ result: Optional<Status>
                         - some: Status.success
                       - type: NodeType.repetition
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_skip()"
@@ -461,8 +499,12 @@
                   ▿ duration: 0.9189844131469727 ms
                     - value: 0.9189844131469727
                     - unit: "ms"
+                  ▿ failureMessage: Optional<String>
+                    - some: "Test skipped - Skip message"
                   - name: "test_skip()"
                   - path: 0 elements
+                  ▿ skipMessage: Optional<String>
+                    - some: "Skip message"
                   - status: Status.skipped
             ▿ RepeatableTest
               - name: "test_success()"
@@ -471,8 +513,10 @@
                   ▿ duration: 10.7879638671875 ms
                     - value: 10.7879638671875
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_success()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
           - warnings: 0 elements
         ▿ File
@@ -579,8 +623,10 @@
                   ▿ duration: 1.8880367279052734 ms
                     - value: 1.8880367279052734
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_testResult_any_count()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_testResult_any_list()"
@@ -589,8 +635,10 @@
                   ▿ duration: 0.6040334701538086 ms
                     - value: 0.6040334701538086
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_testResult_any_list()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_testResult_failure_count()"
@@ -599,8 +647,10 @@
                   ▿ duration: 0.6279945373535156 ms
                     - value: 0.6279945373535156
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_testResult_failure_count()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_testResult_success_list()"
@@ -609,8 +659,10 @@
                   ▿ duration: 0.3300905227661133 ms
                     - value: 0.3300905227661133
                     - unit: "ms"
+                  - failureMessage: Optional<String>.none
                   - name: "test_testResult_success_list()"
                   - path: 0 elements
+                  - skipMessage: Optional<String>.none
                   - status: Status.success
           - warnings: 0 elements
         ▿ File

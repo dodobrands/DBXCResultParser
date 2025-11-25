@@ -1,5 +1,5 @@
 ExampleSUITests
-⏭️ disabled()
+⏭️ disabled() (Test 'disabled()' skipped: Disabled reason)
 
 XCTestTests
-⏭️ test_skip()
+⏭️ test_skip() (Skip message)
