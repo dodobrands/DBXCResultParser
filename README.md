@@ -153,6 +153,22 @@ let failuresAndSkipped = formatter.format(reportModel, include: [.failure, .skip
 let successesOnly = formatter.format(reportModel, include: [.success])
 ```
 
+**Including device details:**
+
+By default, device information is filtered out from test names. When enabled, device names (e.g., `[iPhone 15 Pro]`) will be appended to test names if this information is present in the `.xcresult` file (typically when tests are run on multiple devices).
+
+```swift
+// Default: device details are always hidden
+let output = formatter.format(reportModel)
+
+// Include device details if available in .xcresult
+let outputWithDevices = formatter.format(reportModel, includeDeviceDetails: true)
+```
+
+Example output:
+- `includeDeviceDetails: false` → `test_example()`
+- `includeDeviceDetails: true` → `test_example() [iPhone 15 Pro]` (if device info exists in .xcresult)
+
 #### Output Format
 
 Outputs a detailed list of test results, including the name of each file and the status of each test.
@@ -282,6 +298,7 @@ swift run peekie list path/to/tests.xcresult --include failure,skipped
 - `--include`: Filters the test results to include only certain statuses. Comma-separated list of: `success`, `failure`, `skipped`, `expectedFailure`, `mixed`, `unknown`. Default: all statuses.
 - `--include-coverage`: Whether to parse and include code coverage data. Default: `true`.
 - `--include-warnings`: Whether to parse and include build warnings. Default: `true`.
+- `--include-device-details`: Include device information in test names (e.g., `[iPhone 15 Pro]`). Useful when analyzing merged results from multiple devices. Default: `false`.
 
 #### SonarQube Format Subcommand
 

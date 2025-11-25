@@ -11,6 +11,7 @@ public class ListFormatter {
     /// - Parameters:
     ///   - report: The report model instance to be formatted.
     ///   - include: An array of `Report.Module.File.RepeatableTest.Test.Status` values that specifies which test statuses to include in the formatted report.
+    ///   - includeDeviceDetails: If true, device information is included in test names. Defaults to false.
     ///
     /// - Returns: A formatted string representation of the report based on the specified criteria.
     ///
@@ -18,14 +19,15 @@ public class ListFormatter {
     public func format(
         _ report: Report,
         include: [Report.Module.File.RepeatableTest.Test.Status] = Report.Module
-            .File.RepeatableTest.Test.Status.allCases
+            .File.RepeatableTest.Test.Status.allCases,
+        includeDeviceDetails: Bool = false
     ) -> String {
         let files = report.modules
             .flatMap { Array($0.files) }
             .sorted { $0.name < $1.name }
 
         let filesReports = files.compactMap { file in
-            file.report(testResults: include)
+            file.report(testResults: include, includeDeviceDetails: includeDeviceDetails)
         }
         return filesReports.joined(separator: "\n\n")
     }
@@ -33,7 +35,8 @@ public class ListFormatter {
 
 extension Report.Module.File {
     func report(
-        testResults: [Report.Module.File.RepeatableTest.Test.Status]
+        testResults: [Report.Module.File.RepeatableTest.Test.Status],
+        includeDeviceDetails: Bool
     ) -> String? {
         let tests = repeatableTests.filtered(testResults: testResults).sorted { $0.name < $1.name }
 
@@ -44,7 +47,7 @@ extension Report.Module.File {
         var rows: [String] = []
         for repeatableTest in tests.sorted(by: { $0.name < $1.name }) {
             // Use merged tests which already handle repetitions and optionally devices
-            let mergedTests = repeatableTest.mergedTests(filterDevice: false)
+            let mergedTests = repeatableTest.mergedTests(filterDevice: !includeDeviceDetails)
                 .filter { testResults.contains($0.status) }
 
             // Output each merged test separately
