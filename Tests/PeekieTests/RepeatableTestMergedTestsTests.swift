@@ -404,7 +404,7 @@ struct RepeatableTestMergedTestsTests {
                         )
                     ]),
                 Report.Module.File.RepeatableTest.Test(
-                    name: "testExample() [iPhone 13 false]",
+                    name: "testExample() [iPhone 13, false]",
                     status: .success,
                     duration: Measurement(value: 100, unit: .milliseconds),
                     path: [

@@ -50,6 +50,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "async()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -66,6 +67,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "async()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -82,6 +84,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "async()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -101,6 +104,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "disabled()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -118,6 +122,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "disabled()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -135,6 +140,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "disabled()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -155,6 +161,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "expectedFailure()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -171,6 +178,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "expectedFailure()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -187,6 +195,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "expectedFailure()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -206,6 +215,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "failure()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -223,6 +233,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "failure()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -240,6 +251,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "failure()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -260,6 +272,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -277,6 +290,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -293,6 +307,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -312,6 +327,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "flackyParameterized(value:)"
                   ▿ path: 2 elements
                     ▿ PathNode
                       - duration: Optional<Measurement<NSUnitDuration>>.none
@@ -336,6 +352,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "flackyParameterized(value:)"
                   ▿ path: 2 elements
                     ▿ PathNode
                       - duration: Optional<Measurement<NSUnitDuration>>.none
@@ -360,6 +377,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "flackyParameterized(value:)"
                   ▿ path: 2 elements
                     ▿ PathNode
                       - duration: Optional<Measurement<NSUnitDuration>>.none
@@ -384,6 +402,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "flackyParameterized(value:)"
                   ▿ path: 2 elements
                     ▿ PathNode
                       - duration: Optional<Measurement<NSUnitDuration>>.none
@@ -407,6 +426,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "flackyParameterized(value:)"
                   ▿ path: 2 elements
                     ▿ PathNode
                       - duration: Optional<Measurement<NSUnitDuration>>.none
@@ -430,6 +450,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "flackyParameterized(value:)"
                   ▿ path: 2 elements
                     ▿ PathNode
                       - duration: Optional<Measurement<NSUnitDuration>>.none
@@ -456,6 +477,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "success()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -472,6 +494,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "success()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -488,6 +511,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "success()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -507,6 +531,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "throwing()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -524,6 +549,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "throwing()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -541,6 +567,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "throwing()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -561,6 +588,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "withAttachment()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -577,6 +605,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "withAttachment()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -593,6 +622,7 @@
                   ▿ duration: 0.0 ms
                     - value: 0.0
                     - unit: "ms"
+                  - name: "withAttachment()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -651,6 +681,7 @@
                   ▿ duration: 13.486981391906738 ms
                     - value: 13.486981391906738
                     - unit: "ms"
+                  - name: "test_async()"
                   - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
@@ -660,6 +691,7 @@
                   ▿ duration: 13.226032257080078 ms
                     - value: 13.226032257080078
                     - unit: "ms"
+                  - name: "test_asyncWithExpectation()"
                   - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
@@ -669,6 +701,7 @@
                   ▿ duration: 374.40407276153564 ms
                     - value: 374.40407276153564
                     - unit: "ms"
+                  - name: "test_expectedFailure()"
                   - path: 0 elements
                   - status: Status.expectedFailure
             ▿ RepeatableTest
@@ -678,6 +711,7 @@
                   ▿ duration: 0.9249448776245117 ms
                     - value: 0.9249448776245117
                     - unit: "ms"
+                  - name: "test_failure()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -695,6 +729,7 @@
                   ▿ duration: 0.7879734039306641 ms
                     - value: 0.7879734039306641
                     - unit: "ms"
+                  - name: "test_failure()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -712,6 +747,7 @@
                   ▿ duration: 0.7499456405639648 ms
                     - value: 0.7499456405639648
                     - unit: "ms"
+                  - name: "test_failure()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -732,6 +768,7 @@
                   ▿ duration: 0.8829832077026367 ms
                     - value: 0.8829832077026367
                     - unit: "ms"
+                  - name: "test_flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -749,6 +786,7 @@
                   ▿ duration: 0.3440380096435547 ms
                     - value: 0.3440380096435547
                     - unit: "ms"
+                  - name: "test_flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -768,6 +806,7 @@
                   ▿ duration: 272.01104164123535 ms
                     - value: 272.01104164123535
                     - unit: "ms"
+                  - name: "test_performance()"
                   - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
@@ -777,6 +816,7 @@
                   ▿ duration: 3.1669139862060547 ms
                     - value: 3.1669139862060547
                     - unit: "ms"
+                  - name: "test_skip()"
                   - path: 0 elements
                   - status: Status.skipped
             ▿ RepeatableTest
@@ -786,6 +826,7 @@
                   ▿ duration: 0.9889602661132812 ms
                     - value: 0.9889602661132812
                     - unit: "ms"
+                  - name: "test_success()"
                   - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
@@ -795,6 +836,7 @@
                   ▿ duration: 8.433103561401367 ms
                     - value: 8.433103561401367
                     - unit: "ms"
+                  - name: "test_throwing()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -812,6 +854,7 @@
                   ▿ duration: 6.121993064880371 ms
                     - value: 6.121993064880371
                     - unit: "ms"
+                  - name: "test_throwing()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -829,6 +872,7 @@
                   ▿ duration: 5.2040815353393555 ms
                     - value: 5.2040815353393555
                     - unit: "ms"
+                  - name: "test_throwing()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -849,6 +893,7 @@
                   ▿ duration: 1.2660026550292969 ms
                     - value: 1.2660026550292969
                     - unit: "ms"
+                  - name: "test_withAttachment()"
                   - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
@@ -858,6 +903,7 @@
                   ▿ duration: 0.6868839263916016 ms
                     - value: 0.6868839263916016
                     - unit: "ms"
+                  - name: "test_withWarning()"
                   - path: 0 elements
                   - status: Status.success
           ▿ warnings: 1 element

@@ -246,7 +246,7 @@ extension Report.Module.File.RepeatableTest {
             if pathElementNames.isEmpty {
                 mergedName = self.name
             } else {
-                mergedName = "\(self.name) [\(pathElementNames.joined(separator: " "))]"
+                mergedName = "\(self.name) [\(pathElementNames.joined(separator: ", "))]"
             }
 
             // Check if statuses differ

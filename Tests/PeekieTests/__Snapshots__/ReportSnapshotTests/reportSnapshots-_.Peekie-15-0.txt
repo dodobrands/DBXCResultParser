@@ -113,6 +113,7 @@
                   ▿ duration: 20.159006118774414 ms
                     - value: 20.159006118774414
                     - unit: "ms"
+                  - name: "test()"
                   - path: 0 elements
                   - status: Status.success
           - warnings: 0 elements
@@ -158,6 +159,7 @@
                   ▿ duration: 5.232095718383789 ms
                     - value: 5.232095718383789
                     - unit: "ms"
+                  - name: "test()"
                   - path: 0 elements
                   - status: Status.success
           - warnings: 0 elements
@@ -185,6 +187,7 @@
                   ▿ duration: 47.76906967163086 ms
                     - value: 47.76906967163086
                     - unit: "ms"
+                  - name: "test_parseWithExplicitRefId()"
                   - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
@@ -194,6 +197,7 @@
                   ▿ duration: 42.025089263916016 ms
                     - value: 42.025089263916016
                     - unit: "ms"
+                  - name: "test_parseWithImplicitRefId()"
                   - path: 0 elements
                   - status: Status.success
           - warnings: 0 elements
@@ -230,6 +234,7 @@
                   ▿ duration: 428.8959503173828 ms
                     - value: 428.8959503173828
                     - unit: "ms"
+                  - name: "test_coverageDtoData()"
                   - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
@@ -239,6 +244,7 @@
                   ▿ duration: 313.24899196624756 ms
                     - value: 313.24899196624756
                     - unit: "ms"
+                  - name: "test_coverageDtoParse()"
                   - path: 0 elements
                   - status: Status.success
           - warnings: 0 elements
@@ -293,6 +299,7 @@
                   ▿ duration: 707.8319787979126 ms
                     - value: 707.8319787979126
                     - unit: "ms"
+                  - name: "test()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -310,6 +317,7 @@
                   ▿ duration: 693.6450004577637 ms
                     - value: 693.6450004577637
                     - unit: "ms"
+                  - name: "test()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -327,6 +335,7 @@
                   ▿ duration: 686.1109733581543 ms
                     - value: 686.1109733581543
                     - unit: "ms"
+                  - name: "test()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -347,6 +356,7 @@
                   ▿ duration: 362.97500133514404 ms
                     - value: 362.97500133514404
                     - unit: "ms"
+                  - name: "test_expectedFailure()"
                   - path: 0 elements
                   - status: Status.expectedFailure
             ▿ RepeatableTest
@@ -356,6 +366,7 @@
                   ▿ duration: 0.7870197296142578 ms
                     - value: 0.7870197296142578
                     - unit: "ms"
+                  - name: "test_failure()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -373,6 +384,7 @@
                   ▿ duration: 0.720977783203125 ms
                     - value: 0.720977783203125
                     - unit: "ms"
+                  - name: "test_failure()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -390,6 +402,7 @@
                   ▿ duration: 6.257057189941406 ms
                     - value: 6.257057189941406
                     - unit: "ms"
+                  - name: "test_failure()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -410,6 +423,7 @@
                   ▿ duration: 0.7339715957641602 ms
                     - value: 0.7339715957641602
                     - unit: "ms"
+                  - name: "test_flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -427,6 +441,7 @@
                   ▿ duration: 0.3390312194824219 ms
                     - value: 0.3390312194824219
                     - unit: "ms"
+                  - name: "test_flacky()"
                   ▿ path: 1 element
                     ▿ PathNode
                       ▿ duration: Optional<Measurement<NSUnitDuration>>
@@ -446,6 +461,7 @@
                   ▿ duration: 0.9189844131469727 ms
                     - value: 0.9189844131469727
                     - unit: "ms"
+                  - name: "test_skip()"
                   - path: 0 elements
                   - status: Status.skipped
             ▿ RepeatableTest
@@ -455,6 +471,7 @@
                   ▿ duration: 10.7879638671875 ms
                     - value: 10.7879638671875
                     - unit: "ms"
+                  - name: "test_success()"
                   - path: 0 elements
                   - status: Status.success
           - warnings: 0 elements
@@ -562,6 +579,7 @@
                   ▿ duration: 1.8880367279052734 ms
                     - value: 1.8880367279052734
                     - unit: "ms"
+                  - name: "test_testResult_any_count()"
                   - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
@@ -571,6 +589,7 @@
                   ▿ duration: 0.6040334701538086 ms
                     - value: 0.6040334701538086
                     - unit: "ms"
+                  - name: "test_testResult_any_list()"
                   - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
@@ -580,6 +599,7 @@
                   ▿ duration: 0.6279945373535156 ms
                     - value: 0.6279945373535156
                     - unit: "ms"
+                  - name: "test_testResult_failure_count()"
                   - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
@@ -589,6 +609,7 @@
                   ▿ duration: 0.3300905227661133 ms
                     - value: 0.3300905227661133
                     - unit: "ms"
+                  - name: "test_testResult_success_list()"
                   - path: 0 elements
                   - status: Status.success
           - warnings: 0 elements
