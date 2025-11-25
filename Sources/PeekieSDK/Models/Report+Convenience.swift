@@ -213,6 +213,11 @@ extension Report {
                                 tests: []
                             )
 
+                        // Filter out metadata nodes from test case children
+                        let filteredTestCaseChildren = (testCase.children ?? []).filter {
+                            !$0.isMetadata
+                        }
+
                         // Process test case children and create Test objects with paths
                         func processNode(
                             _ node: TestResultsDTO.TestNode,
@@ -259,9 +264,12 @@ extension Report {
                                 return
                             }
 
+                            // Filter out metadata nodes from node children
+                            let filteredNodeChildren = nodeChildren.filter { !$0.isMetadata }
+
                             // If this is an arguments node, check if it has repetitions
                             if node.nodeType == .arguments {
-                                let hasRepetitions = nodeChildren.contains {
+                                let hasRepetitions = filteredNodeChildren.contains {
                                     $0.nodeType == .repetition
                                 }
                                 if !hasRepetitions {
@@ -277,32 +285,22 @@ extension Report {
                                 // Arguments with repetitions - continue recursion to process repetitions
                             }
 
-                            // Recursively process children
-                            for child in nodeChildren {
-                                // Skip metadata nodes
-                                if child.nodeType == .failureMessage
-                                    || child.nodeType == .runtimeWarning
-                                {
-                                    continue
-                                }
+                            // Recursively process children (already filtered)
+                            for child in filteredNodeChildren {
                                 try processNode(child, path: newPath, testCase: testCase)
                             }
                         }
 
-                        // Start processing from test case children
-                        if let testCaseChildren = testCase.children {
-                            for child in testCaseChildren {
-                                // Skip metadata nodes
-                                if child.nodeType == .failureMessage
-                                    || child.nodeType == .runtimeWarning
-                                {
-                                    continue
-                                }
-                                try processNode(child, path: [], testCase: testCase)
-                            }
+                        // Start processing from filtered test case children
+                        for child in filteredTestCaseChildren {
+                            try processNode(child, path: [], testCase: testCase)
                         }
 
                         // If no tests were created (no children or only metadata), create test from test case itself
+                        assert(
+                            !repeatableTest.tests.isEmpty || filteredTestCaseChildren.isEmpty,
+                            "Tests are empty but test case has non-empty filtered children. This indicates a parsing issue."
+                        )
                         if repeatableTest.tests.isEmpty {
                             let test = Report.Module.File.RepeatableTest.Test(from: testCase)
                             repeatableTest.tests.append(test)

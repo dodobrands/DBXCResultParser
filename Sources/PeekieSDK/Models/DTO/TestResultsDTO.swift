@@ -71,9 +71,7 @@ extension TestResultsDTO {
             // Recursively process children
             for child in nodeChildren {
                 // Skip metadata nodes
-                if child.nodeType == .failureMessage || child.nodeType == .runtimeWarning {
-                    continue
-                }
+                guard !child.isMetadata else { continue }
                 processNode(child, path: newPath)
             }
         }
@@ -81,9 +79,7 @@ extension TestResultsDTO {
         // Process all children
         for child in children {
             // Skip metadata nodes
-            if child.nodeType == .failureMessage || child.nodeType == .runtimeWarning {
-                continue
-            }
+            guard !child.isMetadata else { continue }
             processNode(child, path: [])
         }
 
@@ -190,5 +186,10 @@ extension TestResultsDTO.TestNode {
             return String(message[range.upperBound...]).trimmingCharacters(in: .whitespaces)
         }
         return message
+    }
+
+    /// Returns true if this node is a metadata node (failureMessage, runtimeWarning)
+    var isMetadata: Bool {
+        nodeType == .failureMessage || nodeType == .runtimeWarning
     }
 }
