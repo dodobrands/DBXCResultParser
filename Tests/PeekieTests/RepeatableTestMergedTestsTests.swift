@@ -64,7 +64,7 @@ struct RepeatableTestMergedTestsTests {
             tests: [test1, test2, test3],
         )
 
-        let merged = repeatableTest.mergedTests
+        let merged = repeatableTest.mergedTests(filterDevice: true)
 
         #expect(
             merged == [
@@ -130,7 +130,7 @@ struct RepeatableTestMergedTestsTests {
             tests: [test1, test2]
         )
 
-        let merged = repeatableTest.mergedTests
+        let merged = repeatableTest.mergedTests(filterDevice: true)
 
         #expect(
             merged == [
@@ -207,7 +207,7 @@ struct RepeatableTestMergedTestsTests {
             tests: [test1, test2],
         )
 
-        let merged = repeatableTest.mergedTests
+        let merged = repeatableTest.mergedTests(filterDevice: true)
 
         #expect(
             merged == [
@@ -280,7 +280,7 @@ struct RepeatableTestMergedTestsTests {
             tests: [test1, test2],
         )
 
-        let merged = repeatableTest.mergedTests
+        let merged = repeatableTest.mergedTests(filterDevice: true)
 
         #expect(
             merged == [
@@ -341,7 +341,7 @@ struct RepeatableTestMergedTestsTests {
             tests: [test1, test2],
         )
 
-        let merged = repeatableTest.mergedTests
+        let merged = repeatableTest.mergedTests(filterDevice: true)
 
         #expect(
             merged == [
@@ -389,24 +389,33 @@ struct RepeatableTestMergedTestsTests {
             tests: [test1, test2],
         )
 
-        let merged = repeatableTest.mergedTests
+        let merged = repeatableTest.mergedTests(filterDevice: false)
 
         #expect(
             merged == [
                 Report.Module.File.RepeatableTest.Test(
-                    name: "testExample()",
+                    name: "testExample() [iPhone 13]",
                     status: .success,
                     duration: Measurement(value: 200, unit: .milliseconds),
-                    path: []),
+                    path: [
+                        Report.Module.File.RepeatableTest.PathNode(
+                            name: "iPhone 13", type: .device, result: .success,
+                            duration: Measurement(value: 200, unit: .milliseconds),
+                        )
+                    ]),
                 Report.Module.File.RepeatableTest.Test(
-                    name: "testExample() [false]",
+                    name: "testExample() [iPhone 13 false]",
                     status: .success,
                     duration: Measurement(value: 100, unit: .milliseconds),
                     path: [
                         Report.Module.File.RepeatableTest.PathNode(
+                            name: "iPhone 13", type: .device, result: .success,
+                            duration: Measurement(value: 200, unit: .milliseconds),
+                        ),
+                        Report.Module.File.RepeatableTest.PathNode(
                             name: "false", type: .arguments, result: .success,
                             duration: Measurement(value: 100, unit: .milliseconds),
-                        )
+                        ),
                     ]),
             ])
     }
@@ -440,7 +449,7 @@ struct RepeatableTestMergedTestsTests {
             tests: [test],
         )
 
-        let merged = repeatableTest.mergedTests
+        let merged = repeatableTest.mergedTests(filterDevice: true)
 
         #expect(
             merged == [
@@ -460,7 +469,7 @@ struct RepeatableTestMergedTestsTests {
             tests: [],
         )
 
-        let merged = repeatableTest.mergedTests
+        let merged = repeatableTest.mergedTests(filterDevice: false)
 
         #expect(merged.isEmpty)
     }

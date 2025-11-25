@@ -195,18 +195,26 @@ extension Report.Module.File.RepeatableTest {
 
     /// Returns merged tests by merging repetitions (removing repetition nodes from paths)
     /// Status is mixed if repetitions had different statuses, otherwise uses parent node status
-    public var mergedTests: [Test] {
+    /// - Parameter filterDevice: If true, device nodes are filtered from the path. Defaults to false.
+    /// - Returns: Array of merged tests
+    public func mergedTests(filterDevice: Bool = false) -> [Test] {
         guard !tests.isEmpty else { return [] }
 
-        // Group tests by path without repetition and device elements
+        // Group tests by path without repetition (and optionally device) elements
         var pathToTests: [String: [Test]] = [:]
 
         for test in tests {
-            // Remove repetition and device nodes for grouping
-            let pathWithoutRepetitionAndDevice = test.path.filter {
-                $0.type != .repetition && $0.type != .device
+            // Remove repetition nodes (always) and device nodes (if filterDevice is true) for grouping
+            let pathForGrouping = test.path.filter {
+                if $0.type == .repetition {
+                    return false
+                }
+                if filterDevice && $0.type == .device {
+                    return false
+                }
+                return true
             }
-            let pathKey = self.pathKey(from: pathWithoutRepetitionAndDevice)
+            let pathKey = self.pathKey(from: pathForGrouping)
 
             if pathToTests[pathKey] == nil {
                 pathToTests[pathKey] = []
@@ -220,14 +228,20 @@ extension Report.Module.File.RepeatableTest {
         let sortedKeys = pathToTests.keys.sorted()
         for key in sortedKeys {
             guard let groupTests = pathToTests[key] else { continue }
-            // Remove repetition and device nodes from path
+            // Remove repetition nodes (always) and device nodes (if filterDevice is true) from path
             let firstTest = groupTests[0]
-            let pathWithoutRepetitionAndDevice = firstTest.path.filter {
-                $0.type != .repetition && $0.type != .device
+            let pathForResult = firstTest.path.filter {
+                if $0.type == .repetition {
+                    return false
+                }
+                if filterDevice && $0.type == .device {
+                    return false
+                }
+                return true
             }
 
             // Build name: RepeatableTest name + names of all path elements in brackets
-            let pathElementNames = pathWithoutRepetitionAndDevice.map { $0.name }
+            let pathElementNames = pathForResult.map { $0.name }
             let mergedName: String
             if pathElementNames.isEmpty {
                 mergedName = self.name
@@ -239,7 +253,7 @@ extension Report.Module.File.RepeatableTest {
             let statuses = groupTests.map { $0.status }
             let statusesDiffer = !statuses.elementsAreEqual
 
-            let parentNode = pathWithoutRepetitionAndDevice.last
+            let parentNode = pathForResult.last
             let status: Test.Status
             if statusesDiffer {
                 status = .mixed
@@ -256,7 +270,7 @@ extension Report.Module.File.RepeatableTest {
                     name: mergedName,
                     status: status,
                     duration: duration,
-                    path: []
+                    path: pathForResult
                 ))
         }
 
