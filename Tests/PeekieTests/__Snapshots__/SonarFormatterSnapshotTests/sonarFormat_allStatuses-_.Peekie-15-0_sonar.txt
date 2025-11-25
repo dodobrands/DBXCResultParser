@@ -18,23 +18,8 @@
             <testCase name="test()" duration="707">
                 <failure message="Test message missing" />
             </testCase>
-            <testCase name="test()" duration="693">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="test()" duration="686">
-                <failure message="Test message missing" />
-            </testCase>
             <testCase name="test_expectedFailure()" duration="362" />
             <testCase name="test_failure()" duration="0">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="test_failure()" duration="0">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="test_failure()" duration="6">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="test_flacky()" duration="0">
                 <failure message="Test message missing" />
             </testCase>
             <testCase name="test_flacky()" duration="0" />

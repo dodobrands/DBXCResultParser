@@ -162,20 +162,9 @@ private struct TestExecutions: Encodable, DynamicNodeEncoding {
 }
 
 extension TestExecutions.File.TestCase {
-    init(_ test: Report.Module.File.RepeatableTest) {
+    init(_ test: Report.Module.File.RepeatableTest.Test) {
         self.init(
             name: test.name,
-            duration: Int(test.totalDuration.converted(to: .milliseconds).value),
-            skipped: test.combinedStatus == .skipped
-                ? .init(message: "Test message missing") : nil,
-            failure: test.combinedStatus == .failure
-                ? .init(message: "Test message missing") : nil
-        )
-    }
-
-    init(_ test: Report.Module.File.RepeatableTest.Test, repeatableTestName: String) {
-        self.init(
-            name: repeatableTestName,
             duration: Int(test.duration.converted(to: .milliseconds).value),
             skipped: test.status == .skipped
                 ? .init(message: "Test message missing") : nil,
@@ -192,23 +181,12 @@ extension TestExecutions.File {
         var testCases: [TestExecutions.File.TestCase] = []
 
         for repeatableTest in file.repeatableTests.sorted(by: { $0.name < $1.name }) {
-            // Check if tests have different paths, which indicates they're parameterized
-            let hasDifferentPaths =
-                repeatableTest.tests.count > 1
-                && Set(repeatableTest.tests.map { $0.path }).count
-                    == repeatableTest.tests.count
+            // Use merged tests which already handle repetitions and optionally devices
+            let mergedTests = repeatableTest.mergedTests(filterDevice: false)
 
-            if hasDifferentPaths {
-                // Output each test separately (parameterized case)
-                for test in repeatableTest.tests {
-                    testCases.append(
-                        TestExecutions.File.TestCase.init(
-                            test, repeatableTestName: repeatableTest.name)
-                    )
-                }
-            } else {
-                // Single test or multiple tests with same message (repetitions/mixed), use original format
-                testCases.append(TestExecutions.File.TestCase.init(repeatableTest))
+            // Output each merged test separately
+            for test in mergedTests {
+                testCases.append(TestExecutions.File.TestCase.init(test))
             }
         }
 

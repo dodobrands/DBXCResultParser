@@ -2,60 +2,22 @@
     <testExecutions version="1">
         <file path="{TEMP_DIR}/sonarFormat_allStatuses(_:)/ExampleSUITests.swift">
             <testCase name="async()" duration="0" />
-            <testCase name="async()" duration="0" />
-            <testCase name="async()" duration="0" />
-            <testCase name="disabled()" duration="0">
-                <skipped message="Test message missing" />
-            </testCase>
-            <testCase name="disabled()" duration="0">
-                <skipped message="Test message missing" />
-            </testCase>
             <testCase name="disabled()" duration="0">
                 <skipped message="Test message missing" />
             </testCase>
             <testCase name="expectedFailure()" duration="0" />
-            <testCase name="expectedFailure()" duration="0" />
-            <testCase name="expectedFailure()" duration="0" />
             <testCase name="failure()" duration="0">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="failure()" duration="0">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="failure()" duration="0">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="flacky()" duration="0">
                 <failure message="Test message missing" />
             </testCase>
             <testCase name="flacky()" duration="0" />
-            <testCase name="flacky()" duration="0" />
-            <testCase name="flackyParameterized(value:)" duration="0">
+            <testCase name="flackyParameterized(value:) [false]" duration="0">
                 <failure message="Test message missing" />
             </testCase>
-            <testCase name="flackyParameterized(value:)" duration="0">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="flackyParameterized(value:)" duration="0">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="flackyParameterized(value:)" duration="0" />
-            <testCase name="flackyParameterized(value:)" duration="0" />
-            <testCase name="flackyParameterized(value:)" duration="0" />
-            <testCase name="success()" duration="0" />
-            <testCase name="success()" duration="0" />
+            <testCase name="flackyParameterized(value:) [true]" duration="0" />
             <testCase name="success()" duration="0" />
             <testCase name="throwing()" duration="0">
                 <failure message="Test message missing" />
             </testCase>
-            <testCase name="throwing()" duration="0">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="throwing()" duration="0">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="withAttachment()" duration="0" />
-            <testCase name="withAttachment()" duration="0" />
             <testCase name="withAttachment()" duration="0" />
         </file>
         <file path="{TEMP_DIR}/sonarFormat_allStatuses(_:)/XCTestTests.swift">
@@ -65,15 +27,6 @@
             <testCase name="test_failure()" duration="0">
                 <failure message="Test message missing" />
             </testCase>
-            <testCase name="test_failure()" duration="0">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="test_failure()" duration="0">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="test_flacky()" duration="0">
-                <failure message="Test message missing" />
-            </testCase>
             <testCase name="test_flacky()" duration="0" />
             <testCase name="test_performance()" duration="272" />
             <testCase name="test_skip()" duration="3">
@@ -81,12 +34,6 @@
             </testCase>
             <testCase name="test_success()" duration="0" />
             <testCase name="test_throwing()" duration="8">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="test_throwing()" duration="6">
-                <failure message="Test message missing" />
-            </testCase>
-            <testCase name="test_throwing()" duration="5">
                 <failure message="Test message missing" />
             </testCase>
             <testCase name="test_withAttachment()" duration="1" />
