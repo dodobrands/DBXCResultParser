@@ -1,6 +1,9 @@
 import Foundation
+import Logging
 
 public class ListFormatter {
+    private let logger = Logger(label: "com.peekie.formatter")
+
     public init() {}
 
     /// Formats a given report based on specified criteria.
@@ -22,6 +25,15 @@ public class ListFormatter {
             .File.RepeatableTest.Test.Status.allCases,
         includeDeviceDetails: Bool = false
     ) -> String {
+        logger.debug(
+            "Formatting report",
+            metadata: [
+                "modulesCount": "\(report.modules.count)",
+                "includeStatuses": "\(include.map { $0.rawValue }.joined(separator: ","))",
+                "includeDeviceDetails": "\(includeDeviceDetails)",
+            ]
+        )
+
         let files = report.modules
             .flatMap { Array($0.files) }
             .sorted { $0.name < $1.name }
@@ -29,6 +41,15 @@ public class ListFormatter {
         let filesReports = files.compactMap { file in
             file.report(testResults: include, includeDeviceDetails: includeDeviceDetails)
         }
+
+        logger.debug(
+            "Formatting completed",
+            metadata: [
+                "filesCount": "\(files.count)",
+                "filesWithResults": "\(filesReports.count)",
+            ]
+        )
+
         return filesReports.joined(separator: "\n\n")
     }
 }

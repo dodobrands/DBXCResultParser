@@ -57,6 +57,10 @@ let package = Package(
             url: "https://github.com/CoreOffice/XMLCoder.git",
             .upToNextMajor(from: "0.17.1")
         ),
+        .package(
+            url: "https://github.com/apple/swift-log.git",
+            .upToNextMajor(from: "1.6.0")
+        ),
     ],
     targets: [
         .target(
@@ -74,6 +78,10 @@ let package = Package(
                     name: "XMLCoder",
                     package: "XMLCoder"
                 ),
+                .product(
+                    name: "Logging",
+                    package: "swift-log"
+                ),
             ],
             path: "Sources/PeekieSDK",
             swiftSettings: [
@@ -88,6 +96,10 @@ let package = Package(
                 .product(
                     name: "ArgumentParser",
                     package: "swift-argument-parser"
+                ),
+                .product(
+                    name: "Logging",
+                    package: "swift-log"
                 ),
             ],
             swiftSettings: [

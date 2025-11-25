@@ -1,5 +1,18 @@
 import ArgumentParser
 import Foundation
+import Logging
+
+enum LoggingSetup {
+    static func setup(verbose: Bool) {
+        let logLevel: Logger.Level = verbose ? .debug : .info
+
+        LoggingSystem.bootstrap { label in
+            var handler = StreamLogHandler.standardOutput(label: label)
+            handler.logLevel = logLevel
+            return handler
+        }
+    }
+}
 
 @main
 public struct Peekie: AsyncParsableCommand {

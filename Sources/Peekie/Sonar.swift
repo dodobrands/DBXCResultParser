@@ -16,7 +16,11 @@ public struct Sonar: AsyncParsableCommand {
     @Option(help: "Path to folder with tests")
     public var testsPath: String
 
+    @Flag(name: .shortAndLong, help: "Enable verbose logging (debug level)")
+    public var verbose: Bool = false
+
     public func run() async throws {
+        LoggingSetup.setup(verbose: verbose)
         let xcresultPath = URL(fileURLWithPath: xcresultPath)
         let testsPath = URL(fileURLWithPath: testsPath)
 

@@ -27,7 +27,11 @@ public struct List: AsyncParsableCommand {
     @Option(help: "Include device information in test names")
     public var includeDeviceDetails: Bool = false
 
+    @Flag(name: .shortAndLong, help: "Enable verbose logging (debug level)")
+    public var verbose: Bool = false
+
     public func run() async throws {
+        LoggingSetup.setup(verbose: verbose)
         let xcresultPath = URL(fileURLWithPath: xcresultPath)
 
         let report = try await Report(
