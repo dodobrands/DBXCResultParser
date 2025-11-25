@@ -113,7 +113,7 @@
                   ▿ duration: 20.159006118774414 ms
                     - value: 20.159006118774414
                     - unit: "ms"
-                  - message: Optional<String>.none
+                  - path: 0 elements
                   - status: Status.success
           - warnings: 0 elements
         ▿ File
@@ -158,7 +158,7 @@
                   ▿ duration: 5.232095718383789 ms
                     - value: 5.232095718383789
                     - unit: "ms"
-                  - message: Optional<String>.none
+                  - path: 0 elements
                   - status: Status.success
           - warnings: 0 elements
         ▿ File
@@ -185,7 +185,7 @@
                   ▿ duration: 47.76906967163086 ms
                     - value: 47.76906967163086
                     - unit: "ms"
-                  - message: Optional<String>.none
+                  - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_parseWithImplicitRefId()"
@@ -194,7 +194,7 @@
                   ▿ duration: 42.025089263916016 ms
                     - value: 42.025089263916016
                     - unit: "ms"
-                  - message: Optional<String>.none
+                  - path: 0 elements
                   - status: Status.success
           - warnings: 0 elements
         ▿ File
@@ -230,7 +230,7 @@
                   ▿ duration: 428.8959503173828 ms
                     - value: 428.8959503173828
                     - unit: "ms"
-                  - message: Optional<String>.none
+                  - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_coverageDtoParse()"
@@ -239,7 +239,7 @@
                   ▿ duration: 313.24899196624756 ms
                     - value: 313.24899196624756
                     - unit: "ms"
-                  - message: Optional<String>.none
+                  - path: 0 elements
                   - status: Status.success
           - warnings: 0 elements
         ▿ File
@@ -293,22 +293,52 @@
                   ▿ duration: 707.8319787979126 ms
                     - value: 707.8319787979126
                     - unit: "ms"
-                  ▿ message: Optional<String>
-                    - some: "DBXCReportModelTests.swift:40: XCTAssertEqual failed: (\"1\") is not equal to (\"2\")"
+                  ▿ path: 1 element
+                    ▿ PathNode
+                      ▿ duration: Optional<Measurement<NSUnitDuration>>
+                        ▿ some: 707.8319787979126 ms
+                          - value: 707.8319787979126
+                          - unit: "ms"
+                      ▿ message: Optional<String>
+                        - some: "DBXCReportModelTests.swift:40: XCTAssertEqual failed: (\"1\") is not equal to (\"2\")"
+                      - name: "First Run"
+                      ▿ result: Optional<Status>
+                        - some: Status.failure
+                      - type: NodeType.repetition
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 693.6450004577637 ms
                     - value: 693.6450004577637
                     - unit: "ms"
-                  ▿ message: Optional<String>
-                    - some: "DBXCReportModelTests.swift:40: XCTAssertEqual failed: (\"1\") is not equal to (\"2\")"
+                  ▿ path: 1 element
+                    ▿ PathNode
+                      ▿ duration: Optional<Measurement<NSUnitDuration>>
+                        ▿ some: 693.6450004577637 ms
+                          - value: 693.6450004577637
+                          - unit: "ms"
+                      ▿ message: Optional<String>
+                        - some: "DBXCReportModelTests.swift:40: XCTAssertEqual failed: (\"1\") is not equal to (\"2\")"
+                      - name: "Retry 1"
+                      ▿ result: Optional<Status>
+                        - some: Status.failure
+                      - type: NodeType.repetition
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 686.1109733581543 ms
                     - value: 686.1109733581543
                     - unit: "ms"
-                  ▿ message: Optional<String>
-                    - some: "DBXCReportModelTests.swift:40: XCTAssertEqual failed: (\"1\") is not equal to (\"2\")"
+                  ▿ path: 1 element
+                    ▿ PathNode
+                      ▿ duration: Optional<Measurement<NSUnitDuration>>
+                        ▿ some: 686.1109733581543 ms
+                          - value: 686.1109733581543
+                          - unit: "ms"
+                      ▿ message: Optional<String>
+                        - some: "DBXCReportModelTests.swift:40: XCTAssertEqual failed: (\"1\") is not equal to (\"2\")"
+                      - name: "Retry 2"
+                      ▿ result: Optional<Status>
+                        - some: Status.failure
+                      - type: NodeType.repetition
                   - status: Status.failure
             ▿ RepeatableTest
               - name: "test_expectedFailure()"
@@ -317,8 +347,7 @@
                   ▿ duration: 362.97500133514404 ms
                     - value: 362.97500133514404
                     - unit: "ms"
-                  ▿ message: Optional<String>
-                    - some: "Failure is expected"
+                  - path: 0 elements
                   - status: Status.expectedFailure
             ▿ RepeatableTest
               - name: "test_failure()"
@@ -327,22 +356,52 @@
                   ▿ duration: 0.7870197296142578 ms
                     - value: 0.7870197296142578
                     - unit: "ms"
-                  ▿ message: Optional<String>
-                    - some: "Failure message"
+                  ▿ path: 1 element
+                    ▿ PathNode
+                      ▿ duration: Optional<Measurement<NSUnitDuration>>
+                        ▿ some: 0.7870197296142578 ms
+                          - value: 0.7870197296142578
+                          - unit: "ms"
+                      ▿ message: Optional<String>
+                        - some: "Failure message"
+                      - name: "First Run"
+                      ▿ result: Optional<Status>
+                        - some: Status.failure
+                      - type: NodeType.repetition
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.720977783203125 ms
                     - value: 0.720977783203125
                     - unit: "ms"
-                  ▿ message: Optional<String>
-                    - some: "Failure message"
+                  ▿ path: 1 element
+                    ▿ PathNode
+                      ▿ duration: Optional<Measurement<NSUnitDuration>>
+                        ▿ some: 0.720977783203125 ms
+                          - value: 0.720977783203125
+                          - unit: "ms"
+                      ▿ message: Optional<String>
+                        - some: "Failure message"
+                      - name: "Retry 1"
+                      ▿ result: Optional<Status>
+                        - some: Status.failure
+                      - type: NodeType.repetition
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 6.257057189941406 ms
                     - value: 6.257057189941406
                     - unit: "ms"
-                  ▿ message: Optional<String>
-                    - some: "Failure message"
+                  ▿ path: 1 element
+                    ▿ PathNode
+                      ▿ duration: Optional<Measurement<NSUnitDuration>>
+                        ▿ some: 6.257057189941406 ms
+                          - value: 6.257057189941406
+                          - unit: "ms"
+                      ▿ message: Optional<String>
+                        - some: "Failure message"
+                      - name: "Retry 2"
+                      ▿ result: Optional<Status>
+                        - some: Status.failure
+                      - type: NodeType.repetition
                   - status: Status.failure
             ▿ RepeatableTest
               - name: "test_flacky()"
@@ -351,14 +410,34 @@
                   ▿ duration: 0.7339715957641602 ms
                     - value: 0.7339715957641602
                     - unit: "ms"
-                  ▿ message: Optional<String>
-                    - some: "Flacky failure message"
+                  ▿ path: 1 element
+                    ▿ PathNode
+                      ▿ duration: Optional<Measurement<NSUnitDuration>>
+                        ▿ some: 0.7339715957641602 ms
+                          - value: 0.7339715957641602
+                          - unit: "ms"
+                      ▿ message: Optional<String>
+                        - some: "Flacky failure message"
+                      - name: "First Run"
+                      ▿ result: Optional<Status>
+                        - some: Status.failure
+                      - type: NodeType.repetition
                   - status: Status.failure
                 ▿ Test
                   ▿ duration: 0.3390312194824219 ms
                     - value: 0.3390312194824219
                     - unit: "ms"
-                  - message: Optional<String>.none
+                  ▿ path: 1 element
+                    ▿ PathNode
+                      ▿ duration: Optional<Measurement<NSUnitDuration>>
+                        ▿ some: 0.3390312194824219 ms
+                          - value: 0.3390312194824219
+                          - unit: "ms"
+                      - message: Optional<String>.none
+                      - name: "Retry 1"
+                      ▿ result: Optional<Status>
+                        - some: Status.success
+                      - type: NodeType.repetition
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_skip()"
@@ -367,8 +446,7 @@
                   ▿ duration: 0.9189844131469727 ms
                     - value: 0.9189844131469727
                     - unit: "ms"
-                  ▿ message: Optional<String>
-                    - some: "Skip message"
+                  - path: 0 elements
                   - status: Status.skipped
             ▿ RepeatableTest
               - name: "test_success()"
@@ -377,7 +455,7 @@
                   ▿ duration: 10.7879638671875 ms
                     - value: 10.7879638671875
                     - unit: "ms"
-                  - message: Optional<String>.none
+                  - path: 0 elements
                   - status: Status.success
           - warnings: 0 elements
         ▿ File
@@ -484,7 +562,7 @@
                   ▿ duration: 1.8880367279052734 ms
                     - value: 1.8880367279052734
                     - unit: "ms"
-                  - message: Optional<String>.none
+                  - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_testResult_any_list()"
@@ -493,7 +571,7 @@
                   ▿ duration: 0.6040334701538086 ms
                     - value: 0.6040334701538086
                     - unit: "ms"
-                  - message: Optional<String>.none
+                  - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_testResult_failure_count()"
@@ -502,7 +580,7 @@
                   ▿ duration: 0.6279945373535156 ms
                     - value: 0.6279945373535156
                     - unit: "ms"
-                  - message: Optional<String>.none
+                  - path: 0 elements
                   - status: Status.success
             ▿ RepeatableTest
               - name: "test_testResult_success_list()"
@@ -511,7 +589,7 @@
                   ▿ duration: 0.3300905227661133 ms
                     - value: 0.3300905227661133
                     - unit: "ms"
-                  - message: Optional<String>.none
+                  - path: 0 elements
                   - status: Status.success
           - warnings: 0 elements
         ▿ File

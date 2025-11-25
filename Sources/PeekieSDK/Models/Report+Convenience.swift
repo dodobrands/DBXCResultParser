@@ -228,9 +228,42 @@ extension Report {
                             let pathNode: Report.Module.File.RepeatableTest.PathNode?
                             switch node.nodeType {
                             case .device, .arguments, .repetition:
+                                // Convert result from DTO to Test.Status
+                                let result: Report.Module.File.RepeatableTest.Test.Status? = {
+                                    guard let dtoResult = node.result else { return nil }
+                                    switch dtoResult {
+                                    case .passed:
+                                        return .success
+                                    case .failed:
+                                        return .failure
+                                    case .skipped:
+                                        return .skipped
+                                    case .expectedFailure:
+                                        return .expectedFailure
+                                    }
+                                }()
+
+                                // Convert duration from DTO
+                                let duration: Measurement<UnitDuration>? = {
+                                    guard let durationSeconds = node.durationInSeconds else {
+                                        return nil
+                                    }
+                                    return .init(
+                                        value: durationSeconds * 1000,
+                                        unit: Report.Module.File.RepeatableTest.Test
+                                            .defaultDurationUnit
+                                    )
+                                }()
+
+                                // Extract message from DTO
+                                let message = node.failureMessage ?? node.skipMessage
+
                                 pathNode = Report.Module.File.RepeatableTest.PathNode(
                                     name: node.name,
-                                    type: .init(from: node.nodeType)
+                                    type: .init(from: node.nodeType),
+                                    result: result,
+                                    duration: duration,
+                                    message: message
                                 )
                             default:
                                 pathNode = nil

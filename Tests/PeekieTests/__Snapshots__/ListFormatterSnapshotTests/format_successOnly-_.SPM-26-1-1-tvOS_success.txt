@@ -1,6 +1,12 @@
 ExampleSUITests
 ✅ async()
+✅ async()
+✅ async()
 ✅ success()
+✅ success()
+✅ success()
+✅ withAttachment()
+✅ withAttachment()
 ✅ withAttachment()
 
 XCTestTests

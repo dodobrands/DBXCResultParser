@@ -86,7 +86,7 @@ extension Report.Module.File.RepeatableTest {
     ) -> Self {
         let tests = Array(
             repeating: Report.Module.File.RepeatableTest.Test.testMake(
-                status: .failure, message: message),
+                status: .failure),
             count: times
         )
         return .testMake(name: name, tests: tests)
@@ -102,14 +102,14 @@ extension Report.Module.File.RepeatableTest {
         named name: String,
         message: String? = nil
     ) -> Self {
-        .testMake(name: name, tests: [.testMake(status: .skipped, message: message)])
+        .testMake(name: name, tests: [.testMake(status: .skipped)])
     }
 
     public static func expectedFailed(
         named name: String,
         message: String? = nil
     ) -> Self {
-        .testMake(name: name, tests: [.testMake(status: .expectedFailure, message: message)])
+        .testMake(name: name, tests: [.testMake(status: .expectedFailure)])
     }
 
     public static func mixedFailedSucceeded(
@@ -128,13 +128,11 @@ extension Report.Module.File.RepeatableTest.Test {
     public static func testMake(
         status: Status = .success,
         duration: Measurement<UnitDuration> = .testMake(),
-        message: String? = nil,
         path: [Report.Module.File.RepeatableTest.PathNode] = []
     ) -> Self {
         .init(
             status: status,
             duration: duration,
-            message: message,
             path: path
         )
     }

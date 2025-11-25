@@ -45,13 +45,13 @@ extension Report.Module.File {
         for repeatableTest in tests.sorted(by: { $0.name < $1.name }) {
             // If there are multiple tests with different messages (likely from arguments),
             // output each separately with its own status
-            // Check if tests have different messages, which indicates they're from arguments
-            let hasDifferentMessages =
+            // Check if tests have different paths, which indicates they're from arguments
+            let hasDifferentPaths =
                 repeatableTest.tests.count > 1
-                && Set(repeatableTest.tests.compactMap { $0.message }).count
+                && Set(repeatableTest.tests.map { $0.path }).count
                     == repeatableTest.tests.count
 
-            if hasDifferentMessages {
+            if hasDifferentPaths {
                 // Output each test separately (arguments case)
                 for test in repeatableTest.tests {
                     rows.append(
@@ -74,7 +74,6 @@ extension Report.Module.File.RepeatableTest {
         [
             combinedStatus.icon,
             name,
-            message?.wrappedInBrackets,
         ]
         .compactMap { $0 }
         .joined(separator: " ")
@@ -86,7 +85,6 @@ extension Report.Module.File.RepeatableTest.Test {
         [
             status.icon,
             repeatableTestName,
-            message?.wrappedInBrackets,
         ]
         .compactMap { $0 }
         .joined(separator: " ")

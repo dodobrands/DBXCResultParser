@@ -108,6 +108,9 @@ extension Report.Module.File.RepeatableTest {
     public struct PathNode: Equatable, Hashable {
         public let name: String
         public let type: NodeType
+        public let result: Test.Status?
+        public let duration: Measurement<UnitDuration>?
+        public let message: String?
 
         public enum NodeType: Equatable, Hashable {
             case device
@@ -128,12 +131,25 @@ extension Report.Module.File.RepeatableTest {
                 }
             }
         }
+
+        init(
+            name: String,
+            type: NodeType,
+            result: Test.Status? = nil,
+            duration: Measurement<UnitDuration>? = nil,
+            message: String? = nil
+        ) {
+            self.name = name
+            self.type = type
+            self.result = result
+            self.duration = duration
+            self.message = message
+        }
     }
 
-    public struct Test {
+    public struct Test: Equatable {
         public let status: Status
         public let duration: Measurement<UnitDuration>
-        public let message: String?
         public let path: [PathNode]
     }
 
@@ -144,10 +160,6 @@ extension Report.Module.File.RepeatableTest {
         } else {
             return .mixed
         }
-    }
-
-    public var message: String? {
-        tests.first?.message
     }
 
     public var averageDuration: Measurement<UnitDuration> {
@@ -166,6 +178,108 @@ extension Report.Module.File.RepeatableTest {
         let value = tests.map { $0.duration.value }.sum()
         let unit = tests.first?.duration.unit ?? Test.defaultDurationUnit
         return .init(value: value, unit: unit)
+    }
+
+    /// Returns merged tests by merging repetitions (removing repetition nodes from paths)
+    /// Status is mixed if repetitions had different statuses, otherwise uses parent node status
+    public var mergedTests: [Test] {
+        guard !tests.isEmpty else { return [] }
+
+        // Group tests by path without last repetition element
+        var pathToTests: [String: [Test]] = [:]
+
+        for test in tests {
+            let pathKey: String
+            if test.path.last?.type == .repetition {
+                // Remove last repetition element for grouping
+                let pathWithoutRepetition = Array(test.path.dropLast())
+                pathKey = self.pathKey(from: pathWithoutRepetition)
+            } else {
+                pathKey = self.pathKey(from: test.path)
+            }
+
+            if pathToTests[pathKey] == nil {
+                pathToTests[pathKey] = []
+            }
+            pathToTests[pathKey]?.append(test)
+        }
+
+        var mergedResults: [Test] = []
+
+        // Sort by path key to ensure consistent order
+        let sortedKeys = pathToTests.keys.sorted()
+        for key in sortedKeys {
+            guard let groupTests = pathToTests[key] else { continue }
+            if groupTests.count == 1 {
+                // Single test - check if it ends with repetition
+                let test = groupTests[0]
+                if test.path.last?.type == .repetition {
+                    // Merge: remove repetition, use parent status
+                    let pathWithoutRepetition = Array(test.path.dropLast())
+                    let parentNode = pathWithoutRepetition.last
+                    let status = parentNode?.result ?? test.status
+                    let duration = parentNode?.duration ?? test.duration
+
+                    mergedResults.append(
+                        Test(
+                            status: status,
+                            duration: duration,
+                            path: pathWithoutRepetition
+                        ))
+                } else {
+                    // No repetition, keep as is
+                    mergedResults.append(test)
+                }
+            } else {
+                // Multiple tests - check if all end with repetition
+                let allEndWithRepetition = groupTests.allSatisfy {
+                    $0.path.last?.type == .repetition
+                }
+                if allEndWithRepetition {
+                    // Merge repetitions
+                    let firstTest = groupTests[0]
+                    let pathWithoutRepetition = Array(firstTest.path.dropLast())
+
+                    // Check if statuses differ
+                    let statuses = groupTests.map { $0.status }
+                    let statusesDiffer = !statuses.elementsAreEqual
+
+                    let parentNode = pathWithoutRepetition.last
+                    let status: Test.Status
+                    if statusesDiffer {
+                        status = .mixed
+                    } else {
+                        status = parentNode?.result ?? statuses.first ?? .unknown
+                    }
+
+                    let duration =
+                        parentNode?.duration ?? groupTests.first?.duration
+                        ?? Measurement(value: 0, unit: Test.defaultDurationUnit)
+
+                    mergedResults.append(
+                        Test(
+                            status: status,
+                            duration: duration,
+                            path: pathWithoutRepetition
+                        ))
+                } else {
+                    // Not all end with repetition, keep all as is
+                    mergedResults.append(contentsOf: groupTests)
+                }
+            }
+        }
+
+        // Sort results by path for consistent ordering
+        return mergedResults.sorted { test1, test2 in
+            let key1 = pathKey(from: test1.path)
+            let key2 = pathKey(from: test2.path)
+            return key1 < key2
+        }
+    }
+
+    /// Creates a key from path for grouping
+    private func pathKey(from path: [PathNode]) -> String {
+        path.map { "\($0.name):\($0.type)" }.joined(separator: "|")
     }
 
     public func isSlow(_ duration: Measurement<UnitDuration>) -> Bool {
@@ -281,9 +395,6 @@ extension Report.Module.File.RepeatableTest.Test {
         let durationSeconds = node.durationInSeconds ?? 0.0
         self.duration = .init(value: durationSeconds * 1000, unit: Self.defaultDurationUnit)
 
-        // Extract message from failure message children
-        self.message = node.failureMessage ?? node.skipMessage
-
         self.path = path
     }
 
@@ -310,7 +421,6 @@ extension Report.Module.File.RepeatableTest.Test {
                 status = .unknown
                 self.status = status
                 self.duration = .init(value: 0, unit: Self.defaultDurationUnit)
-                self.message = nil
                 self.path = path
                 return
             }
@@ -331,20 +441,6 @@ extension Report.Module.File.RepeatableTest.Test {
         let durationSeconds = node.durationInSeconds ?? testCase.durationInSeconds ?? 0.0
         self.duration = .init(value: durationSeconds * 1000, unit: Self.defaultDurationUnit)
 
-        // Extract message based on test status
-        let message: String?
-        switch status {
-        case .skipped:
-            message = testCase.skipMessage ?? node.name.trimmingQuotes
-        case .failure:
-            message = testCase.failureMessage ?? node.name.trimmingQuotes
-        case .expectedFailure:
-            message = testCase.failureMessage ?? node.name.trimmingQuotes
-        default:
-            message = node.name.trimmingQuotes
-        }
-        self.message = message
-
         self.path = path
     }
 
@@ -353,7 +449,6 @@ extension Report.Module.File.RepeatableTest.Test {
         guard let result = testCase.result else {
             self.status = .unknown
             self.duration = .init(value: 0, unit: Self.defaultDurationUnit)
-            self.message = nil
             self.path = []
             return
         }
@@ -371,24 +466,6 @@ extension Report.Module.File.RepeatableTest.Test {
 
         let durationSeconds = testCase.durationInSeconds ?? 0.0
         self.duration = .init(value: durationSeconds * 1000, unit: Self.defaultDurationUnit)
-
-        // Extract message based on test status
-        let message: String?
-        switch status {
-        case .skipped:
-            message = testCase.skipMessage
-        case .failure:
-            message = testCase.failureMessage
-        case .expectedFailure:
-            message = testCase.failureMessage
-        default:
-            // Fallback to first non-metadata child name
-            message =
-                testCase.children?
-                .first(where: { $0.nodeType != .runtimeWarning })?
-                .name
-        }
-        self.message = message
 
         self.path = []
     }

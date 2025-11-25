@@ -1,7 +1,15 @@
 ExampleSUITests
-❌ failure() (Expected 5.0 but got 6.0)
-❌ throwing() (Calculator.swift:26: Caught error: .divisionByZero)
+❌ failure()
+❌ failure()
+❌ failure()
+❌ throwing()
+❌ throwing()
+❌ throwing()
 
 XCTestTests
-❌ test_failure() (Expected 5.0 but got 6.0)
-❌ test_throwing() (Calculator.swift:26: failed: caught error: "divisionByZero")
+❌ test_failure()
+❌ test_failure()
+❌ test_failure()
+❌ test_throwing()
+❌ test_throwing()
+❌ test_throwing()

@@ -13,11 +13,16 @@ DBShellTests
 ✅ test()
 
 DBXCReportModelTests
-❌ test() (DBXCReportModelTests.swift:40: XCTAssertEqual failed: ("1") is not equal to ("2"))
-🤡 test_expectedFailure() (Failure is expected)
-❌ test_failure() (Failure message)
-⚠️ test_flacky() (Flacky failure message)
-⏭️ test_skip() (Skip message)
+❌ test()
+❌ test()
+❌ test()
+🤡 test_expectedFailure()
+❌ test_failure()
+❌ test_failure()
+❌ test_failure()
+❌ test_flacky()
+✅ test_flacky()
+⏭️ test_skip()
 ✅ test_success()
 
 DBXCTextFormatterTests

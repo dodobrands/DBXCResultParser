@@ -1,2 +1,2 @@
 DBXCReportModelTests
-⏭️ test_skip() (Skip message)
+⏭️ test_skip()

@@ -15,16 +15,31 @@
             <testCase name="test()" duration="5" />
         </file>
         <file path="{TEMP_DIR}/sonarFormat_allStatuses(_:)/DBXCReportModelTests.swift">
-            <testCase name="test()" duration="2087">
-                <failure message="DBXCReportModelTests.swift:40: XCTAssertEqual failed: (&quot;1&quot;) is not equal to (&quot;2&quot;)" />
+            <testCase name="test()" duration="707">
+                <failure message="Test message missing" />
+            </testCase>
+            <testCase name="test()" duration="693">
+                <failure message="Test message missing" />
+            </testCase>
+            <testCase name="test()" duration="686">
+                <failure message="Test message missing" />
             </testCase>
             <testCase name="test_expectedFailure()" duration="362" />
-            <testCase name="test_failure()" duration="7">
-                <failure message="Failure message" />
+            <testCase name="test_failure()" duration="0">
+                <failure message="Test message missing" />
             </testCase>
-            <testCase name="test_flacky()" duration="1" />
+            <testCase name="test_failure()" duration="0">
+                <failure message="Test message missing" />
+            </testCase>
+            <testCase name="test_failure()" duration="6">
+                <failure message="Test message missing" />
+            </testCase>
+            <testCase name="test_flacky()" duration="0">
+                <failure message="Test message missing" />
+            </testCase>
+            <testCase name="test_flacky()" duration="0" />
             <testCase name="test_skip()" duration="0">
-                <skipped message="Skip message" />
+                <skipped message="Test message missing" />
             </testCase>
             <testCase name="test_success()" duration="10" />
         </file>

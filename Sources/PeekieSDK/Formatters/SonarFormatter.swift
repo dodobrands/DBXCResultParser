@@ -167,28 +167,20 @@ extension TestExecutions.File.TestCase {
             name: test.name,
             duration: Int(test.totalDuration.converted(to: .milliseconds).value),
             skipped: test.combinedStatus == .skipped
-                ? .init(message: test.message ?? "Test message missing") : nil,
+                ? .init(message: "Test message missing") : nil,
             failure: test.combinedStatus == .failure
-                ? .init(message: test.message ?? "Test message missing") : nil
+                ? .init(message: "Test message missing") : nil
         )
     }
 
     init(_ test: Report.Module.File.RepeatableTest.Test, repeatableTestName: String) {
-        // For parameterized tests, include the message (which contains arguments) in the name
-        let name: String
-        if let message = test.message {
-            name = "\(repeatableTestName) (\(message))"
-        } else {
-            name = repeatableTestName
-        }
-
         self.init(
-            name: name,
+            name: repeatableTestName,
             duration: Int(test.duration.converted(to: .milliseconds).value),
             skipped: test.status == .skipped
-                ? .init(message: test.message ?? "Test message missing") : nil,
+                ? .init(message: "Test message missing") : nil,
             failure: test.status == .failure
-                ? .init(message: test.message ?? "Test message missing") : nil
+                ? .init(message: "Test message missing") : nil
         )
     }
 }
@@ -200,13 +192,13 @@ extension TestExecutions.File {
         var testCases: [TestExecutions.File.TestCase] = []
 
         for repeatableTest in file.repeatableTests.sorted(by: { $0.name < $1.name }) {
-            // Check if tests have different messages, which indicates they're parameterized
-            let hasDifferentMessages =
+            // Check if tests have different paths, which indicates they're parameterized
+            let hasDifferentPaths =
                 repeatableTest.tests.count > 1
-                && Set(repeatableTest.tests.compactMap { $0.message }).count
+                && Set(repeatableTest.tests.map { $0.path }).count
                     == repeatableTest.tests.count
 
-            if hasDifferentMessages {
+            if hasDifferentPaths {
                 // Output each test separately (parameterized case)
                 for test in repeatableTest.tests {
                     testCases.append(
