@@ -1,6 +1,8 @@
 import Foundation
+import Logging
 
 extension Report {
+    private static let logger = Logger(label: "com.peekie.report")
     /// Initializes a new instance of the `Report` using the provided `xcresultPath`.
     /// The initialization process involves parsing the `.xcresult` file to extract various reports.
     ///
@@ -14,11 +16,29 @@ extension Report {
         includeCoverage: Bool = true,
         includeWarnings: Bool = true
     ) async throws {
+        Self.logger.debug(
+            "Initializing Report from xcresult",
+            metadata: [
+                "xcresultPath": "\(xcresultPath.path)",
+                "includeCoverage": "\(includeCoverage)",
+                "includeWarnings": "\(includeWarnings)",
+            ]
+        )
+
         let testResultsDTO = try await TestResultsDTO(from: xcresultPath)
+        Self.logger.debug("TestResultsDTO loaded")
+
         let buildResultsDTO: BuildResultsDTO? =
             includeWarnings ? try await BuildResultsDTO(from: xcresultPath) : nil
+        if includeWarnings {
+            Self.logger.debug("BuildResultsDTO loaded")
+        }
+
         let coverageReportDTO: CoverageReportDTO? =
             includeCoverage ? try await CoverageReportDTO(from: xcresultPath) : nil
+        if includeCoverage {
+            Self.logger.debug("CoverageReportDTO loaded")
+        }
 
         // Build a map of file paths to coverage data
         var fileCoverageMap: [String: FileCoverageDTO] = [:]
@@ -60,6 +80,12 @@ extension Report {
 
                 // Extract module name from unit test bundle name (e.g., "PeekieTests")
                 let moduleName = testNode.name
+                Self.logger.debug(
+                    "Processing module",
+                    metadata: [
+                        "moduleName": "\(moduleName)"
+                    ]
+                )
 
                 // Find coverage files for this module
                 // Coverage is organized by target (source module), not test module
@@ -468,5 +494,13 @@ extension Report {
 
         self.modules = modules
         self.coverage = totalCoverage
+
+        Self.logger.debug(
+            "Report initialization completed",
+            metadata: [
+                "modulesCount": "\(modules.count)",
+                "totalCoverage": totalCoverage.map { "\($0)" } ?? "nil",
+            ]
+        )
     }
 }
