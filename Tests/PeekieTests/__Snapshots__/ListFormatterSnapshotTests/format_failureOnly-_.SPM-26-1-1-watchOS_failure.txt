@@ -1,15 +1,7 @@
 ExampleSUITests
 ❌ failure()
-❌ failure()
-❌ failure()
-❌ throwing()
-❌ throwing()
 ❌ throwing()
 
 XCTestTests
 ❌ test_failure()
-❌ test_failure()
-❌ test_failure()
-❌ test_throwing()
-❌ test_throwing()
 ❌ test_throwing()

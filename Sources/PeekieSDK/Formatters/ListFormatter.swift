@@ -43,23 +43,13 @@ extension Report.Module.File {
 
         var rows: [String] = []
         for repeatableTest in tests.sorted(by: { $0.name < $1.name }) {
-            // If there are multiple tests with different messages (likely from arguments),
-            // output each separately with its own status
-            // Check if tests have different paths, which indicates they're from arguments
-            let hasDifferentPaths =
-                repeatableTest.tests.count > 1
-                && Set(repeatableTest.tests.map { $0.path }).count
-                    == repeatableTest.tests.count
+            // Use merged tests which already handle repetitions and optionally devices
+            let mergedTests = repeatableTest.mergedTests(filterDevice: false)
+                .filter { testResults.contains($0.status) }
 
-            if hasDifferentPaths {
-                // Output each test separately (arguments case)
-                for test in repeatableTest.tests {
-                    rows.append(
-                        test.report(repeatableTestName: repeatableTest.name))
-                }
-            } else {
-                // Single test or multiple tests with same message (repetitions/mixed), use original format
-                rows.append(repeatableTest.report())
+            // Output each merged test separately
+            for test in mergedTests {
+                rows.append(test.report())
             }
         }
 
@@ -69,22 +59,11 @@ extension Report.Module.File {
     }
 }
 
-extension Report.Module.File.RepeatableTest {
+extension Report.Module.File.RepeatableTest.Test {
     fileprivate func report() -> String {
         [
-            combinedStatus.icon,
-            name,
-        ]
-        .compactMap { $0 }
-        .joined(separator: " ")
-    }
-}
-
-extension Report.Module.File.RepeatableTest.Test {
-    fileprivate func report(repeatableTestName: String) -> String {
-        [
             status.icon,
-            repeatableTestName,
+            name,
         ]
         .compactMap { $0 }
         .joined(separator: " ")

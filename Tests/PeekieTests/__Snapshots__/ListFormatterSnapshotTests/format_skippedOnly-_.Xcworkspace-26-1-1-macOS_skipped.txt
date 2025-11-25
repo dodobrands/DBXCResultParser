@@ -1,7 +1,5 @@
 ExampleSUITests
 ⏭️ disabled()
-⏭️ disabled()
-⏭️ disabled()
 
 XCTestTests
 ⏭️ test_skip()

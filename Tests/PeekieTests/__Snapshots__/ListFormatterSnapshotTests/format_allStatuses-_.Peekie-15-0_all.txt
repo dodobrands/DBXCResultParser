@@ -14,14 +14,9 @@ DBShellTests
 
 DBXCReportModelTests
 ❌ test()
-❌ test()
-❌ test()
 🤡 test_expectedFailure()
 ❌ test_failure()
-❌ test_failure()
-❌ test_failure()
-❌ test_flacky()
-✅ test_flacky()
+⚠️ test_flacky()
 ⏭️ test_skip()
 ✅ test_success()
 
