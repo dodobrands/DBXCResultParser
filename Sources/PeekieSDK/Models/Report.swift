@@ -288,9 +288,9 @@ extension Report.Module.File.RepeatableTest {
                 status = parentNode?.result ?? statuses.first ?? .unknown
             }
 
-            let duration =
-                parentNode?.duration ?? groupTests.first?.duration
-                ?? Measurement(value: 0, unit: Test.defaultDurationUnit)
+            // Sum durations of all tests in the group (all attempts)
+            let totalDuration = groupTests.map { $0.duration.value }.sum()
+            let duration = Measurement(value: totalDuration, unit: Test.defaultDurationUnit)
 
             // Extract messages from merged tests
             // For failures, prefer message from failed test, otherwise use first available

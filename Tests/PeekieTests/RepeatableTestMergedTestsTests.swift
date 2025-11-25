@@ -71,7 +71,7 @@ struct RepeatableTestMergedTestsTests {
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample()",
                     status: .success,
-                    duration: Measurement(value: 100, unit: .milliseconds),
+                    duration: Measurement(value: 180, unit: .milliseconds),  // Sum: 100 + 50 + 30
                     path: [])
             ])
     }
@@ -137,7 +137,7 @@ struct RepeatableTestMergedTestsTests {
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample() [false]",
                     status: .failure,
-                    duration: Measurement(value: 200, unit: .milliseconds),
+                    duration: Measurement(value: 150, unit: .milliseconds),  // Sum: 100 + 50
                     path: [
                         Report.Module.File.RepeatableTest.PathNode(
                             name: "false", type: .arguments, result: .failure,
@@ -214,7 +214,7 @@ struct RepeatableTestMergedTestsTests {
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample() [false]",
                     status: .failure,  // Status from argumentsFalse
-                    duration: Measurement(value: 200, unit: .milliseconds),
+                    duration: Measurement(value: 100, unit: .milliseconds),  // Sum: 100
                     // Message from repeatableTest (tests.first?.message)
                     path: [
                         Report.Module.File.RepeatableTest.PathNode(
@@ -225,7 +225,7 @@ struct RepeatableTestMergedTestsTests {
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample() [true]",
                     status: .success,  // Status from argumentsTrue
-                    duration: Measurement(value: 150, unit: .milliseconds),
+                    duration: Measurement(value: 80, unit: .milliseconds),  // Sum: 80
                     // Message from repeatableTest (tests.first?.message)
                     path: [
                         Report.Module.File.RepeatableTest.PathNode(
@@ -287,7 +287,7 @@ struct RepeatableTestMergedTestsTests {
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample() [false]",
                     status: .success,
-                    duration: Measurement(value: 200, unit: .milliseconds),
+                    duration: Measurement(value: 150, unit: .milliseconds),  // Sum: 100 + 50
                     path: [
                         Report.Module.File.RepeatableTest.PathNode(
                             name: "false", type: .arguments, result: .success,
@@ -348,7 +348,7 @@ struct RepeatableTestMergedTestsTests {
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample()",
                     status: .mixed,
-                    duration: Measurement(value: 100, unit: .milliseconds),
+                    duration: Measurement(value: 150, unit: .milliseconds),  // Sum: 100 + 50
                     path: [])
             ])
     }
@@ -396,7 +396,7 @@ struct RepeatableTestMergedTestsTests {
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample() [iPhone 13]",
                     status: .success,
-                    duration: Measurement(value: 200, unit: .milliseconds),
+                    duration: Measurement(value: 200, unit: .milliseconds),  // Sum: 200
                     path: [
                         Report.Module.File.RepeatableTest.PathNode(
                             name: "iPhone 13", type: .device, result: .success,
@@ -406,7 +406,7 @@ struct RepeatableTestMergedTestsTests {
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample() [iPhone 13, false]",
                     status: .success,
-                    duration: Measurement(value: 100, unit: .milliseconds),
+                    duration: Measurement(value: 100, unit: .milliseconds),  // Sum: 100
                     path: [
                         Report.Module.File.RepeatableTest.PathNode(
                             name: "iPhone 13", type: .device, result: .success,
@@ -456,7 +456,7 @@ struct RepeatableTestMergedTestsTests {
                 Report.Module.File.RepeatableTest.Test(
                     name: "testExample()",
                     status: .success,
-                    duration: Measurement(value: 100, unit: .milliseconds),
+                    duration: Measurement(value: 100, unit: .milliseconds),  // Sum: 100
                     path: [])
             ])
     }
