@@ -226,6 +226,15 @@ extension Report.Module.File.RepeatableTest {
                 $0.type != .repetition && $0.type != .device
             }
 
+            // Build name: RepeatableTest name + names of all path elements in brackets
+            let pathElementNames = pathWithoutRepetitionAndDevice.map { $0.name }
+            let mergedName: String
+            if pathElementNames.isEmpty {
+                mergedName = self.name
+            } else {
+                mergedName = "\(self.name) [\(pathElementNames.joined(separator: " "))]"
+            }
+
             // Check if statuses differ
             let statuses = groupTests.map { $0.status }
             let statusesDiffer = !statuses.elementsAreEqual
@@ -244,10 +253,10 @@ extension Report.Module.File.RepeatableTest {
 
             mergedResults.append(
                 Test(
-                    name: self.name,
+                    name: mergedName,
                     status: status,
                     duration: duration,
-                    path: pathWithoutRepetitionAndDevice
+                    path: []
                 ))
         }
 

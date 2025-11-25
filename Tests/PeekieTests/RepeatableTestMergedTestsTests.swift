@@ -135,7 +135,7 @@ struct RepeatableTestMergedTestsTests {
         #expect(
             merged == [
                 Report.Module.File.RepeatableTest.Test(
-                    name: "testExample()",
+                    name: "testExample() [false]",
                     status: .failure,
                     duration: Measurement(value: 200, unit: .milliseconds),
                     path: [
@@ -212,7 +212,7 @@ struct RepeatableTestMergedTestsTests {
         #expect(
             merged == [
                 Report.Module.File.RepeatableTest.Test(
-                    name: "testExample()",
+                    name: "testExample() [false]",
                     status: .failure,  // Status from argumentsFalse
                     duration: Measurement(value: 200, unit: .milliseconds),
                     // Message from repeatableTest (tests.first?.message)
@@ -223,7 +223,7 @@ struct RepeatableTestMergedTestsTests {
                             message: "False argument failed")
                     ]),
                 Report.Module.File.RepeatableTest.Test(
-                    name: "testExample()",
+                    name: "testExample() [true]",
                     status: .success,  // Status from argumentsTrue
                     duration: Measurement(value: 150, unit: .milliseconds),
                     // Message from repeatableTest (tests.first?.message)
@@ -285,7 +285,7 @@ struct RepeatableTestMergedTestsTests {
         #expect(
             merged == [
                 Report.Module.File.RepeatableTest.Test(
-                    name: "testExample()",
+                    name: "testExample() [false]",
                     status: .success,
                     duration: Measurement(value: 200, unit: .milliseconds),
                     path: [
@@ -399,7 +399,7 @@ struct RepeatableTestMergedTestsTests {
                     duration: Measurement(value: 200, unit: .milliseconds),
                     path: []),
                 Report.Module.File.RepeatableTest.Test(
-                    name: "testExample()",
+                    name: "testExample() [false]",
                     status: .success,
                     duration: Measurement(value: 100, unit: .milliseconds),
                     path: [
