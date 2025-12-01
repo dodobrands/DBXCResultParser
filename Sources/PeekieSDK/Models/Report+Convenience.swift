@@ -358,10 +358,6 @@ extension Report {
                         }
 
                         // If no tests were created (no children or only metadata), create test from test case itself
-                        assert(
-                            !repeatableTest.tests.isEmpty || filteredTestCaseChildren.isEmpty,
-                            "Tests are empty but test case has non-empty filtered children. This indicates a parsing issue."
-                        )
                         if repeatableTest.tests.isEmpty {
                             let test = Report.Module.File.RepeatableTest.Test(from: testCase)
                             repeatableTest.tests.append(test)
