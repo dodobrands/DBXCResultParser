@@ -16,9 +16,9 @@
               - coveredLines: 0
               - totalLines: 23
           - name: "TextProcessor.swift"
-          - repeatableTests: 0 members
           - warnings: 0 elements
       - name: "XcodeprojExampleFramework.framework"
+      - suites: 0 members
     ▿ Module
       ▿ coverage: Optional<Coverage>
         ▿ some: Coverage
@@ -33,7 +33,6 @@
               - coveredLines: 0
               - totalLines: 36
           - name: "NumberHelper.swift"
-          - repeatableTests: 0 members
           - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
@@ -42,7 +41,6 @@
               - coveredLines: 15
               - totalLines: 34
           - name: "Calculator.swift"
-          - repeatableTests: 0 members
           - warnings: 0 elements
         ▿ File
           ▿ coverage: Optional<Coverage>
@@ -51,9 +49,9 @@
               - coveredLines: 14
               - totalLines: 14
           - name: "XcodeprojExampleApp.swift"
-          - repeatableTests: 0 members
           - warnings: 0 elements
       - name: "XcodeprojExample.app"
+      - suites: 0 members
     ▿ Module
       ▿ coverage: Optional<Coverage>
         ▿ some: Coverage
@@ -64,6 +62,32 @@
         ▿ File
           - coverage: Optional<Coverage>.none
           - name: "ExampleSUITests"
+          - warnings: 0 elements
+        ▿ File
+          ▿ coverage: Optional<Coverage>
+            ▿ some: Coverage
+              - coverage: 0.9895833333333334
+              - coveredLines: 95
+              - totalLines: 96
+          - name: "XCTestTests.swift"
+          ▿ warnings: 4 elements
+            ▿ Issue
+              - message: "Some warning from ExampleSUITests"
+              - type: IssueType.buildWarning
+            ▿ Issue
+              - message: "Main actor-isolated initializer \'init()\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
+              - type: IssueType.buildWarning
+            ▿ Issue
+              - message: "Main actor-isolated instance method \'add\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
+              - type: IssueType.buildWarning
+            ▿ Issue
+              - message: "Main actor-isolated instance method \'multiply\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
+              - type: IssueType.buildWarning
+      - name: "XcodeprojExampleTests"
+      ▿ suites: 2 members
+        ▿ Suite
+          - name: "ExampleSUITests"
+          - nodeIdentifierURL: "test://com.apple.xcode/XcodeprojExample/XcodeprojExampleTests/ExampleSUITests"
           ▿ repeatableTests: 9 members
             ▿ RepeatableTest
               - name: "async()"
@@ -734,13 +758,9 @@
                   - skipMessage: Optional<String>.none
                   - status: Status.success
           - warnings: 0 elements
-        ▿ File
-          ▿ coverage: Optional<Coverage>
-            ▿ some: Coverage
-              - coverage: 0.9895833333333334
-              - coveredLines: 95
-              - totalLines: 96
+        ▿ Suite
           - name: "XCTestTests"
+          - nodeIdentifierURL: "test://com.apple.xcode/XcodeprojExample/XcodeprojExampleTests/XCTestTests"
           ▿ repeatableTests: 11 members
             ▿ RepeatableTest
               - name: "test_async()"
@@ -1016,20 +1036,7 @@
                   - path: 0 elements
                   - skipMessage: Optional<String>.none
                   - status: Status.success
-          ▿ warnings: 4 elements
-            ▿ Issue
-              - message: "Some warning from ExampleSUITests"
-              - type: IssueType.buildWarning
-            ▿ Issue
-              - message: "Main actor-isolated initializer \'init()\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
-              - type: IssueType.buildWarning
-            ▿ Issue
-              - message: "Main actor-isolated instance method \'add\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
-              - type: IssueType.buildWarning
-            ▿ Issue
-              - message: "Main actor-isolated instance method \'multiply\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
-              - type: IssueType.buildWarning
-      - name: "XcodeprojExampleTests"
+          - warnings: 0 elements
     ▿ Module
       ▿ coverage: Optional<Coverage>
         ▿ some: Coverage
@@ -1044,7 +1051,6 @@
               - coveredLines: 57
               - totalLines: 67
           - name: "SwiftTestingTests.swift"
-          - repeatableTests: 0 members
           ▿ warnings: 3 elements
             ▿ Issue
               - message: "Some warning from ExampleSUITests"
@@ -1062,7 +1068,6 @@
               - coveredLines: 95
               - totalLines: 96
           - name: "XCTestTests.swift"
-          - repeatableTests: 0 members
           ▿ warnings: 4 elements
             ▿ Issue
               - message: "Some warning from ExampleSUITests"
@@ -1077,3 +1082,4 @@
               - message: "Main actor-isolated instance method \'multiply\' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
               - type: IssueType.buildWarning
       - name: "XcodeprojExampleTests.xctest"
+      - suites: 0 members

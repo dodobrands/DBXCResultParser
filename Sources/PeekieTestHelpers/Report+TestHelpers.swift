@@ -12,7 +12,7 @@ extension Report {
         if let coverage = coverage {
             calculatedCoverage = coverage
         } else {
-            let fileCoverages = modules.flatMap { $0.suites }.compactMap { $0.coverage }
+            let fileCoverages = modules.flatMap { $0.files }.compactMap { $0.coverage }
             if fileCoverages.count > 0 {
                 let totalLines = fileCoverages.reduce(into: 0) { $0 += $1.totalLines }
                 let totalCoveredLines = fileCoverages.reduce(into: 0) { $0 += $1.coveredLines }
@@ -36,13 +36,14 @@ extension Report.Module {
     public static func testMake(
         name: String = "",
         suites: Set<Suite> = [],
+        files: Set<File> = [],
         coverage: Report.Coverage? = nil
     ) -> Self {
-        .init(name: name, suites: suites, coverage: coverage)
+        .init(name: name, suites: suites, files: files, coverage: coverage)
     }
 }
 
-extension Report.Module.Suite.Coverage {
+extension Report.Module.File.Coverage {
     public static func testMake(
         coveredLines: Int = 0,
         totalLines: Int = 0,
@@ -55,20 +56,28 @@ extension Report.Module.Suite.Coverage {
     }
 }
 
+extension Report.Module.File {
+    public static func testMake(
+        name: String = "",
+        warnings: [Report.Module.File.Issue] = [],
+        coverage: Report.Module.File.Coverage? = nil
+    ) -> Self {
+        .init(name: name, warnings: warnings, coverage: coverage)
+    }
+}
+
 extension Report.Module.Suite {
     public static func testMake(
         name: String = "",
         nodeIdentifierURL: String = "",
         repeatableTests: Set<RepeatableTest> = [],
-        warnings: [Issue] = [],
-        coverage: Coverage? = nil
+        warnings: [Issue] = []
     ) -> Self {
         .init(
             name: name,
             nodeIdentifierURL: nodeIdentifierURL,
             repeatableTests: repeatableTests,
-            warnings: warnings,
-            coverage: coverage
+            warnings: warnings
         )
     }
 }

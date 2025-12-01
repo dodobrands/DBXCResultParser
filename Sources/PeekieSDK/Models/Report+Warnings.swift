@@ -12,11 +12,11 @@ extension Report {
     /// Parses warnings from BuildResultsDTO and returns a map of file names to their issues
     static func parseWarnings(
         from buildResultsDTO: BuildResultsDTO
-    ) async -> [String: [Module.Suite.Issue]] {
+    ) async -> [String: [Module.File.Issue]] {
         let parsed = await buildResultsDTO.warnings.concurrentCompactMap {
-            warning -> (String, Module.Suite.Issue)? in
+            warning -> (String, Module.File.Issue)? in
             guard
-                let issueType = Module.Suite.Issue.IssueType(rawValue: warning.issueType),
+                let issueType = Module.File.Issue.IssueType(rawValue: warning.issueType),
                 let fileName = warning.fileName
             else { return nil }
 
@@ -25,7 +25,7 @@ extension Report {
 
             return (
                 fileName,
-                Module.Suite.Issue(type: issueType, message: normalized)
+                Module.File.Issue(type: issueType, message: normalized)
             )
         }
 
@@ -68,8 +68,8 @@ extension Report {
     /// Retrieves warnings matching a file name, optionally trying with a `.swift` suffix
     static func warningsFor(
         fileName: String,
-        in warningsByFileName: [String: [Module.Suite.Issue]]
-    ) -> [Module.Suite.Issue] {
+        in warningsByFileName: [String: [Module.File.Issue]]
+    ) -> [Module.File.Issue] {
         if let warnings = warningsByFileName[fileName] {
             return warnings
         }
@@ -81,9 +81,9 @@ extension Report {
 
     /// Merges two arrays of warnings, removing duplicates based on message content
     static func mergeWarnings(
-        _ existing: [Module.Suite.Issue],
-        _ new: [Module.Suite.Issue]
-    ) -> [Module.Suite.Issue] {
+        _ existing: [Module.File.Issue],
+        _ new: [Module.File.Issue]
+    ) -> [Module.File.Issue] {
         guard !new.isEmpty else { return existing }
         var combined = existing
         // Use normalized messages for comparison since warnings are already normalized

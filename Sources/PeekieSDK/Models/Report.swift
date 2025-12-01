@@ -14,6 +14,7 @@ extension Report {
     public struct Module: Hashable {
         public let name: String
         public internal(set) var suites: Set<Suite>
+        public internal(set) var files: Set<File>
         public let coverage: Coverage?
 
         public func hash(into hasher: inout Hasher) {
@@ -37,7 +38,7 @@ extension Report {
     }
 }
 
-extension Report.Module.Suite {
+extension Report.Module.File {
     public struct Coverage: Equatable {
         public let coveredLines: Int
         public let totalLines: Int
@@ -62,6 +63,33 @@ extension Report.Module.Suite {
 }
 
 extension Report.Module {
+    public struct File: Hashable {
+        public let name: String
+        public internal(set) var warnings: [File.Issue]
+        public let coverage: File.Coverage?
+
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(name)
+        }
+
+        public static func == (lhs: Self, rhs: Self) -> Bool {
+            lhs.name == rhs.name
+        }
+    }
+}
+
+extension Report.Module.File {
+    public struct Issue: Equatable, Sendable {
+        public let type: IssueType
+        public let message: String
+
+        public enum IssueType: String, Equatable, Sendable {
+            case buildWarning = "Swift Compiler Warning"
+        }
+    }
+}
+
+extension Report.Module {
     public struct Suite: Hashable {
         public let name: String
         /// URL identifier from the test node in xcresult JSON.
@@ -73,7 +101,6 @@ extension Report.Module {
         public let nodeIdentifierURL: String
         public internal(set) var repeatableTests: Set<RepeatableTest>
         public internal(set) var warnings: [Issue]
-        public let coverage: Coverage?
 
         public func hash(into hasher: inout Hasher) {
             hasher.combine(name)
@@ -572,6 +599,12 @@ extension Array where Element: Equatable {
 }
 
 extension Set where Element == Report.Module.Suite {
+    subscript(_ name: String) -> Element? {
+        first { $0.name == name }
+    }
+}
+
+extension Set where Element == Report.Module.File {
     subscript(_ name: String) -> Element? {
         first { $0.name == name }
     }
