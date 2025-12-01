@@ -59,7 +59,6 @@ extension Report.Module.Suite {
     public static func testMake(
         name: String = "",
         nodeIdentifierURL: String = "",
-        fileName: String = "",
         repeatableTests: Set<RepeatableTest> = [],
         warnings: [Issue] = [],
         coverage: Coverage? = nil
@@ -67,7 +66,6 @@ extension Report.Module.Suite {
         .init(
             name: name,
             nodeIdentifierURL: nodeIdentifierURL,
-            fileName: fileName,
             repeatableTests: repeatableTests,
             warnings: warnings,
             coverage: coverage

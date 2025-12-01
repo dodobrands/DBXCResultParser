@@ -159,28 +159,12 @@ extension Report {
                         continue
                     }
 
-                    // Extract file name from nodeIdentifierURL
-                    guard let url = URL(string: nodeIdentifierURL) else {
-                        // Skip suites if we cannot extract file name
-                        Self.logger.debug(
-                            "Skipping Test Suite: cannot parse nodeIdentifierURL as URL",
-                            metadata: [
-                                "suiteName": "\(suiteName)",
-                                "module": "\(moduleName)",
-                                "nodeIdentifierURL": "\(nodeIdentifierURL)",
-                            ]
-                        )
-                        continue
-                    }
-                    let fileName = url.lastPathComponent + ".swift"
-
                     Self.logger.debug(
                         "Creating Suite from DTO",
                         metadata: [
                             "suiteName": "\(suiteName)",
                             "module": "\(moduleName)",
                             "nodeIdentifierURL": "\(nodeIdentifierURL)",
-                            "fileName": "\(fileName)",
                         ]
                     )
 
@@ -276,7 +260,6 @@ extension Report {
                             metadata: [
                                 "suiteName": "\(suiteName)",
                                 "module": "\(moduleName)",
-                                "fileName": "\(fileName)",
                                 "hasCoverage": suiteCoverage != nil ? "true" : "false",
                                 "warningsCount": "\(suiteWarnings.count)",
                             ]
@@ -284,7 +267,6 @@ extension Report {
                         suite = .init(
                             name: suiteName,
                             nodeIdentifierURL: nodeIdentifierURL,
-                            fileName: fileName,
                             repeatableTests: [],
                             warnings: suiteWarnings,
                             coverage: suiteCoverage
@@ -503,7 +485,6 @@ extension Report {
                             let updatedSuite = Report.Module.Suite(
                                 name: suiteName,
                                 nodeIdentifierURL: existingSuite.nodeIdentifierURL,
-                                fileName: existingSuite.fileName,
                                 repeatableTests: existingSuite.repeatableTests,
                                 warnings: updatedWarnings,
                                 coverage: coverage

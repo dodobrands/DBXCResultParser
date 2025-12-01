@@ -71,9 +71,6 @@ extension Report.Module {
         /// - Unit test bundle: `"test://com.apple.xcode/Module/ModuleTests"`
         /// Format: `test://com.apple.xcode/<Module>/<Bundle>/<Suite>/<TestCase>`
         public let nodeIdentifierURL: String
-        /// File name extracted from nodeIdentifierURL
-        /// Example: `test://com.apple.xcode/Module/ModuleTests/SuiteTests` -> `SuiteTests.swift`
-        public let fileName: String
         public internal(set) var repeatableTests: Set<RepeatableTest>
         public internal(set) var warnings: [Issue]
         public let coverage: Coverage?
