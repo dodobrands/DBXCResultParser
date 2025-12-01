@@ -58,12 +58,14 @@ extension Report.Module.Suite.Coverage {
 extension Report.Module.Suite {
     public static func testMake(
         name: String = "",
+        nodeIdentifierURL: String? = nil,
         repeatableTests: Set<RepeatableTest> = [],
         warnings: [Issue] = [],
         coverage: Coverage? = nil
     ) -> Self {
         .init(
             name: name,
+            nodeIdentifierURL: nodeIdentifierURL,
             repeatableTests: repeatableTests,
             warnings: warnings,
             coverage: coverage

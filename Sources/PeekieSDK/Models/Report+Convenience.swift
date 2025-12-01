@@ -138,6 +138,9 @@ extension Report {
                     // Extract suite name from test suite name (e.g., "ReportTests")
                     let suiteName = testSuite.name
 
+                    // Store nodeIdentifierURL for fileName computation
+                    let nodeIdentifierURL = testSuite.nodeIdentifierURL
+
                     // Try to find coverage for this suite by name or path
                     let suiteCoverage: Report.Module.Suite.Coverage?
                     if includeCoverage {
@@ -213,14 +216,30 @@ extension Report {
                         includeWarnings
                         ? Self.warningsFor(fileName: suiteName, in: warningsByFileName)
                         : []
-                    var suite =
-                        module.suites[suiteName]
-                        ?? .init(
+                    // Get existing suite or create new one
+                    var suite: Report.Module.Suite
+                    if let existingSuite = module.suites[suiteName] {
+                        // Update existing suite with nodeIdentifierURL if it wasn't set before
+                        if existingSuite.nodeIdentifierURL == nil && nodeIdentifierURL != nil {
+                            suite = .init(
+                                name: suiteName,
+                                nodeIdentifierURL: nodeIdentifierURL,
+                                repeatableTests: existingSuite.repeatableTests,
+                                warnings: existingSuite.warnings,
+                                coverage: existingSuite.coverage ?? suiteCoverage
+                            )
+                        } else {
+                            suite = existingSuite
+                        }
+                    } else {
+                        suite = .init(
                             name: suiteName,
+                            nodeIdentifierURL: nodeIdentifierURL,
                             repeatableTests: [],
                             warnings: suiteWarnings,
                             coverage: suiteCoverage
                         )
+                    }
 
                     if includeWarnings && !suiteWarnings.isEmpty {
                         suite.warnings = Self.mergeWarnings(suite.warnings, suiteWarnings)
@@ -433,6 +452,7 @@ extension Report {
                                 : existingSuite.warnings
                             let updatedSuite = Report.Module.Suite(
                                 name: suiteName,
+                                nodeIdentifierURL: existingSuite.nodeIdentifierURL,
                                 repeatableTests: existingSuite.repeatableTests,
                                 warnings: updatedWarnings,
                                 coverage: coverage
@@ -449,6 +469,7 @@ extension Report {
                             : []
                         let newSuite = Report.Module.Suite(
                             name: suiteName,
+                            nodeIdentifierURL: nil,
                             repeatableTests: [],
                             warnings: newSuiteWarnings,
                             coverage: coverage
