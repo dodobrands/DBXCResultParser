@@ -139,7 +139,17 @@ extension Report {
                     let suiteName = testSuite.name
 
                     // Store nodeIdentifierURL for fileName computation
-                    let nodeIdentifierURL = testSuite.nodeIdentifierURL
+                    guard let nodeIdentifierURL = testSuite.nodeIdentifierURL else {
+                        // Skip test suites without nodeIdentifierURL (should not happen in practice)
+                        continue
+                    }
+
+                    // Extract file name from nodeIdentifierURL
+                    guard let url = URL(string: nodeIdentifierURL) else {
+                        // Skip suites if we cannot extract file name
+                        continue
+                    }
+                    let fileName = url.lastPathComponent + ".swift"
 
                     // Try to find coverage for this suite by name or path
                     let suiteCoverage: Report.Module.Suite.Coverage?
@@ -219,22 +229,12 @@ extension Report {
                     // Get existing suite or create new one
                     var suite: Report.Module.Suite
                     if let existingSuite = module.suites[suiteName] {
-                        // Update existing suite with nodeIdentifierURL if it wasn't set before
-                        if existingSuite.nodeIdentifierURL == nil && nodeIdentifierURL != nil {
-                            suite = .init(
-                                name: suiteName,
-                                nodeIdentifierURL: nodeIdentifierURL,
-                                repeatableTests: existingSuite.repeatableTests,
-                                warnings: existingSuite.warnings,
-                                coverage: existingSuite.coverage ?? suiteCoverage
-                            )
-                        } else {
-                            suite = existingSuite
-                        }
+                        suite = existingSuite
                     } else {
                         suite = .init(
                             name: suiteName,
                             nodeIdentifierURL: nodeIdentifierURL,
+                            fileName: fileName,
                             repeatableTests: [],
                             warnings: suiteWarnings,
                             coverage: suiteCoverage
@@ -453,6 +453,7 @@ extension Report {
                             let updatedSuite = Report.Module.Suite(
                                 name: suiteName,
                                 nodeIdentifierURL: existingSuite.nodeIdentifierURL,
+                                fileName: existingSuite.fileName,
                                 repeatableTests: existingSuite.repeatableTests,
                                 warnings: updatedWarnings,
                                 coverage: coverage
@@ -462,19 +463,10 @@ extension Report {
                         }
                         // If suite already has coverage, keep existing one (from test suite matching)
                     } else {
-                        // Create new suite entry with coverage but no tests
-                        let newSuiteWarnings: [Report.Module.Suite.Issue] =
-                            includeWarnings
-                            ? Self.warningsFor(fileName: suiteName, in: warningsByFileName)
-                            : []
-                        let newSuite = Report.Module.Suite(
-                            name: suiteName,
-                            nodeIdentifierURL: nil,
-                            repeatableTests: [],
-                            warnings: newSuiteWarnings,
-                            coverage: coverage
-                        )
-                        moduleSuites.insert(newSuite)
+                        // Skip suites without nodeIdentifierURL (should not happen in practice)
+                        // This case occurs when coverage exists but no test suite node was found
+                        // We cannot create a Suite without nodeIdentifierURL
+                        continue
                     }
                 }
 

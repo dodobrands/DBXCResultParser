@@ -70,7 +70,10 @@ extension Report.Module {
         /// - Test Case: `"test://com.apple.xcode/Module/ModuleTests/SuiteTests/test_example"`
         /// - Unit test bundle: `"test://com.apple.xcode/Module/ModuleTests"`
         /// Format: `test://com.apple.xcode/<Module>/<Bundle>/<Suite>/<TestCase>`
-        public let nodeIdentifierURL: String?
+        public let nodeIdentifierURL: String
+        /// File name extracted from nodeIdentifierURL
+        /// Example: `test://com.apple.xcode/Module/ModuleTests/SuiteTests` -> `SuiteTests.swift`
+        public let fileName: String
         public internal(set) var repeatableTests: Set<RepeatableTest>
         public internal(set) var warnings: [Issue]
         public let coverage: Coverage?
@@ -81,17 +84,6 @@ extension Report.Module {
 
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.name == rhs.name
-        }
-
-        /// Extracts file name from nodeIdentifierURL
-        /// Returns the last path component with .swift extension added
-        /// Example: `test://com.apple.xcode/Module/ModuleTests/SuiteTests` -> `SuiteTests.swift`
-        public var fileName: String? {
-            guard let nodeIdentifierURL = nodeIdentifierURL,
-                let url = URL(string: nodeIdentifierURL)
-            else { return nil }
-
-            return url.lastPathComponent + ".swift"
         }
     }
 }
