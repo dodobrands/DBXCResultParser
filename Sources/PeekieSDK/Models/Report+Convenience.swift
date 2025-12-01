@@ -138,18 +138,51 @@ extension Report {
                     // Extract suite name from test suite name (e.g., "ReportTests")
                     let suiteName = testSuite.name
 
+                    Self.logger.debug(
+                        "Parsing Test Suite",
+                        metadata: [
+                            "suiteName": "\(suiteName)",
+                            "module": "\(moduleName)",
+                        ]
+                    )
+
                     // Store nodeIdentifierURL for fileName computation
                     guard let nodeIdentifierURL = testSuite.nodeIdentifierURL else {
                         // Skip test suites without nodeIdentifierURL (should not happen in practice)
+                        Self.logger.debug(
+                            "Skipping Test Suite: missing nodeIdentifierURL",
+                            metadata: [
+                                "suiteName": "\(suiteName)",
+                                "module": "\(moduleName)",
+                            ]
+                        )
                         continue
                     }
 
                     // Extract file name from nodeIdentifierURL
                     guard let url = URL(string: nodeIdentifierURL) else {
                         // Skip suites if we cannot extract file name
+                        Self.logger.debug(
+                            "Skipping Test Suite: cannot parse nodeIdentifierURL as URL",
+                            metadata: [
+                                "suiteName": "\(suiteName)",
+                                "module": "\(moduleName)",
+                                "nodeIdentifierURL": "\(nodeIdentifierURL)",
+                            ]
+                        )
                         continue
                     }
                     let fileName = url.lastPathComponent + ".swift"
+
+                    Self.logger.debug(
+                        "Creating Suite from DTO",
+                        metadata: [
+                            "suiteName": "\(suiteName)",
+                            "module": "\(moduleName)",
+                            "nodeIdentifierURL": "\(nodeIdentifierURL)",
+                            "fileName": "\(fileName)",
+                        ]
+                    )
 
                     // Try to find coverage for this suite by name or path
                     let suiteCoverage: Report.Module.Suite.Coverage?
@@ -229,8 +262,25 @@ extension Report {
                     // Get existing suite or create new one
                     var suite: Report.Module.Suite
                     if let existingSuite = module.suites[suiteName] {
+                        Self.logger.debug(
+                            "Using existing Suite",
+                            metadata: [
+                                "suiteName": "\(suiteName)",
+                                "module": "\(moduleName)",
+                            ]
+                        )
                         suite = existingSuite
                     } else {
+                        Self.logger.debug(
+                            "Created new Suite",
+                            metadata: [
+                                "suiteName": "\(suiteName)",
+                                "module": "\(moduleName)",
+                                "fileName": "\(fileName)",
+                                "hasCoverage": suiteCoverage != nil ? "true" : "false",
+                                "warningsCount": "\(suiteWarnings.count)",
+                            ]
+                        )
                         suite = .init(
                             name: suiteName,
                             nodeIdentifierURL: nodeIdentifierURL,
