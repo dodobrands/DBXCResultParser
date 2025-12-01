@@ -12,7 +12,7 @@ extension Report {
         if let coverage = coverage {
             calculatedCoverage = coverage
         } else {
-            let fileCoverages = modules.flatMap { $0.files }.compactMap { $0.coverage }
+            let fileCoverages = modules.flatMap { $0.suites }.compactMap { $0.coverage }
             if fileCoverages.count > 0 {
                 let totalLines = fileCoverages.reduce(into: 0) { $0 += $1.totalLines }
                 let totalCoveredLines = fileCoverages.reduce(into: 0) { $0 += $1.coveredLines }
@@ -35,14 +35,14 @@ extension Report {
 extension Report.Module {
     public static func testMake(
         name: String = "",
-        files: Set<File> = [],
+        suites: Set<Suite> = [],
         coverage: Report.Coverage? = nil
     ) -> Self {
-        .init(name: name, files: files, coverage: coverage)
+        .init(name: name, suites: suites, coverage: coverage)
     }
 }
 
-extension Report.Module.File.Coverage {
+extension Report.Module.Suite.Coverage {
     public static func testMake(
         coveredLines: Int = 0,
         totalLines: Int = 0,
@@ -55,7 +55,7 @@ extension Report.Module.File.Coverage {
     }
 }
 
-extension Report.Module.File {
+extension Report.Module.Suite {
     public static func testMake(
         name: String = "",
         repeatableTests: Set<RepeatableTest> = [],
@@ -71,7 +71,7 @@ extension Report.Module.File {
     }
 }
 
-extension Report.Module.File.RepeatableTest {
+extension Report.Module.Suite.RepeatableTest {
     public static func testMake(
         name: String = "",
         tests: [Test] = []
@@ -84,7 +84,7 @@ extension Report.Module.File.RepeatableTest {
         times: Int = 1
     ) -> Self {
         let tests = Array(
-            repeating: Report.Module.File.RepeatableTest.Test.testMake(
+            repeating: Report.Module.Suite.RepeatableTest.Test.testMake(
                 name: name,
                 status: .failure),
             count: times
@@ -115,7 +115,7 @@ extension Report.Module.File.RepeatableTest {
         failedTimes: Int = 1
     ) -> Self {
         let failedTests = Array(
-            repeating: Report.Module.File.RepeatableTest.Test.testMake(
+            repeating: Report.Module.Suite.RepeatableTest.Test.testMake(
                 name: name, status: .failure),
             count: failedTimes
         )
@@ -123,12 +123,12 @@ extension Report.Module.File.RepeatableTest {
     }
 }
 
-extension Report.Module.File.RepeatableTest.Test {
+extension Report.Module.Suite.RepeatableTest.Test {
     public static func testMake(
         name: String = "",
         status: Status = .success,
         duration: Measurement<UnitDuration> = .testMake(),
-        path: [Report.Module.File.RepeatableTest.PathNode] = [],
+        path: [Report.Module.Suite.RepeatableTest.PathNode] = [],
         failureMessage: String? = nil,
         skipMessage: String? = nil
     ) -> Self {

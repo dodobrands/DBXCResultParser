@@ -53,7 +53,7 @@ struct SonarFormatterSnapshotTests {
         // Only include files that have tests (skip coverage-only files)
         let testSuites = Set(
             report.modules.flatMap {
-                $0.files.filter { !$0.repeatableTests.isEmpty }.map { $0.name }
+                $0.suites.filter { !$0.repeatableTests.isEmpty }.map { $0.name }
             })
 
         for testSuiteName in testSuites {

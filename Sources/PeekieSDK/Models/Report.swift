@@ -5,7 +5,7 @@ public struct Report {
     public let coverage: Double?
 
     /// All warnings from all modules in this report
-    public var warnings: [Module.File.Issue] {
+    public var warnings: [Module.Suite.Issue] {
         modules.flatMap { $0.warnings }
     }
 }
@@ -13,7 +13,7 @@ public struct Report {
 extension Report {
     public struct Module: Hashable {
         public let name: String
-        public internal(set) var files: Set<File>
+        public internal(set) var suites: Set<Suite>
         public let coverage: Coverage?
 
         public func hash(into hasher: inout Hasher) {
@@ -24,9 +24,9 @@ extension Report {
             lhs.name == rhs.name
         }
 
-        /// All warnings from all files in this module
-        public var warnings: [File.Issue] {
-            files.flatMap { $0.warnings }
+        /// All warnings from all suites in this module
+        public var warnings: [Suite.Issue] {
+            suites.flatMap { $0.warnings }
         }
     }
 
@@ -37,7 +37,7 @@ extension Report {
     }
 }
 
-extension Report.Module.File {
+extension Report.Module.Suite {
     public struct Coverage: Equatable {
         public let coveredLines: Int
         public let totalLines: Int
@@ -62,7 +62,7 @@ extension Report.Module.File {
 }
 
 extension Report.Module {
-    public struct File: Hashable {
+    public struct Suite: Hashable {
         public let name: String
         public internal(set) var repeatableTests: Set<RepeatableTest>
         public internal(set) var warnings: [Issue]
@@ -78,7 +78,7 @@ extension Report.Module {
     }
 }
 
-extension Report.Module.File {
+extension Report.Module.Suite {
     public struct Issue: Equatable, Sendable {
         public let type: IssueType
         public let message: String
@@ -89,7 +89,7 @@ extension Report.Module.File {
     }
 }
 
-extension Report.Module.File {
+extension Report.Module.Suite {
     public struct RepeatableTest: Hashable {
         public let name: String
         public internal(set) var tests: [Test]
@@ -104,7 +104,7 @@ extension Report.Module.File {
     }
 }
 
-extension Report.Module.File.RepeatableTest {
+extension Report.Module.Suite.RepeatableTest {
     public struct PathNode: Equatable, Hashable {
         public let name: String
         public let type: NodeType
@@ -342,7 +342,7 @@ extension Report.Module.File.RepeatableTest {
     }
 }
 
-extension Report.Module.File.RepeatableTest.Test {
+extension Report.Module.Suite.RepeatableTest.Test {
     public enum Status: String, Equatable, CaseIterable {
         case success
         case failure
@@ -355,11 +355,11 @@ extension Report.Module.File.RepeatableTest.Test {
     }
 }
 
-extension Set where Element == Report.Module.File.RepeatableTest {
+extension Set where Element == Report.Module.Suite.RepeatableTest {
     /// Filters tests based on statis
     /// - Parameter testResults: statuses to leave in result
     /// - Returns: set of elements matching any of the specified statuses
-    public func filtered(testResults: [Report.Module.File.RepeatableTest.Test.Status])
+    public func filtered(testResults: [Report.Module.Suite.RepeatableTest.Test.Status])
         -> Set<Element>
     {
         guard !testResults.isEmpty else {
@@ -421,11 +421,11 @@ extension Set where Element == Report.Module.File.RepeatableTest {
     }
 }
 
-extension Report.Module.File.RepeatableTest.Test {
+extension Report.Module.Suite.RepeatableTest.Test {
     /// Initializes from TestResultsDTO.TestNode (Repetition node) with path
     init(
         from node: TestResultsDTO.TestNode,
-        path: [Report.Module.File.RepeatableTest.PathNode],
+        path: [Report.Module.Suite.RepeatableTest.PathNode],
         testCaseName: String,
         testCase: TestResultsDTO.TestNode? = nil
     ) throws {
@@ -464,7 +464,7 @@ extension Report.Module.File.RepeatableTest.Test {
     /// Initializes from TestResultsDTO.TestNode (Arguments node) with path
     init(
         from node: TestResultsDTO.TestNode,
-        path: [Report.Module.File.RepeatableTest.PathNode],
+        path: [Report.Module.Suite.RepeatableTest.PathNode],
         testCase: TestResultsDTO.TestNode
     ) {
         self.name = testCase.name
@@ -564,13 +564,13 @@ extension Array where Element: Equatable {
     }
 }
 
-extension Set where Element == Report.Module.File {
+extension Set where Element == Report.Module.Suite {
     subscript(_ name: String) -> Element? {
         first { $0.name == name }
     }
 }
 
-extension Set where Element == Report.Module.File.RepeatableTest {
+extension Set where Element == Report.Module.Suite.RepeatableTest {
     subscript(_ name: String) -> Element? {
         first { $0.name == name }
     }
@@ -582,18 +582,18 @@ extension Set where Element == Report.Module {
     }
 }
 
-extension Array where Element == Report.Module.File.RepeatableTest {
+extension Array where Element == Report.Module.Suite.RepeatableTest {
     public var totalDuration: Measurement<UnitDuration> {
         assert(map { $0.totalDuration.unit }.elementsAreEqual)
         let value = map { $0.totalDuration.value }.sum()
         let unit =
             first?.totalDuration.unit
-            ?? Report.Module.File.RepeatableTest.Test.defaultDurationUnit
+            ?? Report.Module.Suite.RepeatableTest.Test.defaultDurationUnit
         return .init(value: value, unit: unit)
     }
 }
 
-extension Report.Module.File.RepeatableTest.Test.Status {
+extension Report.Module.Suite.RepeatableTest.Test.Status {
     public var icon: String {
         switch self {
         case .success:

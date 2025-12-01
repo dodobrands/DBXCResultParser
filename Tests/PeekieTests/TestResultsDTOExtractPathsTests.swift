@@ -30,8 +30,8 @@ struct TestResultsDTOExtractPathsTests {
         #expect(
             paths == [
                 [
-                    Report.Module.File.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
-                    Report.Module.File.RepeatableTest.PathNode(
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
+                    Report.Module.Suite.RepeatableTest.PathNode(
                         name: "First Run", type: .repetition),
                 ]
             ])
@@ -69,13 +69,13 @@ struct TestResultsDTOExtractPathsTests {
         #expect(
             paths == [
                 [
-                    Report.Module.File.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
-                    Report.Module.File.RepeatableTest.PathNode(
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
+                    Report.Module.Suite.RepeatableTest.PathNode(
                         name: "First Run", type: .repetition),
                 ],
                 [
-                    Report.Module.File.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
-                    Report.Module.File.RepeatableTest.PathNode(name: "Retry 1", type: .repetition),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "Retry 1", type: .repetition),
                 ],
             ])
     }
@@ -104,8 +104,8 @@ struct TestResultsDTOExtractPathsTests {
         #expect(
             paths == [
                 [
-                    Report.Module.File.RepeatableTest.PathNode(name: "false", type: .arguments),
-                    Report.Module.File.RepeatableTest.PathNode(
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "false", type: .arguments),
+                    Report.Module.Suite.RepeatableTest.PathNode(
                         name: "First Run", type: .repetition),
                 ]
             ])
@@ -143,9 +143,9 @@ struct TestResultsDTOExtractPathsTests {
         #expect(
             paths == [
                 [
-                    Report.Module.File.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
-                    Report.Module.File.RepeatableTest.PathNode(name: "false", type: .arguments),
-                    Report.Module.File.RepeatableTest.PathNode(
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "false", type: .arguments),
+                    Report.Module.Suite.RepeatableTest.PathNode(
                         name: "First Run", type: .repetition),
                 ]
             ])
@@ -175,8 +175,8 @@ struct TestResultsDTOExtractPathsTests {
         #expect(
             paths == [
                 [
-                    Report.Module.File.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
-                    Report.Module.File.RepeatableTest.PathNode(name: "false", type: .arguments),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "false", type: .arguments),
                 ]
             ])
     }
@@ -213,12 +213,12 @@ struct TestResultsDTOExtractPathsTests {
         #expect(
             paths == [
                 [
-                    Report.Module.File.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
-                    Report.Module.File.RepeatableTest.PathNode(name: "false", type: .arguments),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "false", type: .arguments),
                 ],
                 [
-                    Report.Module.File.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
-                    Report.Module.File.RepeatableTest.PathNode(name: "true", type: .arguments),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "true", type: .arguments),
                 ],
             ])
     }
@@ -255,8 +255,8 @@ struct TestResultsDTOExtractPathsTests {
         #expect(
             paths == [
                 [
-                    Report.Module.File.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
-                    Report.Module.File.RepeatableTest.PathNode(
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
+                    Report.Module.Suite.RepeatableTest.PathNode(
                         name: "First Run", type: .repetition),
                 ]
             ])
@@ -325,20 +325,20 @@ struct TestResultsDTOExtractPathsTests {
         #expect(
             paths == [
                 [
-                    Report.Module.File.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
-                    Report.Module.File.RepeatableTest.PathNode(name: "false", type: .arguments),
-                    Report.Module.File.RepeatableTest.PathNode(
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "false", type: .arguments),
+                    Report.Module.Suite.RepeatableTest.PathNode(
                         name: "First Run", type: .repetition),
                 ],
                 [
-                    Report.Module.File.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
-                    Report.Module.File.RepeatableTest.PathNode(name: "false", type: .arguments),
-                    Report.Module.File.RepeatableTest.PathNode(name: "Retry 1", type: .repetition),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "false", type: .arguments),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "Retry 1", type: .repetition),
                 ],
                 [
-                    Report.Module.File.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
-                    Report.Module.File.RepeatableTest.PathNode(name: "true", type: .arguments),
-                    Report.Module.File.RepeatableTest.PathNode(
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "iPhone 13", type: .device),
+                    Report.Module.Suite.RepeatableTest.PathNode(name: "true", type: .arguments),
+                    Report.Module.Suite.RepeatableTest.PathNode(
                         name: "First Run", type: .repetition),
                 ],
             ])

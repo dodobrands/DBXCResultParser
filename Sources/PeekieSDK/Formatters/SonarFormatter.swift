@@ -13,7 +13,7 @@ public class SonarFormatter {
         // Group files by actual file path (multiple test suites can be in one file)
         var filesByPath: [String: [TestExecutions.File.TestCase]] = [:]
 
-        for file in report.modules.flatMap({ $0.files }).sorted(by: { $0.name < $1.name }) {
+        for file in report.modules.flatMap({ $0.suites }).sorted(by: { $0.name < $1.name }) {
             // Skip files that don't have any tests (coverage-only files)
             guard !file.repeatableTests.isEmpty else {
                 continue
@@ -162,7 +162,7 @@ private struct TestExecutions: Encodable, DynamicNodeEncoding {
 }
 
 extension TestExecutions.File.TestCase {
-    init(_ test: Report.Module.File.RepeatableTest.Test) {
+    init(_ test: Report.Module.Suite.RepeatableTest.Test) {
         self.init(
             name: test.name,
             duration: Int(test.duration.converted(to: .milliseconds).value),
@@ -173,7 +173,7 @@ extension TestExecutions.File.TestCase {
 }
 
 extension TestExecutions.File {
-    fileprivate static func testCases(from file: Report.Module.File) throws -> [TestExecutions.File
+    fileprivate static func testCases(from file: Report.Module.Suite) throws -> [TestExecutions.File
         .TestCase]
     {
         var testCases: [TestExecutions.File.TestCase] = []

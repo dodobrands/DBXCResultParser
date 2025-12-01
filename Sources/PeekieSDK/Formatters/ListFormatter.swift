@@ -13,7 +13,7 @@ public class ListFormatter {
     ///
     /// - Parameters:
     ///   - report: The report model instance to be formatted.
-    ///   - include: An array of `Report.Module.File.RepeatableTest.Test.Status` values that specifies which test statuses to include in the formatted report.
+    ///   - include: An array of `Report.Module.Suite.RepeatableTest.Test.Status` values that specifies which test statuses to include in the formatted report.
     ///   - includeDeviceDetails: If true, device information is included in test names. Defaults to false.
     ///
     /// - Returns: A formatted string representation of the report based on the specified criteria.
@@ -21,8 +21,8 @@ public class ListFormatter {
     /// - Throws: This method may throw an error if the formatting fails for any reason, such as an issue with the report model.
     public func format(
         _ report: Report,
-        include: [Report.Module.File.RepeatableTest.Test.Status] = Report.Module
-            .File.RepeatableTest.Test.Status.allCases,
+        include: [Report.Module.Suite.RepeatableTest.Test.Status] = Report.Module
+            .Suite.RepeatableTest.Test.Status.allCases,
         includeDeviceDetails: Bool = false
     ) -> String {
         logger.debug(
@@ -35,7 +35,7 @@ public class ListFormatter {
         )
 
         let files = report.modules
-            .flatMap { Array($0.files) }
+            .flatMap { Array($0.suites) }
             .sorted { $0.name < $1.name }
 
         let filesReports = files.compactMap { file in
@@ -54,9 +54,9 @@ public class ListFormatter {
     }
 }
 
-extension Report.Module.File {
+extension Report.Module.Suite {
     func report(
-        testResults: [Report.Module.File.RepeatableTest.Test.Status],
+        testResults: [Report.Module.Suite.RepeatableTest.Test.Status],
         includeDeviceDetails: Bool
     ) -> String? {
         let tests = repeatableTests.filtered(testResults: testResults).sorted { $0.name < $1.name }
@@ -83,7 +83,7 @@ extension Report.Module.File {
     }
 }
 
-extension Report.Module.File.RepeatableTest.Test {
+extension Report.Module.Suite.RepeatableTest.Test {
     fileprivate func report() -> String {
         [
             status.icon,
