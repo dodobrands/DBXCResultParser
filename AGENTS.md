@@ -118,7 +118,13 @@ git checkout -b your-branch-name
 
 ### Using GitHub CLI (`gh`)
 
-All GitHub operations (creating PRs, issues, etc.) should be performed using the GitHub CLI (`gh`) tool. This ensures consistency and allows for better automation.
+**Always use GitHub CLI (`gh`) for all GitHub operations.** All GitHub operations (creating PRs, issues, updating issues, adding comments, etc.) must be performed using the GitHub CLI (`gh`) tool, not MCP tools. This ensures consistency and allows for better automation.
+
+Examples:
+- Create/update issues: `gh issue create`, `gh issue edit`
+- Add comments: `gh issue comment`
+- Create/update PRs: `gh pr create`, `gh pr edit`
+- View information: `gh issue view`, `gh pr view`
 
 ### Creating Pull Requests
 

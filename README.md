@@ -27,8 +27,9 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
 - Parses modern `.xcresult` format (uses `xcresulttool` without `--legacy` flag).
 - Parses `.xcresult` files to create a typed model of the test results and code coverage.
 - **Parses build warnings** from `.xcresult` files and associates them with source files.
+- **Separates test suite structure from coverage files**: Test suites are identified by URLs (like `test://...`) without file paths in `.xcresult`. Coverage data and warnings, however, include actual file paths. Therefore, test suites (`Module.suites`) and files with coverage/warnings (`Module.files`) are kept separate in the data model.
 - Filters out coverage data related to test helpers and test cases.
-- Provides a detailed breakdown of modules, files, and repeatable tests.
+- Provides a detailed breakdown of modules, test suites, coverage files, and repeatable tests.
 - Calculates total and average test durations, as well as combined test statuses.
 - Supports identifying slow tests based on average duration.
 - Includes utility functions for filtering tests based on status.
@@ -83,25 +84,44 @@ let reportWithoutWarnings = try await Report(
 let modules = reportModel.modules
 let coverage = reportModel.coverage // Coverage value from 0.0 to 1.0
 
-// Iterate over modules, files, and tests:
+// IMPORTANT: Test suites and coverage files are separated
+// Test suites are identified by URLs (like test://...) without file paths in .xcresult.
+// Coverage data and warnings include actual file paths.
+// Therefore, test results are accessed via Module.suites, while coverage and warnings
+// are accessed via Module.files.
+
+// Iterate over modules, test suites, and tests:
 for module in modules {
     print("Module: \(module.name)")
-    for file in module.files {
-        print("  File: \(file.name)")
-        
-        // Access warnings for this file
-        if !file.warnings.isEmpty {
-            print("    Warnings:")
-            for warning in file.warnings {
-                print("      - \(warning.message)")
-            }
+
+    // Access test suites with their test cases
+    for suite in module.suites {
+        print("  Suite: \(suite.name)")
+
+        // Access warnings for this suite
+        for warning in suite.warnings {
+            print("    Warning: \(warning.message)")
         }
-        
-        for repeatableTest in file.repeatableTests {
+
+        for repeatableTest in suite.repeatableTests {
             print("    Repeatable Test: \(repeatableTest.name)")
             for test in repeatableTest.tests {
                 print("      Test: \(test.status.icon) - Duration: \(test.duration)")
             }
+        }
+    }
+
+    // Access coverage files (separate from test suites)
+    for file in module.files {
+        print("  Coverage File: \(file.name)")
+
+        // Access warnings for this file
+        for warning in file.warnings {
+            print("    Warning: \(warning.message)")
+        }
+
+        if let coverage = file.coverage {
+            print("    Lines Covered: \(coverage.linesCovered)/\(coverage.linesTotal)")
         }
     }
 }
@@ -171,7 +191,7 @@ Example output:
 
 #### Output Format
 
-Outputs a detailed list of test results, including the name of each file and the status of each test.
+Outputs a detailed list of test results, including the name of each test suite and the status of each test.
 
 **Basic Test Statuses:**
 - `✅` - Success
@@ -239,6 +259,24 @@ let xmlReport = try formatter.format(report: reportModel, testsPath: testsPath)
 // Print or save the XML report
 print(xmlReport)
 ```
+
+#### Important Note on File Path Resolution
+
+The `.xcresult` format does not include actual file paths for test suites—only suite identifier URLs like `test://com.apple.xcode/Module/ModuleTests/SuiteTests`. However, SonarQube requires actual file paths to properly map test results to source files.
+
+To bridge this gap, `SonarFormatter` performs the following steps:
+1. Takes the last component of the suite identifier URL as the class name (e.g., `SuiteTests` from `test://.../.../SuiteTests`)
+2. Recursively scans all `.swift` files in the provided `testsPath` directory
+3. Uses regex to find `class` and `struct` declarations in each file
+4. Builds a lookup dictionary mapping class/struct names to their file paths
+5. Looks up the class name to find the corresponding file path
+
+**Important**: This path inference is best-effort and may produce incorrect mappings in edge cases, such as:
+- Multiple classes/structs with the same name in different files (only one will be mapped)
+- Test suite names that don't match any class or struct name in the source files
+- Nested or inner classes/structs
+
+The `testsPath` parameter should point to your test source directory to enable this file path lookup.
 
 #### Features
 

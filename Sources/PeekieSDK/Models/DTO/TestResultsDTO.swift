@@ -9,6 +9,7 @@ extension TestResultsDTO {
         let children: [TestNode]?
         let durationInSeconds: Double?
         let name: String
+        let nodeIdentifierURL: String?
         let nodeType: NodeType
         let result: Result?
     }
@@ -17,20 +18,20 @@ extension TestResultsDTO {
     /// Returns an array of paths, where each path represents a route through the tree to a Repetition or Arguments node
     /// - Parameter children: Array of child nodes from a test case
     /// - Returns: Array of paths (arrays of PathNode) representing all paths through the tree
-    static func extractPaths(from children: [TestNode]) -> [[Report.Module.File.RepeatableTest
+    static func extractPaths(from children: [TestNode]) -> [[Report.Module.Suite.RepeatableTest
         .PathNode]]
     {
-        var result: [[Report.Module.File.RepeatableTest.PathNode]] = []
+        var result: [[Report.Module.Suite.RepeatableTest.PathNode]] = []
 
         func processNode(
             _ node: TestNode,
-            path: [Report.Module.File.RepeatableTest.PathNode]
+            path: [Report.Module.Suite.RepeatableTest.PathNode]
         ) {
             // Check if this node should be added to path
-            let pathNode: Report.Module.File.RepeatableTest.PathNode?
+            let pathNode: Report.Module.Suite.RepeatableTest.PathNode?
             switch node.nodeType {
             case .device, .arguments, .repetition:
-                pathNode = Report.Module.File.RepeatableTest.PathNode(
+                pathNode = Report.Module.Suite.RepeatableTest.PathNode(
                     name: node.name,
                     type: .init(from: node.nodeType)
                 )

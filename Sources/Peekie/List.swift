@@ -14,7 +14,7 @@ public struct List: AsyncParsableCommand {
     public var xcresultPath: String
 
     @Option(help: "Test statutes to include in report, comma separated")
-    public var include: String = Report.Module.File.RepeatableTest.Test.Status.allCases.map {
+    public var include: String = Report.Module.Suite.RepeatableTest.Test.Status.allCases.map {
         $0.rawValue
     }.joined(separator: ",")
 
@@ -42,7 +42,7 @@ public struct List: AsyncParsableCommand {
 
         let include = include.split(separator: ",")
             .compactMap {
-                Report.Module.File.RepeatableTest.Test.Status(rawValue: String($0))
+                Report.Module.Suite.RepeatableTest.Test.Status(rawValue: String($0))
             }
 
         let formatter = PeekieSDK.ListFormatter()

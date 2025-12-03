@@ -1,7 +1,10 @@
 import Foundation
+import Logging
 import XMLCoder
 
 public class SonarFormatter {
+    private let logger = Logger(label: "com.peekie.formatter.sonar")
+
     public init() {}
 
     public func format(
@@ -10,22 +13,89 @@ public class SonarFormatter {
     ) throws -> String {
         let fsIndex = try FSIndex(path: testsPath)
 
+        logger.debug(
+            "FSIndex created",
+            metadata: [
+                "testsPath": "\(testsPath.path)",
+                "classesCount": "\(fsIndex.classes.count)",
+            ]
+        )
+
         // Group files by actual file path (multiple test suites can be in one file)
         var filesByPath: [String: [TestExecutions.File.TestCase]] = [:]
+        // Track paths by nodeIdentifierURL (full node identifier)
+        var pathsByNode: [String: String] = [:]
 
-        for file in report.modules.flatMap({ $0.files }).sorted(by: { $0.name < $1.name }) {
+        for file in report.modules.flatMap({ $0.suites }).sorted(by: { $0.name < $1.name }) {
             // Skip files that don't have any tests (coverage-only files)
             guard !file.repeatableTests.isEmpty else {
+                logger.debug(
+                    "Skipping Suite: no tests",
+                    metadata: [
+                        "suiteName": "\(file.name)",
+                        "nodeIdentifierURL": "\(file.nodeIdentifierURL)",
+                    ]
+                )
                 continue
             }
 
-            // Skip files that are not found in the index (e.g., DTO test files that don't exist)
-            // Remove .swift extension for lookup since fsIndex uses class names without extension
-            let lookupName =
-                file.name.hasSuffix(".swift")
-                ? String(file.name.dropLast(6))
-                : file.name
-            guard let path = fsIndex.classes[lookupName] else {
+            // Extract class name from nodeIdentifierURL (lastPathComponent)
+            guard let url = URL(string: file.nodeIdentifierURL) else {
+                logger.debug(
+                    "Skipping Suite: cannot parse nodeIdentifierURL as URL",
+                    metadata: [
+                        "suiteName": "\(file.name)",
+                        "nodeIdentifierURL": "\(file.nodeIdentifierURL)",
+                    ]
+                )
+                continue
+            }
+            let className = url.lastPathComponent
+
+            logger.debug(
+                "Looking up Suite in FSIndex",
+                metadata: [
+                    "suiteName": "\(file.name)",
+                    "nodeIdentifierURL": "\(file.nodeIdentifierURL)",
+                    "className": "\(className)",
+                ]
+            )
+
+            // Check if we already have path for this nodeIdentifierURL
+            let path: String
+            if let cachedPath = pathsByNode[file.nodeIdentifierURL] {
+                path = cachedPath
+                logger.debug(
+                    "Using cached path for nodeIdentifierURL",
+                    metadata: [
+                        "suiteName": "\(file.name)",
+                        "nodeIdentifierURL": "\(file.nodeIdentifierURL)",
+                        "path": "\(path)",
+                    ]
+                )
+            } else if let foundPath = fsIndex.classes[className] {
+                path = foundPath
+                pathsByNode[file.nodeIdentifierURL] = path
+                logger.debug(
+                    "Found Suite in FSIndex",
+                    metadata: [
+                        "suiteName": "\(file.name)",
+                        "nodeIdentifierURL": "\(file.nodeIdentifierURL)",
+                        "className": "\(className)",
+                        "path": "\(path)",
+                    ]
+                )
+            } else {
+                logger.debug(
+                    "Skipping Suite: not found in FSIndex",
+                    metadata: [
+                        "suiteName": "\(file.name)",
+                        "nodeIdentifierURL": "\(file.nodeIdentifierURL)",
+                        "className": "\(className)",
+                        "availableClasses":
+                            "\(Array(fsIndex.classes.keys.sorted().prefix(10)).joined(separator: ", "))",
+                    ]
+                )
                 continue
             }
 
@@ -162,7 +232,7 @@ private struct TestExecutions: Encodable, DynamicNodeEncoding {
 }
 
 extension TestExecutions.File.TestCase {
-    init(_ test: Report.Module.File.RepeatableTest.Test) {
+    init(_ test: Report.Module.Suite.RepeatableTest.Test) {
         self.init(
             name: test.name,
             duration: Int(test.duration.converted(to: .milliseconds).value),
@@ -173,7 +243,7 @@ extension TestExecutions.File.TestCase {
 }
 
 extension TestExecutions.File {
-    fileprivate static func testCases(from file: Report.Module.File) throws -> [TestExecutions.File
+    fileprivate static func testCases(from file: Report.Module.Suite) throws -> [TestExecutions.File
         .TestCase]
     {
         var testCases: [TestExecutions.File.TestCase] = []

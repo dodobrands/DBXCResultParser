@@ -87,9 +87,9 @@ extension Report {
                     ]
                 )
 
-                // Find coverage files for this module
+                // Find coverage suites for this module
                 // Coverage is organized by target (source module), not test module
-                // We need to find all coverage files that belong to this test module's source
+                // We need to find all coverage suites that belong to this test module's source
                 var moduleCoverageFiles: [String: FileCoverageDTO] = [:]
                 var matchedTargetCoverage: Report.Coverage? = nil
                 if let coverageReportDTO = coverageReportDTO {
@@ -113,7 +113,7 @@ extension Report {
                             }
 
                             for fileCoverage in target.files {
-                                // Use file name (without path) as key
+                                // Use suite name (without path) as key
                                 moduleCoverageFiles[fileCoverage.name] = fileCoverage
                                 // Also use path as key for matching
                                 moduleCoverageFiles[fileCoverage.path] = fileCoverage
@@ -126,33 +126,64 @@ extension Report {
                     modules[moduleName]
                     ?? Report.Module(
                         name: moduleName,
+                        suites: [],
                         files: [],
                         coverage: matchedTargetCoverage
                     )
 
-                // Process test suites (files)
+                // Process test suites
                 guard let testSuites = testNode.children else { continue }
                 for testSuite in testSuites {
                     guard testSuite.nodeType == .testSuite else { continue }
 
-                    // Extract file name from test suite name (e.g., "ReportTests")
-                    let fileName = testSuite.name
+                    // Extract suite name from test suite name (e.g., "ReportTests")
+                    let suiteName = testSuite.name
+
+                    Self.logger.debug(
+                        "Parsing Test Suite",
+                        metadata: [
+                            "suiteName": "\(suiteName)",
+                            "module": "\(moduleName)",
+                        ]
+                    )
+
+                    // Store nodeIdentifierURL for fileName computation
+                    guard let nodeIdentifierURL = testSuite.nodeIdentifierURL else {
+                        // Skip test suites without nodeIdentifierURL (should not happen in practice)
+                        Self.logger.debug(
+                            "Skipping Test Suite: missing nodeIdentifierURL",
+                            metadata: [
+                                "suiteName": "\(suiteName)",
+                                "module": "\(moduleName)",
+                            ]
+                        )
+                        continue
+                    }
+
+                    Self.logger.debug(
+                        "Creating Suite from DTO",
+                        metadata: [
+                            "suiteName": "\(suiteName)",
+                            "module": "\(moduleName)",
+                            "nodeIdentifierURL": "\(nodeIdentifierURL)",
+                        ]
+                    )
 
                     // Try to find coverage for this file by name or path
                     let fileCoverage: Report.Module.File.Coverage?
                     if includeCoverage {
-                        // First try by exact file name
-                        if let coverageDTO = fileCoverageMap[fileName] {
+                        // First try by exact suite name
+                        if let coverageDTO = fileCoverageMap[suiteName] {
                             fileCoverage = Report.Module.File.Coverage(from: coverageDTO)
                         } else {
                             // Try with .swift extension
-                            let fileNameWithExtension = fileName + ".swift"
-                            if let coverageDTO = fileCoverageMap[fileNameWithExtension] {
+                            let suiteNameWithExtension = suiteName + ".swift"
+                            if let coverageDTO = fileCoverageMap[suiteNameWithExtension] {
                                 fileCoverage = Report.Module.File.Coverage(from: coverageDTO)
                             } else {
                                 // Try to match by extracting base name from test suite
                                 // Test suite names might be like "ReportTests" but file might be "Report.swift"
-                                let baseName = fileName.replacingOccurrences(of: "Tests", with: "")
+                                let baseName = suiteName.replacingOccurrences(of: "Tests", with: "")
                                 let possibleNames = [
                                     baseName + ".swift",
                                     baseName,
@@ -172,11 +203,11 @@ extension Report {
                                             coverageDTO.name.hasSuffix(".swift")
                                             ? String(coverageDTO.name.dropLast(6))
                                             : coverageDTO.name
-                                        if key == fileName
-                                            || key == fileName + ".swift"
-                                            || key.contains(fileName)
-                                            || fileName == coverageNameWithoutExt
-                                            || fileName == coverageDTO.name
+                                        if key == suiteName
+                                            || key == suiteName + ".swift"
+                                            || key.contains(suiteName)
+                                            || suiteName == coverageNameWithoutExt
+                                            || suiteName == coverageDTO.name
                                         {
                                             found = coverageDTO
                                             break
@@ -184,18 +215,18 @@ extension Report {
                                     }
                                 }
                                 if found == nil {
-                                    // Try to find by matching file name in path
+                                    // Try to find by matching suite name in path
                                     for (path, coverageDTO) in fileCoverageMap {
                                         // Match by exact path or by comparing names (with/without .swift)
                                         let coverageNameWithoutExt =
                                             coverageDTO.name.hasSuffix(".swift")
                                             ? String(coverageDTO.name.dropLast(6))
                                             : coverageDTO.name
-                                        if path == fileName
-                                            || path == fileName + ".swift"
-                                            || path.contains(fileName)
-                                            || fileName == coverageNameWithoutExt
-                                            || fileName == coverageDTO.name
+                                        if path == suiteName
+                                            || path == suiteName + ".swift"
+                                            || path.contains(suiteName)
+                                            || suiteName == coverageNameWithoutExt
+                                            || suiteName == coverageDTO.name
                                         {
                                             found = coverageDTO
                                             break
@@ -209,21 +240,68 @@ extension Report {
                         fileCoverage = nil
                     }
 
+                    // Try to get file name from coverage DTO or use suite name
+                    var fileName = suiteName
+                    if let coverageDTO = fileCoverageMap[suiteName] {
+                        fileName = coverageDTO.name
+                    } else if let coverageDTO = fileCoverageMap[suiteName + ".swift"] {
+                        fileName = coverageDTO.name
+                    } else {
+                        // Try to find in moduleCoverageFiles
+                        for (key, coverageDTO) in moduleCoverageFiles {
+                            if key == suiteName || key == suiteName + ".swift" {
+                                fileName = coverageDTO.name
+                                break
+                            }
+                        }
+                    }
+
+                    // Get or create File with coverage and warnings
                     let fileWarnings: [Report.Module.File.Issue] =
                         includeWarnings
                         ? Self.warningsFor(fileName: fileName, in: warningsByFileName)
                         : []
-                    var file =
-                        module.files[fileName]
-                        ?? .init(
+
+                    var file = module.files[fileName]
+                    if file == nil {
+                        file = Report.Module.File(
                             name: fileName,
-                            repeatableTests: [],
                             warnings: fileWarnings,
                             coverage: fileCoverage
                         )
+                        module.files.insert(file!)
+                    } else {
+                        // Merge warnings if file already exists
+                        if includeWarnings && !fileWarnings.isEmpty {
+                            file!.warnings = Self.mergeWarnings(file!.warnings, fileWarnings)
+                        }
+                    }
 
-                    if includeWarnings && !fileWarnings.isEmpty {
-                        file.warnings = Self.mergeWarnings(file.warnings, fileWarnings)
+                    // Get existing suite or create new one
+                    var suite: Report.Module.Suite
+                    if let existingSuite = module.suites[suiteName] {
+                        Self.logger.debug(
+                            "Using existing Suite",
+                            metadata: [
+                                "suiteName": "\(suiteName)",
+                                "module": "\(moduleName)",
+                            ]
+                        )
+                        suite = existingSuite
+                    } else {
+                        Self.logger.debug(
+                            "Created new Suite",
+                            metadata: [
+                                "suiteName": "\(suiteName)",
+                                "module": "\(moduleName)",
+                            ]
+                        )
+                        suite = .init(
+                            name: suiteName,
+                            nodeIdentifierURL: nodeIdentifierURL,
+                            repeatableTests: [],
+                            warnings: []
+                        )
                     }
 
                     // Process test cases
@@ -233,8 +311,8 @@ extension Report {
 
                         let testName = testCase.name
                         var repeatableTest =
-                            file.repeatableTests[testName]
-                            ?? Report.Module.File.RepeatableTest(
+                            suite.repeatableTests[testName]
+                            ?? Report.Module.Suite.RepeatableTest(
                                 name: testName,
                                 tests: []
                             )
@@ -247,15 +325,15 @@ extension Report {
                         // Process test case children and create Test objects with paths
                         func processNode(
                             _ node: TestResultsDTO.TestNode,
-                            path: [Report.Module.File.RepeatableTest.PathNode],
+                            path: [Report.Module.Suite.RepeatableTest.PathNode],
                             testCase: TestResultsDTO.TestNode
                         ) throws {
                             // Check if this node should be added to path
-                            let pathNode: Report.Module.File.RepeatableTest.PathNode?
+                            let pathNode: Report.Module.Suite.RepeatableTest.PathNode?
                             switch node.nodeType {
                             case .device, .arguments, .repetition:
                                 // Convert result from DTO to Test.Status
-                                let result: Report.Module.File.RepeatableTest.Test.Status? = {
+                                let result: Report.Module.Suite.RepeatableTest.Test.Status? = {
                                     guard let dtoResult = node.result else { return nil }
                                     switch dtoResult {
                                     case .passed:
@@ -276,7 +354,7 @@ extension Report {
                                     }
                                     return .init(
                                         value: durationSeconds * 1000,
-                                        unit: Report.Module.File.RepeatableTest.Test
+                                        unit: Report.Module.Suite.RepeatableTest.Test
                                             .defaultDurationUnit
                                     )
                                 }()
@@ -284,7 +362,7 @@ extension Report {
                                 // Extract message from DTO
                                 let message = node.failureMessage ?? node.skipMessage
 
-                                pathNode = Report.Module.File.RepeatableTest.PathNode(
+                                pathNode = Report.Module.Suite.RepeatableTest.PathNode(
                                     name: node.name,
                                     type: .init(from: node.nodeType),
                                     result: result,
@@ -302,7 +380,7 @@ extension Report {
 
                             // If this is a repetition node, create test and stop recursion
                             if node.nodeType == .repetition {
-                                let test = try Report.Module.File.RepeatableTest.Test(
+                                let test = try Report.Module.Suite.RepeatableTest.Test(
                                     from: node,
                                     path: newPath,
                                     testCaseName: testCase.name,
@@ -315,7 +393,7 @@ extension Report {
                             guard let nodeChildren = node.children else {
                                 // Leaf node - create test if it's an arguments node without children
                                 if node.nodeType == .arguments {
-                                    let test = Report.Module.File.RepeatableTest.Test(
+                                    let test = Report.Module.Suite.RepeatableTest.Test(
                                         from: node,
                                         path: newPath,
                                         testCase: testCase
@@ -335,7 +413,7 @@ extension Report {
                                 }
                                 if !hasRepetitions {
                                     // Arguments without repetitions - create test and stop recursion
-                                    let test = Report.Module.File.RepeatableTest.Test(
+                                    let test = Report.Module.Suite.RepeatableTest.Test(
                                         from: node,
                                         path: newPath,
                                         testCase: testCase
@@ -358,19 +436,15 @@ extension Report {
                         }
 
                         // If no tests were created (no children or only metadata), create test from test case itself
-                        assert(
-                            !repeatableTest.tests.isEmpty || filteredTestCaseChildren.isEmpty,
-                            "Tests are empty but test case has non-empty filtered children. This indicates a parsing issue."
-                        )
                         if repeatableTest.tests.isEmpty {
-                            let test = Report.Module.File.RepeatableTest.Test(from: testCase)
+                            let test = Report.Module.Suite.RepeatableTest.Test(from: testCase)
                             repeatableTest.tests.append(test)
                         }
 
-                        file.repeatableTests.update(with: repeatableTest)
+                        suite.repeatableTests.update(with: repeatableTest)
                     }
 
-                    module.files.update(with: file)
+                    module.suites.update(with: suite)
                 }
 
                 // Update module in set, preserving coverage
@@ -381,7 +455,7 @@ extension Report {
             }
         }
 
-        // Add all files with coverage to modules, even if they don't have test files
+        // Add all suites with coverage to modules, even if they don't have test suites
         if let coverageReportDTO = coverageReportDTO {
             for target in coverageReportDTO.targets {
                 // Create coverage from target-level data if available
@@ -408,7 +482,8 @@ extension Report {
                     }
                 }
 
-                // Start with existing module files or empty set
+                // Start with existing module suites and files or empty sets
+                let moduleSuites = existingModule?.suites ?? Set<Report.Module.Suite>()
                 var moduleFiles = existingModule?.files ?? Set<Report.Module.File>()
 
                 // Determine module coverage: use target coverage if module doesn't have one, or keep existing
@@ -418,46 +493,28 @@ extension Report {
                 for fileCoverageDTO in target.files {
                     let coverage = Report.Module.File.Coverage(from: fileCoverageDTO)
                     // Use the name as it appears in xcresult
-                    // If name contains path separators, extract just the filename
-                    var fileName = fileCoverageDTO.name
-                    if let lastSlash = fileName.lastIndex(of: "/") {
-                        fileName = String(fileName[fileName.index(after: lastSlash)...])
-                    }
+                    let fileName = fileCoverageDTO.name
 
-                    // Check if file already exists in module (from test suites)
-                    if let existingFile = moduleFiles[fileName] {
-                        // File exists - update coverage if it doesn't have one
-                        if existingFile.coverage == nil {
-                            let updatedWarnings: [Report.Module.File.Issue] =
-                                includeWarnings
-                                ? Self.mergeWarnings(
-                                    existingFile.warnings,
-                                    Self.warningsFor(fileName: fileName, in: warningsByFileName)
-                                )
-                                : existingFile.warnings
-                            let updatedFile = Report.Module.File(
-                                name: fileName,
-                                repeatableTests: existingFile.repeatableTests,
-                                warnings: updatedWarnings,
-                                coverage: coverage
-                            )
-                            moduleFiles.remove(existingFile)
-                            moduleFiles.insert(updatedFile)
-                        }
-                        // If file already has coverage, keep existing one (from test suite matching)
-                    } else {
-                        // Create new file entry with coverage but no tests
-                        let newFileWarnings: [Report.Module.File.Issue] =
-                            includeWarnings
-                            ? Self.warningsFor(fileName: fileName, in: warningsByFileName)
-                            : []
-                        let newFile = Report.Module.File(
+                    // Get warnings for this file
+                    let fileWarnings: [Report.Module.File.Issue] =
+                        includeWarnings
+                        ? Self.warningsFor(fileName: fileName, in: warningsByFileName)
+                        : []
+
+                    // Create or update File with coverage and warnings
+                    var file = moduleFiles[fileName]
+                    if file == nil {
+                        file = Report.Module.File(
                             name: fileName,
-                            repeatableTests: [],
-                            warnings: newFileWarnings,
+                            warnings: fileWarnings,
                             coverage: coverage
                         )
-                        moduleFiles.insert(newFile)
+                        moduleFiles.insert(file!)
+                    } else {
+                        // Merge warnings if file already exists
+                        if includeWarnings && !fileWarnings.isEmpty {
+                            file!.warnings = Self.mergeWarnings(file!.warnings, fileWarnings)
+                        }
                     }
                 }
 
@@ -466,14 +523,15 @@ extension Report {
                     modules.remove(oldModule)
                 }
 
-                // Create or update module with all files and coverage
+                // Create or update module with all suites, files and coverage
                 let updatedModule = Report.Module(
-                    name: moduleName, files: moduleFiles, coverage: moduleCoverage)
+                    name: moduleName, suites: moduleSuites, files: moduleFiles,
+                    coverage: moduleCoverage)
                 modules.insert(updatedModule)
             }
         }
 
-        // Use total coverage from xcresult file if available, otherwise calculate from files
+        // Use total coverage from xcresult file if available, otherwise calculate from suites
         let totalCoverage: Double? =
             includeCoverage
             ? {

@@ -26,10 +26,6 @@ extension FSIndex {
             return true
         }
 
-        // Regular expression to find class and struct names
-        let regex = try NSRegularExpression(
-            pattern: "(?:class|struct)\\s+([A-Za-z_][A-Za-z_0-9]*)", options: [])
-
         // Iterate over each file found by the enumerator
         while let element = enumerator?.nextObject() as? URL {
             let isFile =
@@ -48,17 +44,22 @@ extension FSIndex {
 
             let fileContent = try String(contentsOf: element, encoding: .utf8)
 
+            // Regular expression to find class and struct names
+            let regex = try NSRegularExpression(
+                pattern: "(?:class|struct)\\s+([A-Za-z_][A-Za-z_0-9]*)", options: [])
+
             // Search for class definitions
             let nsRange = NSRange(fileContent.startIndex..<fileContent.endIndex, in: fileContent)
             let matches = regex.matches(in: fileContent, options: [], range: nsRange)
+
+            let relativePath: String =
+                try element.relativePath(from: path)
+                ?! Error.cantGetRelativePath(filePath: element, basePath: path)
 
             // Extract class names from the matches and store them in the dictionary
             for match in matches {
                 if let range = Range(match.range(at: 1), in: fileContent) {
                     let className = String(fileContent[range])
-                    let relativePath: String =
-                        try element.relativePath(from: path)
-                        ?! Error.cantGetRelativePath(filePath: element, basePath: path)
                     classDictionary[className] = relativePath
                 }
             }
