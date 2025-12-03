@@ -16,6 +16,7 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
 
 - [Features](#features)
 - [Installation](#installation)
+- [Migration Guide](#migration-guide)
 - [Usage](#usage)
   - [Parsing xcresult Files](#parsing-xcresult-files)
   - [Formatters](#formatters)
@@ -48,7 +49,7 @@ To use `PeekieSDK` in your Swift package, add it to the dependencies for your `P
 let package = Package(
     name: "YourPackageName",
     dependencies: [
-        .package(url: "https://github.com/dodobrands/DBXCResultParser", .upToNextMajor(from: "3.0.0"))
+        .package(url: "https://github.com/dodobrands/Peekie.git", from: "4.0.0")
     ],
     targets: [
         .target(
@@ -58,6 +59,15 @@ let package = Package(
     ]
 )
 ```
+
+## Migration Guide
+
+If you're upgrading from version 3.* (formerly `DBXCResultParser`), please see the [Migration Guide](https://github.com/dodobrands/Peekie/releases/tag/4.0.0) for detailed instructions on how to migrate your code. The guide includes:
+
+- Step-by-step migration instructions
+- Code examples showing before/after changes
+- Common migration patterns
+- List of removed features and renamed types
 
 ## Usage
 
