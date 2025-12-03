@@ -69,7 +69,7 @@ To parse an `.xcresult` file and access the report data, initialize a `Report` w
 import PeekieSDK
 
 let xcresultPath = URL(fileURLWithPath: "/path/to/your.xcresult")
-let reportModel = try await Report(xcresultPath: xcresultPath)
+let report = try await Report(xcresultPath: xcresultPath)
 
 // Optionally, you can control what data to include:
 // Parse without coverage data (faster)
@@ -85,8 +85,8 @@ let reportWithoutWarnings = try await Report(
 )
 
 // Access different parts of the report:
-let modules = reportModel.modules
-let coverage = reportModel.coverage // Coverage value from 0.0 to 1.0
+let modules = report.modules
+let coverage = report.coverage // Coverage value from 0.0 to 1.0
 
 // IMPORTANT: Test suites and coverage files are separated
 // Test suites are identified by URLs (like test://...) without file paths in .xcresult.
@@ -149,14 +149,14 @@ To format your test report data, create an instance of `ListFormatter`:
 ```swift
 import PeekieSDK
 
-// Assuming you have already created a `Report` instance as `reportModel`
-let reportModel: Report = ...
+// Assuming you have already created a `Report` instance as `report`
+let report: Report = ...
 
 // Create a list formatter
 let formatter = ListFormatter()
 
 // Format the report data into a string
-let formattedOutput = formatter.format(reportModel)
+let formattedOutput = formatter.format(report)
 
 // Print the formatted output
 print("Formatted Output:\n\(formattedOutput)")
@@ -168,13 +168,13 @@ The `format` method can also take an array of `Report.Module.File.RepeatableTest
 
 ```swift
 // Only show failures
-let failuresOnly = formatter.format(reportModel, include: [.failure])
+let failuresOnly = formatter.format(report, include: [.failure])
 
 // Show both failures and skipped tests
-let failuresAndSkipped = formatter.format(reportModel, include: [.failure, .skipped])
+let failuresAndSkipped = formatter.format(report, include: [.failure, .skipped])
 
 // Show only successful tests
-let successesOnly = formatter.format(reportModel, include: [.success])
+let successesOnly = formatter.format(report, include: [.success])
 ```
 
 **Including device details:**
@@ -183,10 +183,10 @@ By default, device information is filtered out from test names. When enabled, de
 
 ```swift
 // Default: device details are always hidden
-let output = formatter.format(reportModel)
+let output = formatter.format(report)
 
 // Include device details if available in .xcresult
-let outputWithDevices = formatter.format(reportModel, includeDeviceDetails: true)
+let outputWithDevices = formatter.format(report, includeDeviceDetails: true)
 ```
 
 Example output:
@@ -247,8 +247,8 @@ To generate a SonarQube-compatible XML report programmatically:
 ```swift
 import PeekieSDK
 
-// Assuming you have already created a `Report` instance as `reportModel`
-let reportModel: Report = ...
+// Assuming you have already created a `Report` instance as `report`
+let report: Report = ...
 
 // Path to the directory containing your test source files (not the .xcresult file)
 // This directory should contain your test .swift source files
@@ -258,7 +258,7 @@ let testsPath = URL(fileURLWithPath: "/path/to/your/tests")
 let formatter = SonarFormatter()
 
 // Generate the XML report
-let xmlReport = try formatter.format(report: reportModel, testsPath: testsPath)
+let xmlReport = try formatter.format(report: report, testsPath: testsPath)
 
 // Print or save the XML report
 print(xmlReport)
