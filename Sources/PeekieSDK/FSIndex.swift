@@ -1,9 +1,9 @@
 import Foundation
 
-public struct FSIndex {
-    public let classes: [String: String]
+struct FSIndex {
+    let classes: [String: String]
 
-    public init(path: URL) throws {
+    init(path: URL) throws {
         self.classes = try Self.classes(in: path)
     }
 }
@@ -68,7 +68,7 @@ extension FSIndex {
         return classDictionary
     }
 
-    public enum Error: Swift.Error {
+    enum Error: Swift.Error {
         case cantGetRelativePath(filePath: URL, basePath: URL)
     }
 }

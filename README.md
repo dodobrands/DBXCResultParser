@@ -102,11 +102,6 @@ for module in modules {
     for suite in module.suites {
         print("  Suite: \(suite.name)")
 
-        // Access warnings for this suite
-        for warning in suite.warnings {
-            print("    Warning: \(warning.message)")
-        }
-
         for repeatableTest in suite.repeatableTests {
             print("    Repeatable Test: \(repeatableTest.name)")
             for test in repeatableTest.tests {

@@ -299,8 +299,7 @@ extension Report {
                         suite = .init(
                             name: suiteName,
                             nodeIdentifierURL: nodeIdentifierURL,
-                            repeatableTests: [],
-                            warnings: []
+                            repeatableTests: []
                         )
                     }
 
