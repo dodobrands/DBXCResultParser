@@ -99,11 +99,8 @@ for module in modules {
         print("  Suite: \(suite.name)")
 
         // Access warnings for this suite
-        if !suite.warnings.isEmpty {
-            print("    Warnings:")
-            for warning in suite.warnings {
-                print("      - \(warning.message)")
-            }
+        for warning in suite.warnings {
+            print("    Warning: \(warning.message)")
         }
 
         for repeatableTest in suite.repeatableTests {
@@ -119,11 +116,8 @@ for module in modules {
         print("  Coverage File: \(file.name)")
 
         // Access warnings for this file
-        if !file.warnings.isEmpty {
-            print("    Warnings:")
-            for warning in file.warnings {
-                print("      - \(warning.message)")
-            }
+        for warning in file.warnings {
+            print("    Warning: \(warning.message)")
         }
 
         if let coverage = file.coverage {
