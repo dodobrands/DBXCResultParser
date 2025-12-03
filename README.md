@@ -27,7 +27,7 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
 - Parses modern `.xcresult` format (uses `xcresulttool` without `--legacy` flag).
 - Parses `.xcresult` files to create a typed model of the test results and code coverage.
 - **Parses build warnings** from `.xcresult` files and associates them with source files.
-- **Separates test suite structure from coverage files**: The `.xcresult` format doesn't include actual file paths for test suites—only suite identifier URLs. Therefore, test suites (`Module.suites`) are kept separate from coverage files (`Module.files`) in the data model.
+- **Separates test suite structure from coverage files**: Test suites are identified by URLs (like `test://...`) without file paths in `.xcresult`. Coverage data and warnings, however, include actual file paths. Therefore, test suites (`Module.suites`) and files with coverage/warnings (`Module.files`) are kept separate in the data model.
 - Filters out coverage data related to test helpers and test cases.
 - Provides a detailed breakdown of modules, test suites, coverage files, and repeatable tests.
 - Calculates total and average test durations, as well as combined test statuses.
@@ -85,9 +85,10 @@ let modules = reportModel.modules
 let coverage = reportModel.coverage // Coverage value from 0.0 to 1.0
 
 // IMPORTANT: Test suites and coverage files are separated
-// The .xcresult format doesn't include actual file paths for test suites—only suite identifier URLs.
-// Therefore, test results are accessed via Module.suites, while code coverage data is accessed
-// via Module.files.
+// Test suites are identified by URLs (like test://...) without file paths in .xcresult.
+// Coverage data and warnings include actual file paths.
+// Therefore, test results are accessed via Module.suites, while coverage and warnings
+// are accessed via Module.files.
 
 // Iterate over modules, test suites, and tests:
 for module in modules {
