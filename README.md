@@ -26,7 +26,7 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
 - Supports **XCTest** and **Swift Testing** frameworks.
 - Parses modern `.xcresult` format (uses `xcresulttool` without `--legacy` flag).
 - Parses `.xcresult` files to create a typed model of the test results and code coverage.
-- **Parses build warnings** from `.xcresult` files and associates them with test suites.
+- **Parses build warnings** from `.xcresult` files and associates them with source files.
 - **Separates test suite structure from coverage files**: The `.xcresult` format doesn't include actual file paths for test suites—only suite identifier URLs. Therefore, test suites (`Module.suites`) are kept separate from coverage files (`Module.files`) in the data model.
 - Filters out coverage data related to test helpers and test cases.
 - Provides a detailed breakdown of modules, test suites, coverage files, and repeatable tests.
