@@ -26,9 +26,10 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
 - Supports **XCTest** and **Swift Testing** frameworks.
 - Parses modern `.xcresult` format (uses `xcresulttool` without `--legacy` flag).
 - Parses `.xcresult` files to create a typed model of the test results and code coverage.
-- **Parses build warnings** from `.xcresult` files and associates them with source files.
+- **Parses build warnings** from `.xcresult` files and associates them with test suites.
+- Separates test suite structure from coverage files for accurate reporting.
 - Filters out coverage data related to test helpers and test cases.
-- Provides a detailed breakdown of modules, files, and repeatable tests.
+- Provides a detailed breakdown of modules, test suites, coverage files, and repeatable tests.
 - Calculates total and average test durations, as well as combined test statuses.
 - Supports identifying slow tests based on average duration.
 - Includes utility functions for filtering tests based on status.
@@ -83,25 +84,35 @@ let reportWithoutWarnings = try await Report(
 let modules = reportModel.modules
 let coverage = reportModel.coverage // Coverage value from 0.0 to 1.0
 
-// Iterate over modules, files, and tests:
+// Iterate over modules, test suites, and tests:
 for module in modules {
     print("Module: \(module.name)")
-    for file in module.files {
-        print("  File: \(file.name)")
-        
-        // Access warnings for this file
-        if !file.warnings.isEmpty {
+
+    // Access test suites with their test cases
+    for suite in module.suites {
+        print("  Suite: \(suite.name)")
+
+        // Access warnings for this suite
+        if !suite.warnings.isEmpty {
             print("    Warnings:")
-            for warning in file.warnings {
+            for warning in suite.warnings {
                 print("      - \(warning.message)")
             }
         }
-        
-        for repeatableTest in file.repeatableTests {
+
+        for repeatableTest in suite.repeatableTests {
             print("    Repeatable Test: \(repeatableTest.name)")
             for test in repeatableTest.tests {
                 print("      Test: \(test.status.icon) - Duration: \(test.duration)")
             }
+        }
+    }
+
+    // Access coverage files (separate from test suites)
+    for file in module.files {
+        print("  Coverage File: \(file.name)")
+        if let coverage = file.coverage {
+            print("    Lines Covered: \(coverage.linesCovered)/\(coverage.linesTotal)")
         }
     }
 }
@@ -171,7 +182,7 @@ Example output:
 
 #### Output Format
 
-Outputs a detailed list of test results, including the name of each file and the status of each test.
+Outputs a detailed list of test results, including the name of each test suite and the status of each test.
 
 **Basic Test Statuses:**
 - `✅` - Success
