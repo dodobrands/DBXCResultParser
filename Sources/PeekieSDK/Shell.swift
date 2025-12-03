@@ -2,12 +2,11 @@ import Foundation
 import Logging
 import Subprocess
 
-public class Shell {
+class Shell {
     private static let logger = Logger(label: "com.peekie.shell")
+
     @discardableResult
-    public static func execute(_ executable: String, arguments: [String] = []) async throws
-        -> String
-    {
+    static func execute(_ executable: String, arguments: [String] = []) async throws -> String {
         logger.debug(
             "Executing command",
             metadata: [

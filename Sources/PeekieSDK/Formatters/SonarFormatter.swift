@@ -2,11 +2,25 @@ import Foundation
 import Logging
 import XMLCoder
 
+/// Formatter that generates SonarQube Generic Test Execution XML format
+///
+/// This formatter converts test results into XML format compatible with SonarQube's
+/// Generic Test Data import feature, enabling test result visualization in SonarQube dashboards.
+///
+/// - Note: Requires a testsPath directory to map test suite names to actual file paths,
+///   as xcresult files only contain suite URLs without file paths.
 public class SonarFormatter {
     private let logger = Logger(label: "com.peekie.formatter.sonar")
 
+    /// Creates a new SonarQube formatter instance
     public init() {}
 
+    /// Formats a report into SonarQube Generic Test Execution XML
+    /// - Parameters:
+    ///   - report: The parsed test report to format
+    ///   - testsPath: Directory containing test source files for file path resolution
+    /// - Returns: XML string in SonarQube Generic Test Execution format
+    /// - Throws: Error if file path resolution fails or XML encoding fails
     public func format(
         report: Report,
         testsPath: URL

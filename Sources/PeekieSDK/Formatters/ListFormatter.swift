@@ -1,9 +1,22 @@
 import Foundation
 import Logging
 
+/// Formatter that generates human-readable list output of test results
+///
+/// This formatter produces plain text output with test statuses represented by emoji icons.
+/// Ideal for terminal output and CI/CD logs.
+///
+/// Example output:
+/// ```
+/// FileA.swift
+/// ✅ test_success()
+/// ❌ test_failure() (Failure message)
+/// ⏭️ test_skip() (Skip message)
+/// ```
 public class ListFormatter {
     private let logger = Logger(label: "com.peekie.formatter")
 
+    /// Creates a new list formatter instance
     public init() {}
 
     /// Formats a given report based on specified criteria.
