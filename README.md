@@ -116,6 +116,15 @@ for module in modules {
     // Access coverage files (separate from test suites)
     for file in module.files {
         print("  Coverage File: \(file.name)")
+
+        // Access warnings for this file
+        if !file.warnings.isEmpty {
+            print("    Warnings:")
+            for warning in file.warnings {
+                print("      - \(warning.message)")
+            }
+        }
+
         if let coverage = file.coverage {
             print("    Lines Covered: \(coverage.linesCovered)/\(coverage.linesTotal)")
         }
