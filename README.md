@@ -27,7 +27,7 @@ The `PeekieSDK` package provides a Swift module for parsing `.xcresult` files ge
 - Parses modern `.xcresult` format (uses `xcresulttool` without `--legacy` flag).
 - Parses `.xcresult` files to create a typed model of the test results and code coverage.
 - **Parses build warnings** from `.xcresult` files and associates them with test suites.
-- Separates test suite structure from coverage files for accurate reporting.
+- **Separates test suite structure from coverage files**: Since `.xcresult` files don't contain file paths for test suites (only suite identifiers), test suites are kept separate from coverage files to avoid incorrect path guessing and potential errors.
 - Filters out coverage data related to test helpers and test cases.
 - Provides a detailed breakdown of modules, test suites, coverage files, and repeatable tests.
 - Calculates total and average test durations, as well as combined test statuses.
@@ -83,6 +83,11 @@ let reportWithoutWarnings = try await Report(
 // Access different parts of the report:
 let modules = reportModel.modules
 let coverage = reportModel.coverage // Coverage value from 0.0 to 1.0
+
+// IMPORTANT: Test suites and coverage files are separated
+// The .xcresult format doesn't include file paths for test suites, only suite identifiers.
+// To avoid guessing file paths (which can lead to errors), test results are accessed via
+// Module.suites, while code coverage data is accessed via Module.files.
 
 // Iterate over modules, test suites, and tests:
 for module in modules {
@@ -250,6 +255,12 @@ let xmlReport = try formatter.format(report: reportModel, testsPath: testsPath)
 // Print or save the XML report
 print(xmlReport)
 ```
+
+#### Important Note on File Path Resolution
+
+The `.xcresult` format does not include actual file paths for test suites—only suite identifier URLs like `test://com.apple.xcode/Module/ModuleTests/SuiteTests`. To map test suites to their source files, `SonarFormatter` requires the `testsPath` parameter pointing to your test source directory. The formatter extracts class names from suite identifiers and uses `FSIndex` to locate the corresponding `.swift` files.
+
+This approach avoids guessing file paths, which could lead to incorrect mappings when multiple test suites exist or when file naming doesn't match suite names.
 
 #### Features
 
