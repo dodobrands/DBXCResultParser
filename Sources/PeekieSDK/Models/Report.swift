@@ -157,7 +157,6 @@ extension Report.Module {
     }
 }
 
-
 extension Report.Module.Suite {
     /// A test that can be run multiple times (e.g., with retries, different devices, or parameterized inputs)
     public struct RepeatableTest: Hashable {
