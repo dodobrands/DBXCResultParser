@@ -1,20 +1,32 @@
 import Foundation
 
+/// Parsed report from an `.xcresult` file containing test results, coverage, and warnings
 public struct Report {
+    /// Set of all modules in this report
     public let modules: Set<Module>
+
+    /// Total code coverage percentage (0.0 to 1.0), calculated from all modules
     public let coverage: Double?
 
-    /// All warnings from all modules in this report
+    /// All warnings from all modules in this report (computed from Module.File.warnings)
     public var warnings: [Module.File.Issue] {
         modules.flatMap { $0.warnings }
     }
 }
 
 extension Report {
+    /// A module (test target) containing test suites and coverage files
     public struct Module: Hashable {
+        /// Name of the module (e.g., "PeekieTests")
         public let name: String
+
+        /// Set of test suites in this module
         public internal(set) var suites: Set<Suite>
+
+        /// Set of files with coverage and warnings data
         public internal(set) var files: Set<File>
+
+        /// Code coverage for this module (from target-level coverage data in xcresult)
         public let coverage: Coverage?
 
         public func hash(into hasher: inout Hasher) {
@@ -25,23 +37,35 @@ extension Report {
             lhs.name == rhs.name
         }
 
-        /// All warnings from all files in this module
+        /// All warnings from all files in this module (computed from File.warnings)
         public var warnings: [File.Issue] {
             files.flatMap { $0.warnings }
         }
     }
 
+    /// Code coverage information for a module or file
     public struct Coverage: Equatable {
+        /// Number of lines covered by tests
         public let coveredLines: Int
+
+        /// Total number of executable lines
         public let totalLines: Int
+
+        /// Coverage percentage (0.0 to 1.0)
         public let coverage: Double
     }
 }
 
 extension Report.Module.File {
+    /// Code coverage information for a specific file
     public struct Coverage: Equatable {
+        /// Number of lines covered by tests
         public let coveredLines: Int
+
+        /// Total number of executable lines
         public let totalLines: Int
+
+        /// Coverage percentage (0.0 to 1.0)
         public let coverage: Double
 
         init(
@@ -63,9 +87,15 @@ extension Report.Module.File {
 }
 
 extension Report.Module {
+    /// A source file with coverage and warnings information
     public struct File: Hashable {
+        /// Name of the file (e.g., "Report.swift")
         public let name: String
+
+        /// Build warnings associated with this file
         public internal(set) var warnings: [File.Issue]
+
+        /// Code coverage information for this file
         public let coverage: File.Coverage?
 
         public func hash(into hasher: inout Hasher) {
@@ -79,10 +109,15 @@ extension Report.Module {
 }
 
 extension Report.Module.File {
+    /// A build issue (warning or error) associated with a file
     public struct Issue: Equatable, Sendable {
+        /// Type of the issue
         public let type: IssueType
+
+        /// Human-readable message describing the issue
         public let message: String
 
+        /// Types of build issues that can be reported
         public enum IssueType: String, Equatable, Sendable {
             case buildWarning = "Swift Compiler Warning"
         }
@@ -90,8 +125,11 @@ extension Report.Module.File {
 }
 
 extension Report.Module {
+    /// A test suite containing a group of related tests
     public struct Suite: Hashable {
+        /// Name of the test suite (e.g., "ReportTests")
         public let name: String
+
         /// URL identifier from the test node in xcresult JSON.
         /// Examples:
         /// - Test Suite: `"test://com.apple.xcode/Module/ModuleTests/SuiteTests"`
@@ -99,6 +137,8 @@ extension Report.Module {
         /// - Unit test bundle: `"test://com.apple.xcode/Module/ModuleTests"`
         /// Format: `test://com.apple.xcode/<Module>/<Bundle>/<Suite>/<TestCase>`
         public let nodeIdentifierURL: String
+
+        /// Set of repeatable tests in this suite
         public internal(set) var repeatableTests: Set<RepeatableTest>
 
         public func hash(into hasher: inout Hasher) {
@@ -113,8 +153,12 @@ extension Report.Module {
 
 
 extension Report.Module.Suite {
+    /// A test that can be run multiple times (e.g., with retries, different devices, or parameterized inputs)
     public struct RepeatableTest: Hashable {
+        /// Name of the test (e.g., "test_example()")
         public let name: String
+
+        /// Array of test executions (multiple entries if test was retried or run with different parameters)
         public internal(set) var tests: [Test]
 
         public func hash(into hasher: inout Hasher) {
@@ -128,16 +172,32 @@ extension Report.Module.Suite {
 }
 
 extension Report.Module.Suite.RepeatableTest {
+    /// A node in the test execution path representing device, arguments, or repetition
     public struct PathNode: Equatable, Hashable {
+        /// Name of the path node (e.g., device name, argument value, or repetition number)
         public let name: String
+
+        /// Type of this path node
         public let type: NodeType
+
+        /// Test result at this path node level (if available)
         public let result: Test.Status?
+
+        /// Duration of execution at this path node level (if available)
         public let duration: Measurement<UnitDuration>?
+
+        /// Message associated with this path node (e.g., failure or skip reason)
         public let message: String?
 
+        /// Types of path nodes in test execution hierarchy
         public enum NodeType: Equatable, Hashable {
+            /// Device on which test was executed (e.g., "iPhone 15 Pro")
             case device
+
+            /// Test arguments for parameterized tests
             case arguments
+
+            /// Test repetition/retry
             case repetition
 
             init(from dtoNodeType: TestResultsDTO.TestNode.NodeType) {
@@ -170,12 +230,24 @@ extension Report.Module.Suite.RepeatableTest {
         }
     }
 
+    /// A single test execution with its result, duration, and execution path
     public struct Test: Equatable {
+        /// Name of the test
         public let name: String
+
+        /// Execution status of the test
         public let status: Status
+
+        /// Duration of the test execution
         public let duration: Measurement<UnitDuration>
+
+        /// Execution path showing device, arguments, and repetitions
         public let path: [PathNode]
+
+        /// Failure message if test failed
         public let failureMessage: String?
+
+        /// Skip message if test was skipped
         public let skipMessage: String?
 
         public init(
@@ -216,6 +288,7 @@ extension Report.Module.Suite.RepeatableTest {
         }
     }
 
+    /// Combined status of all test executions (mixed if statuses differ)
     public var combinedStatus: Test.Status {
         let statuses = tests.map { $0.status }
         if statuses.elementsAreEqual {
@@ -225,6 +298,7 @@ extension Report.Module.Suite.RepeatableTest {
         }
     }
 
+    /// Average duration across all test executions
     public var averageDuration: Measurement<UnitDuration> {
         assert(tests.map { $0.duration.unit }.elementsAreEqual)
 
@@ -236,6 +310,7 @@ extension Report.Module.Suite.RepeatableTest {
         )
     }
 
+    /// Total duration of all test executions combined
     public var totalDuration: Measurement<UnitDuration> {
         assert(tests.map { $0.duration.unit }.elementsAreEqual)
         let value = tests.map { $0.duration.value }.sum()
@@ -358,6 +433,9 @@ extension Report.Module.Suite.RepeatableTest {
         path.map { "\($0.name):\($0.type)" }.joined(separator: "|")
     }
 
+    /// Checks if this test is considered slow based on a threshold duration
+    /// - Parameter duration: The threshold duration to compare against
+    /// - Returns: True if average duration meets or exceeds the threshold
     public func isSlow(_ duration: Measurement<UnitDuration>) -> Bool {
         let averageDuration = averageDuration
         let duration = duration.converted(to: averageDuration.unit)
@@ -366,14 +444,24 @@ extension Report.Module.Suite.RepeatableTest {
 }
 
 extension Report.Module.Suite.RepeatableTest.Test {
+    /// Test execution status
     public enum Status: String, Equatable, CaseIterable {
+        /// Test passed successfully
         case success
+
+        /// Test failed
         case failure
+
+        /// Test failed as expected (marked with XCTExpectFailure)
         case expectedFailure
+
+        /// Test was skipped
         case skipped
 
-        // there were multiple retries with different results
+        /// Test had multiple retries with different results (flaky test)
         case mixed
+
+        /// Test status is unknown or could not be determined
         case unknown
     }
 }
@@ -623,6 +711,7 @@ extension Array where Element == Report.Module.Suite.RepeatableTest {
 }
 
 extension Report.Module.Suite.RepeatableTest.Test.Status {
+    /// Emoji icon representing the test status
     public var icon: String {
         switch self {
         case .success:
