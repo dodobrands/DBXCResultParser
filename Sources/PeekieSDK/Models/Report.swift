@@ -5,10 +5,12 @@ public struct Report {
     /// Set of all modules in this report
     public let modules: Set<Module>
 
-    /// Total code coverage percentage (0.0 to 1.0), calculated from all modules
+    /// Total code coverage percentage (0.0 to 1.0)
+    /// - Note: Read directly from xcresult DTO (not calculated)
     public let coverage: Double?
 
-    /// All warnings from all modules in this report (computed from Module.File.warnings)
+    /// All warnings from all modules in this report
+    /// - Note: Computed property that aggregates warnings from all Module.File.warnings
     public var warnings: [Module.File.Issue] {
         modules.flatMap { $0.warnings }
     }
@@ -26,7 +28,8 @@ extension Report {
         /// Set of files with coverage and warnings data
         public internal(set) var files: Set<File>
 
-        /// Code coverage for this module (from target-level coverage data in xcresult)
+        /// Code coverage for this module
+        /// - Note: Read directly from target-level coverage data in xcresult DTO
         public let coverage: Coverage?
 
         public func hash(into hasher: inout Hasher) {
@@ -37,7 +40,8 @@ extension Report {
             lhs.name == rhs.name
         }
 
-        /// All warnings from all files in this module (computed from File.warnings)
+        /// All warnings from all files in this module
+        /// - Note: Computed property that aggregates warnings from all File.warnings
         public var warnings: [File.Issue] {
             files.flatMap { $0.warnings }
         }
@@ -93,9 +97,11 @@ extension Report.Module {
         public let name: String
 
         /// Build warnings associated with this file
+        /// - Note: Read directly from xcresult DTO
         public internal(set) var warnings: [File.Issue]
 
         /// Code coverage information for this file
+        /// - Note: Read directly from file-level coverage data in xcresult DTO
         public let coverage: File.Coverage?
 
         public func hash(into hasher: inout Hasher) {
