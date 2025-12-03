@@ -264,12 +264,17 @@ print(xmlReport)
 
 The `.xcresult` format does not include actual file paths for test suites—only suite identifier URLs like `test://com.apple.xcode/Module/ModuleTests/SuiteTests`. However, SonarQube requires actual file paths to properly map test results to source files.
 
-To bridge this gap, `SonarFormatter` attempts to infer file paths by extracting class names from suite identifiers and searching for matching `.swift` files in the provided `testsPath` directory.
+To bridge this gap, `SonarFormatter` performs the following steps:
+1. Takes the last component of the suite identifier URL as the class name (e.g., `SuiteTests` from `test://.../.../SuiteTests`)
+2. Recursively scans all `.swift` files in the provided `testsPath` directory
+3. Uses regex to find `class` and `struct` declarations in each file
+4. Builds a lookup dictionary mapping class/struct names to their file paths
+5. Looks up the class name to find the corresponding file path
 
 **Important**: This path inference is best-effort and may produce incorrect mappings in edge cases, such as:
-- Multiple test suites with similar names
-- File names that don't match class/suite names
-- Complex project structures with nested directories
+- Multiple classes/structs with the same name in different files (only one will be mapped)
+- Test suite names that don't match any class or struct name in the source files
+- Nested or inner classes/structs
 
 The `testsPath` parameter should point to your test source directory to enable this file path lookup.
 
