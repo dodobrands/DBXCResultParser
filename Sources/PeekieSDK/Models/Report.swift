@@ -5,7 +5,7 @@ public struct Report {
     public let coverage: Double?
 
     /// All warnings from all modules in this report
-    public var warnings: [Module.Suite.Issue] {
+    public var warnings: [Module.File.Issue] {
         modules.flatMap { $0.warnings }
     }
 }
@@ -25,9 +25,9 @@ extension Report {
             lhs.name == rhs.name
         }
 
-        /// All warnings from all suites in this module
-        public var warnings: [Suite.Issue] {
-            suites.flatMap { $0.warnings }
+        /// All warnings from all files in this module
+        public var warnings: [File.Issue] {
+            files.flatMap { $0.warnings }
         }
     }
 
@@ -100,7 +100,6 @@ extension Report.Module {
         /// Format: `test://com.apple.xcode/<Module>/<Bundle>/<Suite>/<TestCase>`
         public let nodeIdentifierURL: String
         public internal(set) var repeatableTests: Set<RepeatableTest>
-        public internal(set) var warnings: [Issue]
 
         public func hash(into hasher: inout Hasher) {
             hasher.combine(name)
@@ -112,16 +111,6 @@ extension Report.Module {
     }
 }
 
-extension Report.Module.Suite {
-    public struct Issue: Equatable, Sendable {
-        public let type: IssueType
-        public let message: String
-
-        public enum IssueType: String, Equatable, Sendable {
-            case buildWarning = "Swift Compiler Warning"
-        }
-    }
-}
 
 extension Report.Module.Suite {
     public struct RepeatableTest: Hashable {

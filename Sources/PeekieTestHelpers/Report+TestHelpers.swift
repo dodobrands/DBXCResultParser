@@ -70,14 +70,12 @@ extension Report.Module.Suite {
     public static func testMake(
         name: String = "",
         nodeIdentifierURL: String = "",
-        repeatableTests: Set<RepeatableTest> = [],
-        warnings: [Issue] = []
+        repeatableTests: Set<RepeatableTest> = []
     ) -> Self {
         .init(
             name: name,
             nodeIdentifierURL: nodeIdentifierURL,
-            repeatableTests: repeatableTests,
-            warnings: warnings
+            repeatableTests: repeatableTests
         )
     }
 }

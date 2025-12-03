@@ -763,7 +763,6 @@
                       - type: NodeType.repetition
                   - skipMessage: Optional<String>.none
                   - status: Status.success
-          - warnings: 0 elements
         ▿ Suite
           - name: "XCTestTests"
           - nodeIdentifierURL: "test://com.apple.xcode/XcodeprojExample/XcodeprojExampleTests/XCTestTests"
@@ -1042,7 +1041,6 @@
                   - path: 0 elements
                   - skipMessage: Optional<String>.none
                   - status: Status.success
-          - warnings: 0 elements
     ▿ Module
       ▿ coverage: Optional<Coverage>
         ▿ some: Coverage
