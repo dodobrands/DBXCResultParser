@@ -1,0 +1,3 @@
+[submodule "swift-tests-example"]
+	path = swift-tests-example
+	url = https://github.com/dodobrands/swift-tests-example

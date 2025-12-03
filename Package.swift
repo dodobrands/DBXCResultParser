@@ -3,20 +3,17 @@
 
 import PackageDescription
 
-let packageName = "DBXCResultParser"
+let packageName = "Peekie"
 
-let parserLibraryName = packageName
-let formatterLibraryName = parserLibraryName + "-TextFormatter"
-let executableFormatterLibraryName = formatterLibraryName + "Exec"
-let testHelpersLibraryName = parserLibraryName + "TestHelpers"
+let parserLibraryName = "PeekieSDK"
+let executableLibraryName = "peekie"
+let testHelpersLibraryName = "PeekieTestHelpers"
 
-let parserTargetName = parserLibraryName
-let formatterTargetName = formatterLibraryName
-let executableFormatterTargetName = formatterTargetName + "Exec"
+let parserTargetName = "PeekieSDK"
+let executableTargetName = "Peekie"
 let testHelpersTargetName = testHelpersLibraryName
 
 let parserTestsTargetName = parserTargetName + "Tests"
-let formatterTestsTargetName = formatterTargetName + "Tests"
 
 let package = Package(
     name: packageName,
@@ -31,22 +28,15 @@ let package = Package(
             ]
         ),
         .library(
-            name: formatterLibraryName,
-            targets: [
-                parserTargetName,
-                formatterTargetName,
-            ]
-        ),
-        .library(
             name: testHelpersLibraryName,
             targets: [
-                testHelpersLibraryName
+                testHelpersTargetName
             ]
         ),
         .executable(
-            name: executableFormatterLibraryName,
+            name: executableLibraryName,
             targets: [
-                executableFormatterTargetName
+                executableTargetName
             ]
         ),
     ],
@@ -63,6 +53,14 @@ let package = Package(
             url: "https://github.com/pointfreeco/swift-snapshot-testing.git",
             .upToNextMajor(from: "1.16.0")
         ),
+        .package(
+            url: "https://github.com/CoreOffice/XMLCoder.git",
+            .upToNextMajor(from: "0.17.1")
+        ),
+        .package(
+            url: "https://github.com/apple/swift-log.git",
+            .upToNextMajor(from: "1.6.0")
+        ),
     ],
     targets: [
         .target(
@@ -76,30 +74,32 @@ let package = Package(
                     name: "Subprocess",
                     package: "swift-subprocess"
                 ),
+                .product(
+                    name: "XMLCoder",
+                    package: "XMLCoder"
+                ),
+                .product(
+                    name: "Logging",
+                    package: "swift-log"
+                ),
             ],
-            swiftSettings: [
-                .swiftLanguageMode(.v6),
-                .treatAllWarnings(as: .error),
-            ]
-        ),
-        .target(
-            name: formatterTargetName,
-            dependencies: [
-                .init(stringLiteral: parserTargetName)
-            ],
+            path: "Sources/PeekieSDK",
             swiftSettings: [
                 .swiftLanguageMode(.v6),
                 .treatAllWarnings(as: .error),
             ]
         ),
         .executableTarget(
-            name: executableFormatterTargetName,
+            name: executableTargetName,
             dependencies: [
                 .init(stringLiteral: parserTargetName),
-                .init(stringLiteral: formatterTargetName),
                 .product(
                     name: "ArgumentParser",
                     package: "swift-argument-parser"
+                ),
+                .product(
+                    name: "Logging",
+                    package: "swift-log"
                 ),
             ],
             swiftSettings: [
@@ -121,29 +121,25 @@ let package = Package(
             name: parserTestsTargetName,
             dependencies: [
                 .init(stringLiteral: parserTargetName),
-                .init(stringLiteral: formatterTargetName),
                 .init(stringLiteral: testHelpersTargetName),
                 .product(
                     name: "SnapshotTesting",
                     package: "swift-snapshot-testing"
                 ),
+                .product(
+                    name: "XMLCoder",
+                    package: "XMLCoder"
+                ),
+            ],
+            path: "Tests/PeekieTests",
+            exclude: [
+                "__Snapshots__"
             ],
             resources: [
                 .copy("Resources")
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v6)
-            ]
-        ),
-        .testTarget(
-            name: formatterTestsTargetName,
-            dependencies: [
-                .init(stringLiteral: formatterTargetName),
-                .init(stringLiteral: testHelpersTargetName),
-            ],
-            swiftSettings: [
-                .swiftLanguageMode(.v6),
-                .treatAllWarnings(as: .error),
             ]
         ),
     ]

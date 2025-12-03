@@ -1,0 +1,12 @@
+ExampleSUITests
+✅ async()
+✅ success()
+✅ withAttachment()
+
+XCTestTests
+✅ test_async()
+✅ test_asyncWithExpectation()
+✅ test_performance()
+✅ test_success()
+✅ test_withAttachment()
+✅ test_withWarning()
