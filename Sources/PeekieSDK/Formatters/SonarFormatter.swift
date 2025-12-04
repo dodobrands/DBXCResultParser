@@ -137,7 +137,7 @@ public class SonarFormatter {
     }
 }
 
-// swift-format-ignore
+// swift-format-ignore: TypeNamesShouldBeCapitalized
 private struct testExecutions: Encodable, DynamicNodeEncoding {
     let version = 1
     let file: [file]
@@ -156,7 +156,7 @@ private struct testExecutions: Encodable, DynamicNodeEncoding {
         }
     }
 
-    // swift-format-ignore
+    // swift-format-ignore: TypeNamesShouldBeCapitalized
     struct file: Encodable, DynamicNodeEncoding {
         let path: String
         let testCase: [testCase]
@@ -175,7 +175,7 @@ private struct testExecutions: Encodable, DynamicNodeEncoding {
             }
         }
 
-        // swift-format-ignore
+        // swift-format-ignore: TypeNamesShouldBeCapitalized
         struct testCase: Encodable, DynamicNodeEncoding {
             let name: String
             let duration: Int
@@ -199,7 +199,7 @@ private struct testExecutions: Encodable, DynamicNodeEncoding {
                 }
             }
 
-            // swift-format-ignore
+            // swift-format-ignore: TypeNamesShouldBeCapitalized
             struct skipped: Encodable, DynamicNodeEncoding {
                 let message: String
 
@@ -217,7 +217,7 @@ private struct testExecutions: Encodable, DynamicNodeEncoding {
                 }
             }
 
-            // swift-format-ignore
+            // swift-format-ignore: TypeNamesShouldBeCapitalized
             struct failure: Encodable, DynamicNodeEncoding {
                 let message: String
 
