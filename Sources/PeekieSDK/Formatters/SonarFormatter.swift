@@ -128,24 +128,24 @@ public class SonarFormatter {
         let sonarFiles = filesByPath.map { path, testCases in
             TestExecutions.File(path: path, testCase: testCases)
         }.sorted { $0.path < $1.path }
-        let dto = TestExecutionsRoot(testExecutions: TestExecutions(file: sonarFiles))
+        let dto = TestExecutions(file: sonarFiles)
 
         let encoder = XMLEncoder()
         encoder.outputFormatting = .prettyPrinted
         let data = try encoder.encode(dto)
-        return String(decoding: data, as: UTF8.self)
-    }
-}
-
-private struct TestExecutionsRoot: Encodable, DynamicNodeEncoding {
-    let testExecutions: TestExecutions
-
-    enum CodingKeys: String, CodingKey {
-        case testExecutions = "testExecutions"
-    }
-
-    static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
-        return .element
+        
+        // XMLCoder generates <TestExecutions> but SonarQube requires <testExecutions>
+        // Replace the root element name to match SonarQube format
+        let xmlString = String(decoding: data, as: UTF8.self)
+        let correctedXML = xmlString.replacingOccurrences(
+            of: "<TestExecutions",
+            with: "<testExecutions"
+        ).replacingOccurrences(
+            of: "</TestExecutions>",
+            with: "</testExecutions>"
+        )
+        
+        return correctedXML
     }
 }
 
