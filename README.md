@@ -1,8 +1,8 @@
 # Peekie
 
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdodobrands%2FDBXCResultParser%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/dodobrands/DBXCResultParser)
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdodobrands%2FDBXCResultParser%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/dodobrands/DBXCResultParser)
-[![](https://github.com/dodobrands/DBXCResultParser/actions/workflows/unittest.yml/badge.svg)](https://github.com/dodobrands/DBXCResultParser/actions/workflows/unittest.yml)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdodobrands%2FPeekie%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/dodobrands/Peekie)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdodobrands%2FPeekie%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/dodobrands/Peekie)
+[![](https://github.com/dodobrands/Peekie/actions/workflows/unittest.yml/badge.svg)](https://github.com/dodobrands/Peekie/actions/workflows/unittest.yml)
 [![](https://img.shields.io/badge/XCTest-Supported-success)](https://developer.apple.com/documentation/xctest)
 [![](https://img.shields.io/badge/Swift%20Testing-Supported-success)](https://www.swift.org/documentation/package-manager/)
 
