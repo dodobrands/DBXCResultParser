@@ -36,7 +36,7 @@ public class SonarFormatter {
         )
 
         // Group files by actual file path (multiple test suites can be in one file)
-        var filesByPath: [String: [TestExecutions.File.TestCase]] = [:]
+        var filesByPath: [String: [testExecutions.file.testCase]] = [:]
         // Track paths by nodeIdentifierURL (full node identifier)
         var pathsByNode: [String: String] = [:]
 
@@ -114,7 +114,7 @@ public class SonarFormatter {
             }
 
             // Extract test cases from this file
-            let testCases = try TestExecutions.File.testCases(from: file)
+            let testCases = try testExecutions.file.testCases(from: file)
 
             // Merge test cases by file path
             if filesByPath[path] != nil {
@@ -126,9 +126,9 @@ public class SonarFormatter {
 
         // Create file entries from grouped test cases
         let sonarFiles = filesByPath.map { path, testCases in
-            TestExecutions.File(path: path, testCase: testCases)
+            testExecutions.file(path: path, testCase: testCases)
         }.sorted { $0.path < $1.path }
-        let dto = TestExecutionsRoot(testExecutions: TestExecutions(file: sonarFiles))
+        let dto = testExecutions(file: sonarFiles)
 
         let encoder = XMLEncoder()
         encoder.outputFormatting = .prettyPrinted
@@ -137,21 +137,10 @@ public class SonarFormatter {
     }
 }
 
-private struct TestExecutionsRoot: Encodable, DynamicNodeEncoding {
-    let testExecutions: TestExecutions
-
-    enum CodingKeys: String, CodingKey {
-        case testExecutions = "testExecutions"
-    }
-
-    static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
-        return .element
-    }
-}
-
-private struct TestExecutions: Encodable, DynamicNodeEncoding {
+// swift-format-ignore: TypeNamesShouldBeCapitalized
+private struct testExecutions: Encodable, DynamicNodeEncoding {
     let version = 1
-    let file: [File]
+    let file: [file]
 
     enum CodingKeys: String, CodingKey {
         case version
@@ -167,9 +156,10 @@ private struct TestExecutions: Encodable, DynamicNodeEncoding {
         }
     }
 
-    struct File: Encodable, DynamicNodeEncoding {
+    // swift-format-ignore: TypeNamesShouldBeCapitalized
+    struct file: Encodable, DynamicNodeEncoding {
         let path: String
-        let testCase: [TestCase]
+        let testCase: [testCase]
 
         enum CodingKeys: String, CodingKey {
             case path
@@ -185,11 +175,12 @@ private struct TestExecutions: Encodable, DynamicNodeEncoding {
             }
         }
 
-        struct TestCase: Encodable, DynamicNodeEncoding {
+        // swift-format-ignore: TypeNamesShouldBeCapitalized
+        struct testCase: Encodable, DynamicNodeEncoding {
             let name: String
             let duration: Int
-            let skipped: Skipped?
-            let failure: Failure?
+            let skipped: skipped?
+            let failure: failure?
 
             enum CodingKeys: String, CodingKey {
                 case name
@@ -208,7 +199,8 @@ private struct TestExecutions: Encodable, DynamicNodeEncoding {
                 }
             }
 
-            struct Skipped: Encodable, DynamicNodeEncoding {
+            // swift-format-ignore: TypeNamesShouldBeCapitalized
+            struct skipped: Encodable, DynamicNodeEncoding {
                 let message: String
 
                 enum CodingKeys: String, CodingKey {
@@ -225,7 +217,8 @@ private struct TestExecutions: Encodable, DynamicNodeEncoding {
                 }
             }
 
-            struct Failure: Encodable, DynamicNodeEncoding {
+            // swift-format-ignore: TypeNamesShouldBeCapitalized
+            struct failure: Encodable, DynamicNodeEncoding {
                 let message: String
 
                 enum CodingKeys: String, CodingKey {
@@ -245,7 +238,7 @@ private struct TestExecutions: Encodable, DynamicNodeEncoding {
     }
 }
 
-extension TestExecutions.File.TestCase {
+extension testExecutions.file.testCase {
     init(_ test: Report.Module.Suite.RepeatableTest.Test) {
         self.init(
             name: test.name,
@@ -256,11 +249,11 @@ extension TestExecutions.File.TestCase {
     }
 }
 
-extension TestExecutions.File {
-    fileprivate static func testCases(from file: Report.Module.Suite) throws -> [TestExecutions.File
-        .TestCase]
+extension testExecutions.file {
+    fileprivate static func testCases(from file: Report.Module.Suite) throws -> [testExecutions.file
+        .testCase]
     {
-        var testCases: [TestExecutions.File.TestCase] = []
+        var testCases: [testExecutions.file.testCase] = []
 
         for repeatableTest in file.repeatableTests.sorted(by: { $0.name < $1.name }) {
             // Use merged tests which already handle repetitions and optionally devices
@@ -268,7 +261,7 @@ extension TestExecutions.File {
 
             // Output each merged test separately
             for test in mergedTests {
-                testCases.append(TestExecutions.File.TestCase.init(test))
+                testCases.append(testExecutions.file.testCase.init(test))
             }
         }
 
